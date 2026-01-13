@@ -1,0 +1,3105 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>废土方舟</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏰</text></svg>">
+    
+    <style>
+        /* ====== 基础重置 ====== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #0a0a12;
+            color: #e0e0ff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        /* ====== PWA全屏优化 ====== */
+        @media (display-mode: standalone) {
+            body {
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+        }
+
+        /* 横屏提示 */
+        @media (orientation: landscape) and (max-height: 600px) {
+            body::before {
+                content: "📱 请旋转设备为竖屏以获得最佳体验";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: #000;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 99999;
+                font-size: 18px;
+                text-align: center;
+                padding: 20px;
+                backdrop-filter: blur(10px);
+            }
+        }
+
+        /* ====== 游戏容器 - 网格布局 ====== */
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            padding: 6px;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            grid-template-rows: min-content 1fr min-content;
+            gap: 6px;
+            grid-template-areas:
+                "status status status"
+                "resources base survivors"
+                "events events events";
+        }
+
+        /* ====== 状态栏（顶部） ====== */
+        #status-bar {
+            grid-area: status;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            border-radius: 10px;
+            padding: 5px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #3498db;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+            min-height: 45px;
+            flex-wrap: wrap;
+            font-size: 12px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin: 1px 3px;
+            flex-shrink: 0;
+        }
+
+        .status-icon {
+            font-size: 14px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .status-value {
+            font-size: 13px;
+            font-weight: bold;
+            color: #fff;
+            white-space: nowrap;
+        }
+
+        /* ====== 通用按钮样式（小尺寸） ====== */
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 5px 10px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            min-height: 28px;
+            min-width: 55px;
+        }
+
+        .btn:hover, .btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .btn-success { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .btn-purple { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+
+        .btn-small {
+            padding: 3px 6px;
+            font-size: 10px;
+            min-height: 24px;
+            min-width: 45px;
+        }
+
+        /* ====== 左侧资源面板 ====== */
+        #resource-panel {
+            grid-area: resources;
+            background: rgba(30, 35, 50, 0.95);
+            border-radius: 10px;
+            padding: 8px;
+            border: 1px solid #444;
+            overflow-y: auto;
+            font-size: 11px;
+        }
+
+        .panel-title {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #3498db;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px;
+            margin-bottom: 5px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            font-size: 11px;
+        }
+
+        .resource-icon {
+            font-size: 14px;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        .resource-bar {
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin: 2px 0;
+            overflow: hidden;
+        }
+
+        .resource-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.5s;
+        }
+
+        /* ====== 科技树 ====== */
+        #tech-tree {
+            margin-top: 10px;
+        }
+
+        .tech-item {
+            background: rgba(52, 152, 219, 0.1);
+            border: 1px solid #3498db;
+            border-radius: 6px;
+            padding: 6px;
+            margin: 3px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 11px;
+        }
+
+        .tech-item:hover {
+            background: rgba(52, 152, 219, 0.2);
+        }
+
+        .tech-item.researched {
+            background: rgba(46, 204, 113, 0.2);
+            border-color: #2ecc71;
+        }
+
+        .tech-item.insufficient {
+            background: rgba(231, 76, 60, 0.1);
+            border-color: #e74c3c;
+            opacity: 0.7;
+        }
+
+        /* ====== 中央基地面板 ====== */
+        #base-panel {
+            grid-area: base;
+            background: rgba(25, 30, 45, 0.95);
+            border-radius: 10px;
+            padding: 8px;
+            border: 1px solid #444;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #base-canvas {
+            width: 100%;
+            flex: 1;
+            min-height: 180px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            margin: 5px 0;
+            border: 1px solid #555;
+        }
+
+        #building-controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            margin-top: 6px;
+        }
+
+        .btn-build {
+            background: rgba(155, 89, 182, 0.7);
+            border: 1px solid #9b59b6;
+            border-radius: 6px;
+            padding: 6px 3px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            font-size: 10px;
+            min-height: 50px;
+        }
+
+        .btn-build:hover {
+            background: rgba(155, 89, 182, 0.9);
+        }
+
+        .btn-build span:first-child {
+            font-size: 16px;
+        }
+
+        /* ====== 右侧幸存者面板 ====== */
+        #survivor-panel {
+            grid-area: survivors;
+            background: rgba(30, 35, 50, 0.95);
+            border-radius: 10px;
+            padding: 8px;
+            border: 1px solid #444;
+            overflow-y: auto;
+            font-size: 11px;
+        }
+
+        .survivor-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 6px;
+            margin-bottom: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 11px;
+        }
+
+        .survivor-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .survivor-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #e74c3c, #f39c12);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: bold;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .stat-row {
+            display: flex;
+            align-items: center;
+            margin: 2px 0;
+            gap: 4px;
+            font-size: 10px;
+        }
+
+        .stat-bar {
+            flex: 1;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .stat-fill {
+            height: 100%;
+            border-radius: 2px;
+        }
+
+        .health-bar { background: linear-gradient(90deg, #e74c3c, #f39c12); }
+        .hunger-bar { background: linear-gradient(90deg, #f1c40f, #f39c12); }
+        .energy-bar { background: linear-gradient(90deg, #3498db, #2980b9); }
+
+        /* ====== 底部事件面板 ====== */
+        #event-panel {
+            grid-area: events;
+            background: rgba(30, 35, 50, 0.95);
+            border-radius: 10px;
+            padding: 8px;
+            border: 1px solid #444;
+            min-height: 120px;
+            max-height: 140px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+
+        #event-log {
+            flex: 1;
+            overflow-y: auto;
+            margin: 3px 0;
+            padding-right: 6px;
+            font-size: 11px;
+        }
+
+        .log-entry {
+            padding: 4px 6px;
+            margin-bottom: 3px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            border-left: 3px solid #3498db;
+            animation: fadeIn 0.3s;
+        }
+
+        .log-entry.warning { border-left-color: #f39c12; }
+        .log-entry.danger { border-left-color: #e74c3c; }
+        .log-entry.success { border-left-color: #2ecc71; }
+        .log-entry.build { border-left-color: #9b59b6; }
+
+        /* ====== 探索面板 ====== */
+        #explore-panel {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .btn-explore {
+            background: rgba(46, 204, 113, 0.7);
+            border: 1px solid #2ecc71;
+            border-radius: 6px;
+            padding: 6px 3px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            font-size: 10px;
+            min-height: 45px;
+        }
+
+        .btn-explore:hover {
+            background: rgba(46, 204, 113, 0.9);
+        }
+
+        .btn-explore span:first-child {
+            font-size: 16px;
+        }
+
+        /* ====== 弹窗系统 ====== */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: #2c3e50;
+            border-radius: 12px;
+            padding: 12px;
+            width: 95%;
+            max-width: 400px;
+            border: 2px solid #3498db;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 15px;
+            color: #3498db;
+            margin-bottom: 10px;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* ====== 设置面板 ====== */
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            margin: 5px 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #666;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #3498db;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* ====== 成就系统 ====== */
+        .achievement {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px;
+            margin: 4px 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+        }
+
+        .achievement.locked {
+            opacity: 0.5;
+            filter: grayscale(1);
+        }
+
+        .achievement-icon {
+            font-size: 20px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+        }
+
+        /* ====== 快捷操作栏 ====== */
+        .quick-actions {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 900;
+        }
+
+        .quick-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #3498db;
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s;
+        }
+
+        .quick-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* ====== 通知系统 ====== */
+        #notification-container {
+            position: fixed;
+            top: 50px;
+            right: 10px;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            max-width: 250px;
+        }
+
+        .notification {
+            background: #2c3e50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            animation: slideInRight 0.3s, fadeOut 0.3s 2.7s forwards;
+            font-size: 12px;
+        }
+
+        .notification.success { border-left-color: #2ecc71; }
+        .notification.warning { border-left-color: #f39c12; }
+        .notification.danger { border-left-color: #e74c3c; }
+        .notification.info { border-left-color: #3498db; }
+
+        /* ====== 加载动画 ====== */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a2e;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        /* ====== 动画定义 ====== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translate(-50%, -50%); }
+            10%, 30%, 50%, 70%, 90% { transform: translate(-51%, -50%); }
+            20%, 40%, 60%, 80% { transform: translate(-49%, -50%); }
+        }
+
+        .pulse { animation: pulse 2s infinite; }
+        .shake { animation: shake 0.5s ease; }
+
+        /* ====== 研究面板特殊样式 ====== */
+        .research-modal {
+            animation: fadeIn 0.3s ease;
+        }
+
+        .insufficient-materials {
+            border-color: #e74c3c !important;
+            background: rgba(231, 76, 60, 0.1) !important;
+        }
+
+        /* ====== 战斗界面 ====== */
+        .enemy-card {
+            background: rgba(231, 76, 60, 0.2);
+            border: 2px solid #e74c3c;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 6px 0;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .combat-log {
+            height: 100px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 6px;
+            padding: 6px;
+            margin: 6px 0;
+            font-size: 11px;
+        }
+
+        .combat-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin-top: 8px;
+        }
+
+        /* ====== 响应式调整 ====== */
+        @media (max-width: 768px) {
+            #game-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: min-content min-content 1fr min-content min-content;
+                grid-template-areas:
+                    "status"
+                    "base"
+                    "resources"
+                    "survivors"
+                    "events";
+                gap: 4px;
+            }
+            
+            #resource-panel, #survivor-panel {
+                max-height: 180px;
+            }
+            
+            #event-panel {
+                max-height: 120px;
+            }
+            
+            #base-canvas {
+                min-height: 200px;
+            }
+            
+            .btn {
+                font-size: 10px;
+                padding: 4px 8px;
+            }
+            
+            .status-value {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            #status-bar {
+                padding: 3px 6px;
+            }
+            
+            .status-icon {
+                font-size: 12px;
+            }
+            
+            .btn {
+                min-width: 40px;
+                font-size: 9px;
+            }
+            
+            #building-controls {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ====== 滚动条美化 ====== */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3498db;
+            border-radius: 2px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2980b9;
+        }
+    </style>
+    
+    <!-- 音乐库链接 -->
+    <link rel="preload" href="https://assets.mixkit.co/music/preview/mixkit-game-show-suspense-waiting-667.mp3" as="audio" crossorigin="anonymous">
+</head>
+<body>
+    <!-- 加载屏幕 -->
+    <div id="loading-screen">
+        <div class="loading-spinner"></div>
+        <div style="font-size: 18px; color: #3498db; margin-bottom: 10px; font-weight: bold;">废土方舟</div>
+        <div style="font-size: 12px; color: #8899cc; text-align: center; max-width: 300px;">
+            加载幸存者数据库...
+        </div>
+    </div>
+
+    <!-- 主游戏界面 -->
+    <div id="game-container" style="display: none;">
+        <!-- 状态栏 -->
+        <div id="status-bar">
+            <div class="status-item">
+                <span class="status-icon">📅</span>
+                <span class="status-value" id="day-count">第1天</span>
+            </div>
+            
+            <div class="status-item">
+                <span class="status-icon">⏰</span>
+                <span class="status-value" id="time-display">06:00</span>
+            </div>
+            
+            <div class="status-item">
+                <span class="status-icon">☁️</span>
+                <span class="status-value" id="weather">晴朗</span>
+            </div>
+            
+            <div class="status-item">
+                <span class="status-icon">😊</span>
+                <span class="status-value" id="morale">士气: 75</span>
+            </div>
+            
+            <div class="status-item">
+                <span class="status-icon">👥</span>
+                <span class="status-value" id="survivor-count">4人</span>
+            </div>
+            
+            <button class="btn btn-small" id="btn-pause">
+                <span>⏸️</span>
+                <span>暂停</span>
+            </button>
+            
+            <button class="btn btn-small btn-danger" id="btn-save">
+                <span>💾</span>
+                <span>保存</span>
+            </button>
+            
+            <button class="btn btn-small btn-purple" id="btn-settings">
+                <span>⚙️</span>
+                <span>设置</span>
+            </button>
+        </div>
+
+        <!-- 左侧资源面板 -->
+        <div id="resource-panel">
+            <div class="panel-title">
+                <span>📦</span>
+                <span>资源管理</span>
+                <span id="total-resources" style="margin-left: auto; font-size: 10px; color: #f39c12;"></span>
+            </div>
+            <div id="resource-list">
+                <!-- 动态生成 -->
+            </div>
+            
+            <div class="panel-title" style="margin-top: 10px;">
+                <span>🔬</span>
+                <span>科技树</span>
+                <span id="tech-progress" style="margin-left: auto; font-size: 10px; color: #2ecc71;"></span>
+            </div>
+            <div id="tech-tree">
+                <!-- 动态生成 -->
+            </div>
+        </div>
+
+        <!-- 中央基地面板 -->
+        <div id="base-panel">
+            <div class="panel-title">
+                <span>🏰</span>
+                <span>基地总览</span>
+                <span id="defense-level" style="margin-left: auto; font-size: 10px; color: #f39c12;">防御: 1级</span>
+            </div>
+            
+            <canvas id="base-canvas"></canvas>
+            
+            <div id="building-controls">
+                <!-- 基础建筑 -->
+                <button class="btn-build" data-type="宿舍" data-cost="30">
+                    <span>🛏️</span>
+                    <span>宿舍</span>
+                    <small>+4人口</small>
+                </button>
+                <button class="btn-build" data-type="厨房" data-cost="30">
+                    <span>🍳</span>
+                    <span>厨房</span>
+                    <small>食物+3/h</small>
+                </button>
+                <button class="btn-build" data-type="医疗站" data-cost="30">
+                    <span>🏥</span>
+                    <span>医疗站</span>
+                    <small>治疗伤病</small>
+                </button>
+                <button class="btn-build" data-type="瞭望塔" data-cost="30">
+                    <span>🔭</span>
+                    <span>瞭望塔</span>
+                    <small>视野+50%</small>
+                </button>
+                <button class="btn-build" data-type="仓库" data-cost="40">
+                    <span>📦</span>
+                    <span>仓库</span>
+                    <small>容量+200</small>
+                </button>
+                <button class="btn-build" data-type="研究所" data-cost="50">
+                    <span>🔬</span>
+                    <span>研究所</span>
+                    <small>研究科技</small>
+                </button>
+                <!-- 高级建筑（需科技解锁） -->
+                <button class="btn-build" data-type="水处理厂" data-cost="60" data-tech="water_purify">
+                    <span>💧</span>
+                    <span>水厂</span>
+                    <small>水+5/h</small>
+                </button>
+                <button class="btn-build" data-type="发电站" data-cost="70" data-tech="advanced_defense">
+                    <span>⚡</span>
+                    <span>电站</span>
+                    <small>电力+10</small>
+                </button>
+                <button class="btn-build" data-type="训练场" data-cost="45">
+                    <span>⚔️</span>
+                    <span>训练场</span>
+                    <small>战斗+1</small>
+                </button>
+            </div>
+        </div>
+
+        <!-- 右侧幸存者面板 -->
+        <div id="survivor-panel">
+            <div class="panel-title">
+                <span>👥</span>
+                <span>幸存者</span>
+                <button class="btn btn-small btn-success" id="btn-recruit" style="margin-left: auto; padding: 3px 6px;">
+                    <span>📢</span>
+                    <span>招募</span>
+                </button>
+            </div>
+            <div id="survivor-list">
+                <!-- 动态生成 -->
+            </div>
+        </div>
+
+        <!-- 底部事件面板 -->
+        <div id="event-panel">
+            <div class="panel-header">
+                <div class="panel-title" style="margin: 0; padding: 0;">
+                    <span>📜</span>
+                    <span>事件日志</span>
+                </div>
+                <button class="btn btn-small" id="btn-explore" style="margin-left: auto; padding: 3px 6px;">
+                    <span>🧭</span>
+                    <span>探索</span>
+                </button>
+                <button class="btn btn-small btn-danger" id="btn-combat" style="padding: 3px 6px;">
+                    <span>⚔️</span>
+                    <span>战斗</span>
+                </button>
+                <button class="btn btn-small btn-warning" id="btn-achievements" style="padding: 3px 6px;">
+                    <span>🏆</span>
+                    <span>成就</span>
+                </button>
+            </div>
+            
+            <div id="event-log">
+                <!-- 事件日志动态生成 -->
+            </div>
+            
+            <div id="explore-panel">
+                <button class="btn-explore" data-location="废墟" data-risk="0.2">
+                    <span>🏚️</span>
+                    <span>废墟</span>
+                    <small>低风险</small>
+                </button>
+                <button class="btn-explore" data-location="医院" data-risk="0.4">
+                    <span>🏥</span>
+                    <span>医院</span>
+                    <small>中风险</small>
+                </button>
+                <button class="btn-explore" data-location="超市" data-risk="0.3">
+                    <span>🛒</span>
+                    <span>超市</span>
+                    <small>低风险</small>
+                </button>
+                <button class="btn-explore" data-location="军事基地" data-risk="0.6">
+                    <span>🎖️</span>
+                    <span>军事基地</span>
+                    <small>高风险</small>
+                </button>
+                <button class="btn-explore" data-location="农场" data-risk="0.3">
+                    <span>🌾</span>
+                    <span>农场</span>
+                    <small>中风险</small>
+                </button>
+                <button class="btn-explore" data-location="研究所废墟" data-risk="0.5">
+                    <span>🔬</span>
+                    <span>研究所</span>
+                    <small>高风险</small>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 快捷操作栏 -->
+    <div class="quick-actions">
+        <button class="quick-btn" id="quick-pause" title="暂停/继续">
+            ⏸️
+        </button>
+        <button class="quick-btn" id="quick-save" title="保存游戏">
+            💾
+        </button>
+        <button class="quick-btn" id="quick-explore" title="探索">
+            🧭
+        </button>
+        <button class="quick-btn" id="quick-menu" title="快捷菜单">
+            ⚙️
+        </button>
+    </div>
+
+    <!-- 通知容器 -->
+    <div id="notification-container"></div>
+
+    <!-- ====== 弹窗系统 ====== -->
+    
+    <!-- 设置模态框 -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">⚙️ 游戏设置</div>
+            
+            <div class="settings-item">
+                <span>🎵 背景音乐</span>
+                <label class="switch">
+                    <input type="checkbox" id="music-toggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="settings-item">
+                <span>🔊 游戏音效</span>
+                <label class="switch">
+                    <input type="checkbox" id="sfx-toggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="settings-item">
+                <span>⚡ 游戏速度</span>
+                <select id="game-speed" style="background: #34495e; color: white; border: 1px solid #555; padding: 4px 8px; border-radius: 4px;">
+                    <option value="0.5">慢速 (0.5x)</option>
+                    <option value="1" selected>正常 (1x)</option>
+                    <option value="2">快速 (2x)</option>
+                    <option value="5">极速 (5x)</option>
+                </select>
+            </div>
+            
+            <div class="settings-item">
+                <span>🌙 夜间模式</span>
+                <label class="switch">
+                    <input type="checkbox" id="night-mode">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="settings-item">
+                <span>📱 振动反馈</span>
+                <label class="switch">
+                    <input type="checkbox" id="vibration-toggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <button class="btn btn-danger" id="btn-exit-game" style="width: 100%; margin-bottom: 8px;">
+                    🚪 退出游戏
+                </button>
+                <button class="btn" id="btn-close-settings" style="width: 100%;">
+                    关闭设置
+                </button>
+            </div>
+            
+            <div style="margin-top: 15px; font-size: 10px; color: #8899cc; text-align: center;">
+                《废土方舟》v1.0<br>
+                幸存者数量: <span id="settings-survivor-count">4</span> | 
+                游戏天数: <span id="settings-game-day">1</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 成就模态框 -->
+    <div id="achievements-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">🏆 成就系统</div>
+            <div id="achievements-list" style="max-height: 300px; overflow-y: auto; padding: 5px;">
+                <!-- 成就动态生成 -->
+            </div>
+            <button class="btn" id="btn-close-achievements" style="width: 100%; margin-top: 10px;">
+                关闭
+            </button>
+        </div>
+    </div>
+
+    <!-- 探索结果模态框 -->
+    <div id="explore-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title" id="explore-title">🧭 探索结果</div>
+            <div id="explore-result"></div>
+            <button class="btn" id="btn-close-explore" style="width: 100%; margin-top: 10px;">
+                关闭
+            </button>
+        </div>
+    </div>
+
+    <!-- 战斗模态框 -->
+    <div id="combat-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">⚔️ 丧尸来袭！</div>
+            <div id="enemy-info"></div>
+            <div class="combat-log" id="combat-log"></div>
+            <div class="combat-actions">
+                <button class="btn btn-success" id="btn-attack">🗡️ 攻击</button>
+                <button class="btn" id="btn-defend">🛡️ 防御</button>
+                <button class="btn btn-danger" id="btn-flee">🏃 撤退</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 研究模态框（旧版，将被动态创建替代） -->
+    <div id="research-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">🔬 科技研究</div>
+            <div id="research-info"></div>
+            <button class="btn btn-success" id="btn-research" style="width: 100%; margin-top: 10px;">
+                开始研究
+            </button>
+        </div>
+    </div>
+
+    <!-- 幸存者详情模态框 -->
+    <div id="survivor-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title" id="survivor-modal-title">👤 幸存者详情</div>
+            <div id="survivor-details"></div>
+            <button class="btn" id="btn-close-survivor" style="width: 100%; margin-top: 10px;">
+                关闭
+            </button>
+        </div>
+    </div>
+
+    <!-- 建筑详情模态框 -->
+    <div id="building-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title" id="building-modal-title">🏗️ 建筑详情</div>
+            <div id="building-details"></div>
+            <button class="btn" id="btn-close-building" style="width: 100%; margin-top: 10px;">
+                关闭
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript 代码 -->
+    <script>
+        // ====== 游戏核心类 ======
+        class SurvivalGame {
+            constructor() {
+                // 游戏状态
+                this.gameState = {
+                    day: 1,
+                    hour: 6,
+                    weather: 'clear',
+                    morale: 75,
+                    paused: false,
+                    threat: 1,
+                    tech: new Set(),
+                    explored: new Set(),
+                    achievements: new Set(),
+                    settings: {
+                        music: true,
+                        sfx: true,
+                        speed: 1,
+                        nightMode: false,
+                        vibration: true
+                    }
+                };
+                
+                // 资源系统
+                this.resources = {
+                    '食物': { amount: 100, max: 500, prod: 5, cons: 8 },
+                    '水': { amount: 80, max: 300, prod: 3, cons: 6 },
+                    '材料': { amount: 50, max: 1000, prod: 2, cons: 1 },
+                    '药品': { amount: 20, max: 200, prod: 0.5, cons: 0.2 },
+                    '弹药': { amount: 50, max: 500, prod: 1, cons: 0 },
+                    '电力': { amount: 100, max: 200, prod: 10, cons: 5 }
+                };
+                
+                // 幸存者名字库（50+个）
+                this.survivorNames = [
+                    '张伟', '李娜', '王刚', '赵敏', '刘强', '陈静', '孙浩', '周婷', '吴磊', '郑芳',
+                    '杨明', '黄霞', '朱勇', '林芳', '周杰', '吴刚', '郑凯', '王芳', '李强', '张敏',
+                    '陈伟', '刘芳', '杨军', '黄勇', '周梅', '吴静', '郑明', '王勇', '李霞', '张勇',
+                    '老兵陈', '医生李', '工程师王', '猎人张', '农夫刘', '教师赵', '学生周', '工人吴',
+                    '队长孙', '侦察兵杨', '机械师黄', '药剂师林', '建筑师郑', '电工朱', '木工马',
+                    '铁匠韩', '厨师唐', '园丁宋', '学者秦', '运动员许'
+                ];
+                
+                // 幸存者技能库
+                this.survivorSkills = ['建造', '医疗', '战斗', '研究', '探索', '领导', '机械', '农业', '烹饪', '射击'];
+                
+                // 初始幸存者
+                this.survivors = [
+                    this.createRandomSurvivor(1),
+                    this.createRandomSurvivor(2),
+                    this.createRandomSurvivor(3),
+                    this.createRandomSurvivor(4)
+                ];
+                
+                // 建筑类型（18种）
+                this.buildingTypes = {
+                    '指挥中心': { cost: 0, workers: 3, effect: '核心建筑' },
+                    '宿舍': { cost: 30, workers: 0, effect: '+4人口容量' },
+                    '厨房': { cost: 30, workers: 2, effect: '食物+3/h' },
+                    '医疗站': { cost: 30, workers: 2, effect: '治疗伤病' },
+                    '瞭望塔': { cost: 30, workers: 1, effect: '视野+50%' },
+                    '仓库': { cost: 40, workers: 1, effect: '容量+200' },
+                    '研究所': { cost: 50, workers: 3, effect: '研究科技' },
+                    '水处理厂': { cost: 60, workers: 2, effect: '水+5/h', require: 'water_purify' },
+                    '发电站': { cost: 70, workers: 2, effect: '电力+10', require: 'advanced_defense' },
+                    '训练场': { cost: 45, workers: 1, effect: '战斗+1' },
+                    '农场': { cost: 35, workers: 2, effect: '食物+4/h' },
+                    '围墙': { cost: 25, workers: 0, effect: '防御+10' },
+                    '哨塔': { cost: 40, workers: 1, effect: '防御+15' },
+                    '工坊': { cost: 55, workers: 3, effect: '材料+2/h' },
+                    '娱乐室': { cost: 30, workers: 0, effect: '士气+5' },
+                    '通讯站': { cost: 65, workers: 2, effect: '探索效率+20%' },
+                    '军械库': { cost: 50, workers: 1, effect: '弹药+2/h' },
+                    '温室': { cost: 45, workers: 2, effect: '食物+2/h 水-1/h' }
+                };
+                
+                // 初始建筑
+                this.buildings = [
+                    { id: 1, type: '指挥中心', level: 1, x: 200, y: 150, workers: [], efficiency: 1.0 },
+                    { id: 2, type: '宿舍', level: 1, x: 300, y: 200, workers: [1, 2], efficiency: 0.8 },
+                    { id: 3, type: '厨房', level: 1, x: 100, y: 200, workers: [], efficiency: 0.6 },
+                    { id: 4, type: '医疗站', level: 1, x: 200, y: 250, workers: [2], efficiency: 0.9 },
+                    { id: 5, type: '瞭望塔', level: 1, x: 400, y: 150, workers: [3], efficiency: 0.7 }
+                ];
+                
+                // 事件日志
+                this.events = [
+                    { time: '06:00', message: '新的一天开始了。昨晚平安无事。', type: 'info' },
+                    { time: '07:00', message: '张伟修复了围墙的破损处。', type: 'work' }
+                ];
+                
+                // 敌人系统
+                this.enemies = [];
+                this.combatActive = false;
+                this.currentEnemy = null;
+                
+                // 成就系统（25个）
+                this.achievementList = [
+                    { id: 'first_light', name: '第一道光', desc: '建造第一个建筑', icon: '🏗️', condition: () => this.buildings.length >= 2 },
+                    { id: 'dawn_breaker', name: '破晓之人', desc: '生存超过7天', icon: '🌅', condition: () => this.gameState.day >= 7 },
+                    { id: 'wasteland_gardener', name: '废土园丁', desc: '首次收获食物', icon: '🌱', condition: () => this.resources['食物'].amount >= 200 },
+                    { id: 'iron_fortress', name: '钢铁堡垒', desc: '建造所有防御建筑', icon: '🏰', condition: () => this.buildings.filter(b => ['围墙', '哨塔', '瞭望塔'].includes(b.type)).length >= 3 },
+                    { id: 'ark_heart', name: '方舟之心', desc: '收容10名幸存者', icon: '❤️', condition: () => this.survivors.length >= 10 },
+                    { id: 'civilization_spark', name: '文明火种', desc: '研究所有科技', icon: '🔥', condition: () => this.gameState.tech.size >= 3 },
+                    { id: 'wasteland_revival', name: '废土复兴', desc: '建立自给自足社区', icon: '🏘️', condition: () => this.resources['食物'].prod > 20 && this.resources['水'].prod > 15 },
+                    { id: 'doom_terminator', name: '末日终结者', desc: '生存365天', icon: '⚔️', condition: () => this.gameState.day >= 365 },
+                    { id: 'ark_commander', name: '方舟指挥官', desc: '完全通关游戏', icon: '🎖️', condition: () => this.gameState.day >= 100 && this.survivors.length >= 15 },
+                    { id: 'resource_master', name: '资源大师', desc: '所有资源达到上限', icon: '📊', condition: () => Object.values(this.resources).every(r => r.amount >= r.max * 0.9) },
+                    { id: 'explorer', name: '探索者', desc: '探索所有地点', icon: '🧭', condition: () => this.gameState.explored.size >= 6 },
+                    { id: 'zombie_slayer', name: '丧尸杀手', desc: '击败100个敌人', icon: '🧟', condition: () => this.gameState.threat >= 10 },
+                    { id: 'tech_master', name: '科技大师', desc: '研究5项科技', icon: '🔬', condition: () => this.gameState.tech.size >= 5 },
+                    { id: 'builder', name: '建造大师', desc: '建造10种不同建筑', icon: '👷', condition: () => new Set(this.buildings.map(b => b.type)).size >= 10 },
+                    { id: 'leader', name: '领袖', desc: '士气维持100点超过1天', icon: '👑', condition: () => this.gameState.morale >= 100 },
+                    { id: 'medic', name: '医疗兵', desc: '治疗10次伤病', icon: '🏥', condition: () => this.survivors.filter(s => s.health >= 90).length >= 5 },
+                    { id: 'farmer', name: '农场主', desc: '食物产量达到50/h', icon: '🌾', condition: () => this.resources['食物'].prod >= 50 },
+                    { id: 'engineer', name: '工程师', desc: '材料产量达到30/h', icon: '🔧', condition: () => this.resources['材料'].prod >= 30 },
+                    { id: 'scout', name: '侦察兵', desc: '成功探索10次', icon: '🔭', condition: () => this.gameState.explored.size >= 10 },
+                    { id: 'trader', name: '贸易商', desc: '交易资源总值达到1000', icon: '💰', condition: () => Object.values(this.resources).reduce((sum, r) => sum + r.amount, 0) >= 1000 },
+                    { id: 'survivor', name: '生存专家', desc: '连续30天无人员死亡', icon: '🛡️', condition: () => this.gameState.day >= 30 },
+                    { id: 'inventor', name: '发明家', desc: '解锁所有高级建筑', icon: '💡', condition: () => this.buildings.filter(b => ['水处理厂', '发电站', '通讯站'].includes(b.type)).length >= 3 },
+                    { id: 'strategist', name: '战略家', desc: '防御等级达到10级', icon: '🎯', condition: () => this.gameState.threat >= 10 },
+                    { id: 'collector', name: '收藏家', desc: '收集所有类型资源', icon: '📦', condition: () => Object.keys(this.resources).length >= 6 },
+                    { id: 'legend', name: '传奇指挥官', desc: '达成所有成就', icon: '🌟', condition: () => this.gameState.achievements.size >= 24 }
+                ];
+                
+                // 科技系统（12项）
+                this.techTree = [
+                    { id: 'basic_farming', name: '基础农业', cost: 50, desc: '食物产量+20%', time: 24, icon: '🌱', require: [] },
+                    { id: 'water_purify', name: '净水技术', cost: 40, desc: '水消耗-30%', time: 18, icon: '💧', require: [] },
+                    { id: 'advanced_defense', name: '高级防御', cost: 60, desc: '防御力+50%', time: 36, icon: '🛡️', require: [] },
+                    { id: 'solar_power', name: '太阳能技术', cost: 70, desc: '电力+15/h', time: 48, icon: '☀️', require: ['advanced_defense'] },
+                    { id: 'advanced_medicine', name: '高级医疗', cost: 55, desc: '治疗效果+40%', time: 30, icon: '💊', require: [] },
+                    { id: 'reinforced_structure', name: '强化结构', cost: 65, desc: '建筑耐久+30%', time: 42, icon: '🏗️', require: ['advanced_defense'] },
+                    { id: 'hydroponics', name: '水耕技术', cost: 80, desc: '食物+5/h 水-2/h', time: 60, icon: '🌿', require: ['basic_farming', 'water_purify'] },
+                    { id: 'recycling', name: '资源回收', cost: 45, desc: '材料消耗-25%', time: 24, icon: '♻️', require: [] },
+                    { id: 'surveillance', name: '监控系统', cost: 75, desc: '威胁预警+50%', time: 54, icon: '📹', require: ['advanced_defense'] },
+                    { id: 'education', name: '教育系统', desc: '幸存者技能成长+20%', cost: 50, time: 36, icon: '📚', require: [] },
+                    { id: 'automation', name: '自动化', cost: 90, desc: '工人需求-30%', time: 72, icon: '🤖', require: ['solar_power', 'recycling'] },
+                    { id: 'biotech', name: '生物科技', cost: 100, desc: '解锁基因改良', time: 96, icon: '🧬', require: ['advanced_medicine', 'hydroponics'] }
+                ];
+                
+                // 多媒体系统
+                this.audio = {
+                    bgMusic: null,
+                    sfx: {
+                        build: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-building-wood-hit-3122.mp3'),
+                        click: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3'),
+                        combat: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-sword-attack-2766.mp3'),
+                        success: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3'),
+                        error: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3')
+                    }
+                };
+                
+                // 初始化
+                this.init();
+            }
+            
+            // ====== 初始化方法 ======
+            init() {
+                this.initCanvas();
+                this.setupUI();
+                this.initAudio();
+                this.startGameLoop();
+                this.loadGame();
+                this.checkAchievements();
+                
+                // 隐藏加载界面
+                setTimeout(() => {
+                    document.getElementById('loading-screen').style.opacity = '0';
+                    setTimeout(() => {
+                        document.getElementById('loading-screen').style.display = 'none';
+                        document.getElementById('game-container').style.display = 'grid';
+                        this.showNotification('《废土方舟》已加载完成！', 'success');
+                    }, 500);
+                }, 1500);
+            }
+            
+            initCanvas() {
+                this.canvas = document.getElementById('base-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.resizeCanvas();
+                this.drawBase();
+                window.addEventListener('resize', () => this.resizeCanvas());
+            }
+            
+            resizeCanvas() {
+                const container = this.canvas.parentElement;
+                this.canvas.width = container.clientWidth - 16;
+                this.canvas.height = container.clientHeight - 120;
+                this.drawBase();
+            }
+            
+            initAudio() {
+                // 背景音乐
+             this.audio.bgMusic = new Audio('https://anrao1314.github.io/MP3/mixkit-cyberpunk-city-140.mp3');
+                
+                // 设置音效音量
+                Object.values(this.audio.sfx).forEach(sfx => {
+                    sfx.volume = 0.5;
+                });
+                
+                // 应用设置
+                this.applyAudioSettings();
+            }
+            
+            applyAudioSettings() {
+                if (this.audio.bgMusic) {
+                    this.audio.bgMusic.muted = !this.gameState.settings.music;
+                }
+                Object.values(this.audio.sfx).forEach(sfx => {
+                    sfx.muted = !this.gameState.settings.sfx;
+                });
+            }
+            
+            playSound(soundName) {
+                if (this.audio.sfx[soundName] && this.gameState.settings.sfx) {
+                    this.audio.sfx[soundName].currentTime = 0;
+                    this.audio.sfx[soundName].play().catch(e => console.log('音效播放失败:', e));
+                }
+            }
+            
+            // ====== UI 设置 ======
+            setupUI() {
+                this.updateUI();
+                this.bindButtonEvents();
+                this.setupCanvasEvents();
+                this.setupQuickActions();
+            }
+            
+            updateUI() {
+                // 状态栏
+                document.getElementById('day-count').textContent = `第${this.gameState.day}天`;
+                document.getElementById('time-display').textContent = 
+                    `${this.gameState.hour.toString().padStart(2, '0')}:00`;
+                
+                const weatherMap = {
+                    'clear': '☀️晴朗', 'rain': '🌧️雨天', 
+                    'fog': '🌫️雾天', 'storm': '⛈️暴风雨',
+                    'windy': '💨大风', 'snow': '❄️雪天'
+                };
+                document.getElementById('weather').textContent = 
+                    weatherMap[this.gameState.weather] || this.gameState.weather;
+                
+                document.getElementById('morale').textContent = `士气: ${this.gameState.morale}`;
+                document.getElementById('survivor-count').textContent = `${this.survivors.length}人`;
+                document.getElementById('settings-survivor-count').textContent = this.survivors.length;
+                document.getElementById('settings-game-day').textContent = this.gameState.day;
+                
+                // 资源列表
+                this.updateResourceList();
+                
+                // 科技树
+                this.updateTechTree();
+                
+                // 幸存者列表
+                this.updateSurvivorList();
+                
+                // 事件日志
+                this.updateEventLog();
+                
+                // 防御等级
+                const defenseBuildings = this.buildings.filter(b => 
+                    ['瞭望塔', '围墙', '哨塔'].includes(b.type)
+                ).length;
+                document.getElementById('defense-level').textContent = 
+                    `防御: ${Math.min(10, Math.floor(defenseBuildings / 2) + 1)}级`;
+                
+                // 总资源统计
+                const total = Object.values(this.resources).reduce((sum, r) => sum + r.amount, 0);
+                document.getElementById('total-resources').textContent = `总量: ${Math.floor(total)}`;
+                
+                // 科技进度
+                const researched = this.gameState.tech.size;
+                const totalTech = this.techTree.length;
+                document.getElementById('tech-progress').textContent = `${researched}/${totalTech}`;
+                
+                // 画布更新
+                this.drawBase();
+            }
+            
+            updateResourceList() {
+                const container = document.getElementById('resource-list');
+                container.innerHTML = '';
+                
+                for (const [name, data] of Object.entries(this.resources)) {
+                    const percent = (data.amount / data.max) * 100;
+                    const color = percent > 50 ? '#2ecc71' : percent > 20 ? '#f39c12' : '#e74c3c';
+                    const icon = this.getResourceIcon(name);
+                    
+                    const item = document.createElement('div');
+                    item.className = 'resource-item';
+                    item.innerHTML = `
+                        <div class="resource-icon">${icon}</div>
+                        <div class="resource-info" style="flex: 1;">
+                            <div>${name}</div>
+                            <div class="resource-bar">
+                                <div class="resource-fill" style="width: ${percent}%; background: ${color};"></div>
+                            </div>
+                            <div style="font-size: 10px; color: #aaa;">
+                                ${Math.floor(data.amount)}/${data.max}
+                                <span style="color: ${data.prod > data.cons ? '#2ecc71' : '#e74c3c'}; margin-left: 5px;">
+                                    ${data.prod > data.cons ? '+' : ''}${(data.prod - data.cons).toFixed(1)}/h
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                }
+            }
+            
+            updateTechTree() {
+                const container = document.getElementById('tech-tree');
+                container.innerHTML = '';
+                
+                this.techTree.forEach(tech => {
+                    const canResearch = this.canResearchTech(tech);
+                    const researched = this.gameState.tech.has(tech.id);
+                    
+                    const item = document.createElement('div');
+                    item.className = `tech-item ${researched ? 'researched' : ''} ${!canResearch && !researched ? 'insufficient' : ''}`;
+                    item.dataset.tech = tech.id;
+                    
+                    let requirements = '';
+                    if (tech.require.length > 0) {
+                        requirements = `<small style="color: #f39c12;">需要: ${tech.require.map(r => this.techTree.find(t => t.id === r)?.name || r).join(', ')}</small>`;
+                    }
+                    
+                    item.innerHTML = `
+                        <div>${tech.icon} ${tech.name}</div>
+                        <small style="color: #8899cc;">${tech.desc}</small>
+                        <div style="display: flex; justify-content: space-between; margin-top: 3px;">
+                            <span style="color: #f39c12; font-size: 10px;">${tech.cost}材料</span>
+                            <span style="color: #3498db; font-size: 10px;">${researched ? '✅已研究' : canResearch ? '🟡可研究' : '🔒未解锁'}</span>
+                        </div>
+                        ${requirements}
+                    `;
+                    
+                    container.appendChild(item);
+                });
+            }
+            
+            updateSurvivorList() {
+                const container = document.getElementById('survivor-list');
+                container.innerHTML = '';
+                
+                this.survivors.forEach(survivor => {
+                    const card = document.createElement('div');
+                    card.className = 'survivor-card';
+                    card.dataset.id = survivor.id;
+                    card.innerHTML = `
+                        <div class="survivor-header">
+                            <div class="survivor-avatar">${survivor.name.charAt(0)}</div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: bold; font-size: 12px;">${survivor.name}</div>
+                                <div style="font-size: 10px; color: #3498db;">${survivor.skill}</div>
+                                <div style="font-size: 9px; color: #aaa;">${survivor.status}</div>
+                            </div>
+                            <button class="btn btn-small btn-feed" data-id="${survivor.id}" style="padding: 2px 5px; font-size: 9px;">
+                                🍖喂食
+                            </button>
+                        </div>
+                        
+                        <div class="stat-row">
+                            <span style="width: 40px; font-size: 9px;">❤️健康</span>
+                            <div class="stat-bar">
+                                <div class="stat-fill health-bar" style="width: ${survivor.health}%;"></div>
+                            </div>
+                            <span style="width: 25px; font-size: 9px; text-align: right;">${Math.floor(survivor.health)}%</span>
+                        </div>
+                        
+                        <div class="stat-row">
+                            <span style="width: 40px; font-size: 9px;">🍖饥饿</span>
+                            <div class="stat-bar">
+                                <div class="stat-fill hunger-bar" style="width: ${survivor.hunger}%;"></div>
+                            </div>
+                            <span style="width: 25px; font-size: 9px; text-align: right;">${Math.floor(survivor.hunger)}%</span>
+                        </div>
+                        
+                        <div class="stat-row">
+                            <span style="width: 40px; font-size: 9px;">⚡精力</span>
+                            <div class="stat-bar">
+                                <div class="stat-fill energy-bar" style="width: ${survivor.energy}%;"></div>
+                            </div>
+                            <span style="width: 25px; font-size: 9px; text-align: right;">${Math.floor(survivor.energy)}%</span>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+            
+            updateEventLog() {
+                const container = document.getElementById('event-log');
+                container.innerHTML = '';
+                
+                const recentEvents = this.events.slice(-8);
+                
+                recentEvents.forEach(event => {
+                    const entry = document.createElement('div');
+                    entry.className = `log-entry ${event.type}`;
+                    entry.innerHTML = `
+                        <span style="color: #aaa; font-size: 10px;">[${event.time}]</span>
+                        <span style="font-size: 11px;">${event.message}</span>
+                    `;
+                    container.appendChild(entry);
+                });
+                
+                container.scrollTop = container.scrollHeight;
+            }
+            
+            updateAchievements() {
+                const container = document.getElementById('achievements-list');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                this.achievementList.forEach(achievement => {
+                    const unlocked = this.gameState.achievements.has(achievement.id);
+                    
+                    const item = document.createElement('div');
+                    item.className = `achievement ${unlocked ? '' : 'locked'}`;
+                    item.innerHTML = `
+                        <div class="achievement-icon">${achievement.icon}</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: bold; font-size: 12px;">${achievement.name}</div>
+                            <div style="font-size: 10px; color: ${unlocked ? '#8899cc' : '#666'};">${achievement.desc}</div>
+                            <div style="font-size: 9px; color: ${unlocked ? '#2ecc71' : '#e74c3c'}; margin-top: 2px;">
+                                ${unlocked ? '✅ 已解锁' : '🔒 未解锁'}
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+            }
+            
+            // ====== 游戏循环 ======
+            startGameLoop() {
+                setInterval(() => {
+                    if (!this.gameState.paused) {
+                        this.updateGame();
+                    }
+                }, 1000 / this.gameState.settings.speed);
+            }
+            
+            updateGame() {
+                // 时间流逝
+                this.gameState.hour++;
+                if (this.gameState.hour >= 24) {
+                    this.gameState.hour = 0;
+                    this.gameState.day++;
+                    this.addEvent(`第${this.gameState.day}天开始了`, 'info');
+                    
+                    // 每天增加威胁
+                    if (this.gameState.day % 3 === 0) {
+                        this.gameState.threat = Math.min(10, this.gameState.threat + 1);
+                        this.addEvent('威胁等级提升了！', 'alert');
+                    }
+                }
+                
+                // 随机天气
+                if (Math.random() < 0.1) {
+                    const weathers = ['clear', 'rain', 'fog', 'storm', 'windy', 'snow'];
+                    this.gameState.weather = weathers[Math.floor(Math.random() * weathers.length)];
+                }
+                
+                // 更新资源
+                for (const [name, data] of Object.entries(this.resources)) {
+                    const net = data.prod - data.cons;
+                    data.amount = Math.max(0, Math.min(data.amount + net, data.max));
+                    
+                    if (data.amount < data.max * 0.2 && Math.random() < 0.1) {
+                        this.addEvent(`⚠️ ${name}储量不足！`, 'danger');
+                    }
+                }
+                
+                // 更新幸存者
+                this.survivors.forEach(survivor => {
+                    survivor.hunger += 0.5;
+                    survivor.energy -= 0.3;
+                    
+                    if (survivor.hunger > 80) {
+                        survivor.health -= 1;
+                    }
+                    
+                    if (survivor.energy < 30) {
+                        survivor.health -= 0.5;
+                    }
+                    
+                    // 自动恢复
+                    if (survivor.hunger < 20 && survivor.energy > 70) {
+                        survivor.health = Math.min(100, survivor.health + 0.2);
+                    }
+                    
+                    // 限制范围
+                    survivor.hunger = Math.max(0, Math.min(100, survivor.hunger));
+                    survivor.energy = Math.max(0, Math.min(100, survivor.energy));
+                    survivor.health = Math.max(0, Math.min(100, survivor.health));
+                    
+                    // 死亡检查
+                    if (survivor.health <= 0) {
+                        this.handleDeath(survivor);
+                    }
+                });
+                
+                // 更新士气
+                const avgHealth = this.survivors.reduce((sum, s) => sum + s.health, 0) / this.survivors.length;
+                const avgHunger = this.survivors.reduce((sum, s) => sum + s.hunger, 0) / this.survivors.length;
+                
+                this.gameState.morale = Math.max(0, Math.min(100,
+                    avgHealth * 0.5 + (100 - avgHunger) * 0.3 + 
+                    (this.buildings.length * 2) + (this.gameState.tech.size * 5)
+                ));
+                
+                // 随机事件
+                if (Math.random() < 0.05) {
+                    this.randomEvent();
+                }
+                
+                // 随机敌人
+                if (Math.random() < 0.02 + this.gameState.threat * 0.01) {
+                    this.spawnEnemy();
+                }
+                
+                // 检查成就
+                this.checkAchievements();
+                
+                // 更新UI
+                this.updateUI();
+            }
+            
+            // ====== 核心游戏功能 ======
+            createRandomSurvivor(id) {
+                const name = this.survivorNames[Math.floor(Math.random() * this.survivorNames.length)];
+                const skill = this.survivorSkills[Math.floor(Math.random() * this.survivorSkills.length)];
+                
+                return {
+                    id: id,
+                    name: name,
+                    health: 70 + Math.floor(Math.random() * 30),
+                    hunger: 40 + Math.floor(Math.random() * 40),
+                    energy: 60 + Math.floor(Math.random() * 40),
+                    skill: skill,
+                    status: '空闲',
+                    experience: 0,
+                    level: 1
+                };
+            }
+            
+            getResourceIcon(name) {
+                const icons = {
+                    '食物': '🍎', '水': '💧', '材料': '🔨',
+                    '药品': '💊', '弹药': '🔫', '电力': '⚡'
+                };
+                return icons[name] || '📦';
+            }
+            
+            // ====== 事件系统 ======
+            addEvent(message, type = 'info') {
+                const time = new Date().toLocaleTimeString('zh-CN', { 
+                    hour: '2-digit', minute: '2-digit', hour12: false 
+                });
+                this.events.push({ time, message, type });
+                
+                // 显示通知
+                this.showNotification(message, type);
+                
+                this.updateEventLog();
+                this.playSound(type === 'success' ? 'success' : 'click');
+            }
+            
+            showNotification(message, type = 'info') {
+                const container = document.getElementById('notification-container');
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                
+                container.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+            
+            // ====== 按钮事件绑定 ======
+            bindButtonEvents() {
+                // 控制按钮
+                document.getElementById('btn-pause').addEventListener('click', () => this.togglePause());
+                document.getElementById('btn-save').addEventListener('click', () => this.saveGame());
+                document.getElementById('btn-explore').addEventListener('click', () => this.toggleExplorePanel());
+                document.getElementById('btn-combat').addEventListener('click', () => this.checkCombat());
+                document.getElementById('btn-recruit').addEventListener('click', () => this.recruitSurvivor());
+                document.getElementById('btn-settings').addEventListener('click', () => this.showSettings());
+                document.getElementById('btn-achievements').addEventListener('click', () => this.showAchievements());
+                
+                // 快捷按钮
+                document.getElementById('quick-pause').addEventListener('click', () => this.togglePause());
+                document.getElementById('quick-save').addEventListener('click', () => this.saveGame());
+                document.getElementById('quick-explore').addEventListener('click', () => this.toggleExplorePanel());
+                document.getElementById('quick-menu').addEventListener('click', () => this.showQuickMenu());
+                
+                // 建造按钮
+                document.querySelectorAll('.btn-build').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const type = e.currentTarget.dataset.type;
+                        const cost = parseInt(e.currentTarget.dataset.cost);
+                        const requiredTech = e.currentTarget.dataset.tech;
+                        
+                        if (requiredTech && !this.gameState.tech.has(requiredTech)) {
+                            this.showNotification(`需要研究"${this.techTree.find(t => t.id === requiredTech)?.name || requiredTech}"`, 'warning');
+                            return;
+                        }
+                        
+                        if (this.resources['材料'].amount >= cost) {
+                            this.buildStructure(type, cost);
+                            this.playSound('build');
+                        } else {
+                            this.showNotification(`材料不足！需要${cost}材料`, 'danger');
+                            this.playSound('error');
+                        }
+                    });
+                });
+                
+                // 探索按钮
+                document.querySelectorAll('.btn-explore').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const location = e.currentTarget.dataset.location;
+                        const risk = parseFloat(e.currentTarget.dataset.risk);
+                        this.exploreLocation(location, risk);
+                    });
+                });
+                
+                // 科技研究
+                document.getElementById('tech-tree').addEventListener('click', (e) => {
+                    const techItem = e.target.closest('.tech-item');
+                    if (techItem) {
+                        const techId = techItem.dataset.tech;
+                        if (!this.gameState.tech.has(techId) && this.canResearchTech(this.techTree.find(t => t.id === techId))) {
+                            this.showResearchModal(techId);
+                        }
+                    }
+                });
+                
+                // 幸存者喂食（事件委托）
+                document.getElementById('survivor-panel').addEventListener('click', (e) => {
+                    if (e.target.closest('.btn-feed')) {
+                        const survivorId = parseInt(e.target.closest('.btn-feed').dataset.id);
+                        this.feedSurvivor(survivorId);
+                    }
+                });
+                
+                // 设置面板
+                document.getElementById('music-toggle').addEventListener('change', (e) => {
+                    this.gameState.settings.music = e.target.checked;
+                    this.applyAudioSettings();
+                    if (e.target.checked) {
+                        this.audio.bgMusic.play().catch(e => console.log('音乐播放失败'));
+                    }
+                });
+                
+                document.getElementById('sfx-toggle').addEventListener('change', (e) => {
+                    this.gameState.settings.sfx = e.target.checked;
+                    this.applyAudioSettings();
+                });
+                
+                document.getElementById('game-speed').addEventListener('change', (e) => {
+                    this.gameState.settings.speed = parseFloat(e.target.value);
+                });
+                
+                document.getElementById('night-mode').addEventListener('change', (e) => {
+                    this.gameState.settings.nightMode = e.target.checked;
+                    document.body.classList.toggle('night-mode', e.target.checked);
+                });
+                
+                document.getElementById('vibration-toggle').addEventListener('change', (e) => {
+                    this.gameState.settings.vibration = e.target.checked;
+                });
+                
+                document.getElementById('btn-exit-game').addEventListener('click', () => {
+                    if (confirm('确定要退出游戏吗？未保存的进度可能会丢失。')) {
+                        this.saveGame();
+                        window.close();
+                    }
+                });
+                
+                document.getElementById('btn-close-settings').addEventListener('click', () => {
+                    document.getElementById('settings-modal').style.display = 'none';
+                    this.saveSettings();
+                });
+                
+                // 成就面板
+                document.getElementById('btn-close-achievements').addEventListener('click', () => {
+                    document.getElementById('achievements-modal').style.display = 'none';
+                });
+                
+                // 探索面板
+                document.getElementById('btn-close-explore').addEventListener('click', () => {
+                    document.getElementById('explore-modal').style.display = 'none';
+                });
+                
+                // 战斗面板
+                document.getElementById('btn-attack').addEventListener('click', () => this.combatAction('attack'));
+                document.getElementById('btn-defend').addEventListener('click', () => this.combatAction('defend'));
+                document.getElementById('btn-flee').addEventListener('click', () => this.combatAction('flee'));
+                
+                // 窗口大小变化
+                window.addEventListener('resize', () => {
+                    this.resizeCanvas();
+                });
+            }
+            
+            setupCanvasEvents() {
+                const canvas = document.getElementById('base-canvas');
+                
+                canvas.addEventListener('click', (e) => {
+                    const rect = canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    // 检查点击建筑
+                    this.buildings.forEach(building => {
+                        const scale = canvas.width / 600;
+                        const bX = building.x * scale;
+                        const bY = building.y * scale;
+                        const size = 50 * scale;
+                        
+                        if (x >= bX && x <= bX + size && y >= bY && y <= bY + size) {
+                            this.showBuildingInfo(building);
+                        }
+                    });
+                });
+                
+                canvas.addEventListener('mousemove', (e) => {
+                    const rect = canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    let hovered = false;
+                    this.buildings.forEach(building => {
+                        const scale = canvas.width / 600;
+                        const bX = building.x * scale;
+                        const bY = building.y * scale;
+                        const size = 50 * scale;
+                        
+                        if (x >= bX && x <= bX + size && y >= bY && y <= bY + size) {
+                            canvas.style.cursor = 'pointer';
+                            hovered = true;
+                        }
+                    });
+                    
+                    if (!hovered) canvas.style.cursor = 'default';
+                });
+            }
+            
+            setupQuickActions() {
+                // 快捷菜单按钮
+                document.getElementById('quick-menu').addEventListener('click', () => {
+                    this.showQuickMenu();
+                });
+            }
+            
+            // ====== 游戏功能方法 ======
+            togglePause() {
+                this.gameState.paused = !this.gameState.paused;
+                const btn = document.getElementById('btn-pause');
+                if (this.gameState.paused) {
+                    btn.innerHTML = '<span>▶️</span><span>继续</span>';
+                    this.addEvent('游戏已暂停', 'info');
+                    this.audio.bgMusic?.pause();
+                } else {
+                    btn.innerHTML = '<span>⏸️</span><span>暂停</span>';
+                    this.addEvent('游戏继续', 'info');
+                    if (this.gameState.settings.music) {
+                        this.audio.bgMusic?.play().catch(e => console.log('音乐播放失败'));
+                    }
+                }
+            }
+            
+            saveGame() {
+                const saveData = {
+                    gameState: this.gameState,
+                    resources: this.resources,
+                    survivors: this.survivors,
+                    buildings: this.buildings,
+                    tech: Array.from(this.gameState.tech),
+                    achievements: Array.from(this.gameState.achievements),
+                    explored: Array.from(this.gameState.explored)
+                };
+                
+                try {
+                    localStorage.setItem('废土方舟_save', JSON.stringify(saveData));
+                    this.showNotification('游戏进度已保存！', 'success');
+                    
+                    // 保存设置
+                    this.saveSettings();
+                    
+                    // 按钮反馈
+                    const btn = document.getElementById('btn-save');
+                    const original = btn.innerHTML;
+                    btn.innerHTML = '<span>✅</span><span>已保存</span>';
+                    setTimeout(() => {
+                        btn.innerHTML = original;
+                    }, 1000);
+                } catch (e) {
+                    this.showNotification('保存失败：存储空间不足', 'danger');
+                }
+            }
+            
+            saveSettings() {
+                localStorage.setItem('废土方舟_settings', JSON.stringify(this.gameState.settings));
+            }
+            
+            loadGame() {
+                try {
+                    // 加载游戏存档
+                    const saveData = localStorage.getItem('废土方舟_save');
+                    if (saveData) {
+                        const data = JSON.parse(saveData);
+                        this.gameState = { ...this.gameState, ...data.gameState };
+                        this.resources = data.resources || this.resources;
+                        this.survivors = data.survivors || this.survivors;
+                        this.buildings = data.buildings || this.buildings;
+                        this.gameState.tech = new Set(data.tech || []);
+                        this.gameState.achievements = new Set(data.achievements || []);
+                        this.gameState.explored = new Set(data.explored || []);
+                        
+                        // 恢复Set对象
+                        this.gameState.tech = new Set(this.gameState.tech);
+                        this.gameState.achievements = new Set(this.gameState.achievements);
+                        this.gameState.explored = new Set(this.gameState.explored);
+                        
+                        this.addEvent('读取存档成功！', 'success');
+                    }
+                    
+                    // 加载设置
+                    const settingsData = localStorage.getItem('废土方舟_settings');
+                    if (settingsData) {
+                        this.gameState.settings = { ...this.gameState.settings, ...JSON.parse(settingsData) };
+                        this.applySettingsToUI();
+                    }
+                } catch (e) {
+                    console.error('读取存档失败:', e);
+                }
+            }
+            
+            applySettingsToUI() {
+                document.getElementById('music-toggle').checked = this.gameState.settings.music;
+                document.getElementById('sfx-toggle').checked = this.gameState.settings.sfx;
+                document.getElementById('game-speed').value = this.gameState.settings.speed;
+                document.getElementById('night-mode').checked = this.gameState.settings.nightMode;
+                document.getElementById('vibration-toggle').checked = this.gameState.settings.vibration;
+                
+                document.body.classList.toggle('night-mode', this.gameState.settings.nightMode);
+                this.applyAudioSettings();
+                
+                if (this.gameState.settings.music) {
+                    this.audio.bgMusic?.play().catch(e => console.log('音乐播放失败'));
+                }
+            }
+            
+            // ====== 建筑系统 ======
+            buildStructure(type, cost) {
+                if (this.resources['材料'].amount < cost) {
+                    this.showNotification(`材料不足！需要${cost}材料`, 'danger');
+                    return;
+                }
+                
+                // 检查人口限制
+                if (type === '宿舍') {
+                    const maxPopulation = 4 + this.buildings.filter(b => b.type === '宿舍').length * 4;
+                    if (this.survivors.length >= maxPopulation) {
+                        this.showNotification('人口已达上限，需要建造更多宿舍', 'warning');
+                        return;
+                    }
+                }
+                
+                // 扣除资源
+                this.resources['材料'].amount -= cost;
+                
+                // 创建新建筑
+                const newId = this.buildings.length + 1;
+                const x = 50 + (this.buildings.length % 5) * 100;
+                const y = 50 + Math.floor(this.buildings.length / 5) * 80;
+                
+                const building = {
+                    id: newId,
+                    type: type,
+                    level: 1,
+                    x: Math.min(x, 550),
+                    y: Math.min(y, 350),
+                    workers: [],
+                    efficiency: 1.0
+                };
+                
+                this.buildings.push(building);
+                
+                // 建筑效果
+                this.applyBuildingEffect(type);
+                
+                this.addEvent(`建造了新的${type}`, 'success');
+                this.checkAchievement('builder');
+                
+                this.updateUI();
+            }
+            
+            applyBuildingEffect(type) {
+                switch(type) {
+                    case '厨房':
+                        this.resources['食物'].prod += 3;
+                        break;
+                    case '医疗站':
+                        this.survivors.forEach(s => s.health = Math.min(100, s.health + 10));
+                        break;
+                    case '仓库':
+                        Object.values(this.resources).forEach(r => r.max += 200);
+                        break;
+                    case '水处理厂':
+                        this.resources['水'].prod += 5;
+                        break;
+                    case '发电站':
+                        this.resources['电力'].prod += 10;
+                        break;
+                    case '农场':
+                        this.resources['食物'].prod += 4;
+                        break;
+                    case '工坊':
+                        this.resources['材料'].prod += 2;
+                        break;
+                    case '娱乐室':
+                        this.gameState.morale = Math.min(100, this.gameState.morale + 5);
+                        break;
+                    case '军械库':
+                        this.resources['弹药'].prod += 2;
+                        break;
+                    case '温室':
+                        this.resources['食物'].prod += 2;
+                        this.resources['水'].cons += 1;
+                        break;
+                }
+            }
+            
+            showBuildingInfo(building) {
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.8);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 1000;
+                `;
+                
+                const workers = building.workers.map(id => 
+                    this.survivors.find(s => s.id === id)?.name || '未知'
+                ).join(', ') || '无';
+                
+                modal.innerHTML = `
+                    <div class="modal-content" style="max-width: 300px;">
+                        <div class="modal-title">${this.getBuildingEmoji(building.type)} ${building.type}</div>
+                        <div style="padding: 10px;">
+                            <div style="margin-bottom: 8px; color: #aabbee;">等级: ${building.level}</div>
+                            <div style="margin-bottom: 8px; color: #aabbee;">效率: ${Math.round(building.efficiency * 100)}%</div>
+                            <div style="margin-bottom: 15px; color: #aabbee;">工人: ${workers}</div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-success btn-upgrade" data-id="${building.id}" 
+                                        style="flex: 1;">
+                                    ⬆️ 升级
+                                </button>
+                                <button class="btn btn-close-building" 
+                                        style="flex: 1; background: #e74c3c;">
+                                    关闭
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                modal.querySelector('.btn-upgrade').addEventListener('click', () => {
+                    this.upgradeBuilding(building.id);
+                    modal.remove();
+                });
+                
+                modal.querySelector('.btn-close-building').addEventListener('click', () => {
+                    modal.remove();
+                });
+                
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.remove();
+                    }
+                });
+            }
+            
+            getBuildingEmoji(type) {
+                const emojis = {
+                    '指挥中心': '🏢', '宿舍': '🛏️', '厨房': '🍳', '医疗站': '🏥',
+                    '瞭望塔': '🔭', '仓库': '📦', '研究所': '🔬', '水处理厂': '💧',
+                    '发电站': '⚡', '训练场': '⚔️', '农场': '🌾', '围墙': '🧱',
+                    '哨塔': '🏹', '工坊': '🔨', '娱乐室': '🎮', '通讯站': '📡',
+                    '军械库': '🔫', '温室': '🌿'
+                };
+                return emojis[type] || '🏠';
+            }
+            
+            upgradeBuilding(buildingId) {
+                const building = this.buildings.find(b => b.id === buildingId);
+                if (!building) return;
+                
+                const upgradeCost = building.level * 75;
+                
+                if (this.resources['材料'].amount < upgradeCost) {
+                    this.showNotification(`升级需要${upgradeCost}材料`, 'danger');
+                    return;
+                }
+                
+                this.resources['材料'].amount -= upgradeCost;
+                building.level++;
+                building.efficiency = Math.min(1.5, building.efficiency + 0.1);
+                
+                // 升级效果
+                switch(building.type) {
+                    case '厨房':
+                        this.resources['食物'].prod += 2;
+                        break;
+                    case '医疗站':
+                        this.survivors.forEach(s => s.health = Math.min(100, s.health + 5));
+                        break;
+                    case '瞭望塔':
+                        this.gameState.threat = Math.max(1, this.gameState.threat - 0.5);
+                        break;
+                }
+                
+                this.addEvent(`${building.type}升级到${building.level}级`, 'success');
+                this.updateUI();
+            }
+            
+            // ====== 幸存者系统 ======
+            feedSurvivor(survivorId) {
+                if (this.resources['食物'].amount < 5) {
+                    this.showNotification('食物不足！', 'danger');
+                    return;
+                }
+                
+                const survivor = this.survivors.find(s => s.id === survivorId);
+                if (survivor) {
+                    this.resources['食物'].amount -= 5;
+                    survivor.hunger = Math.max(0, survivor.hunger - 30);
+                    survivor.health = Math.min(100, survivor.health + 10);
+                    this.addEvent(`喂食了${survivor.name}`, 'success');
+                    this.updateUI();
+                    this.playSound('click');
+                }
+            }
+            
+            recruitSurvivor() {
+                const maxPopulation = 4 + this.buildings.filter(b => b.type === '宿舍').length * 4;
+                if (this.survivors.length >= maxPopulation) {
+                    this.showNotification('人口已达上限，需要建造更多宿舍', 'warning');
+                    return;
+                }
+                
+                if (this.resources['食物'].amount < 20 || this.resources['水'].amount < 15) {
+                    this.showNotification('资源不足，无法招募幸存者', 'danger');
+                    return;
+                }
+                
+                this.resources['食物'].amount -= 20;
+                this.resources['水'].amount -= 15;
+                
+                const newId = this.survivors.length + 1;
+                const newSurvivor = this.createRandomSurvivor(newId);
+                this.survivors.push(newSurvivor);
+                
+                this.addEvent(`${newSurvivor.name}加入了基地（技能：${newSurvivor.skill}）`, 'success');
+                this.checkAchievement('ark_heart');
+                this.updateUI();
+                this.playSound('success');
+            }
+            
+            handleDeath(survivor) {
+                const index = this.survivors.findIndex(s => s.id === survivor.id);
+                if (index !== -1) {
+                    this.addEvent(`😢 ${survivor.name}不幸去世了...`, 'danger');
+                    this.survivors.splice(index, 1);
+                    this.gameState.morale -= 20;
+                    this.updateUI();
+                }
+            }
+            
+            // ====== 探索系统 ======
+            toggleExplorePanel() {
+                const panel = document.getElementById('explore-panel');
+                panel.style.display = panel.style.display === 'none' ? 'grid' : 'none';
+            }
+            
+            exploreLocation(location, risk) {
+                const availableSurvivors = this.survivors.filter(s => s.health > 50 && s.energy > 40);
+                if (availableSurvivors.length < 2) {
+                    this.showNotification('没有足够的健康幸存者进行探索', 'danger');
+                    return;
+                }
+                
+                // 消耗精力
+                availableSurvivors.slice(0, 2).forEach(s => {
+                    s.energy -= 30;
+                    s.hunger += 20;
+                });
+                
+                // 探索结果
+                let result = '';
+                let success = Math.random() > risk;
+                
+                // 添加到探索记录
+                this.gameState.explored.add(location);
+                this.checkAchievement('explorer');
+                
+                if (success) {
+                    // 成功探索
+                    const rewards = this.getExploreRewards(location);
+                    let totalFound = 0;
+                    
+                    result = `探索${location}成功！发现：`;
+                    for (const [resource, amount] of Object.entries(rewards)) {
+                        this.resources[resource].amount = Math.min(
+                            this.resources[resource].max,
+                            this.resources[resource].amount + amount
+                        );
+                        result += ` ${amount}${resource}`;
+                        totalFound += amount;
+                    }
+                    
+                    if (Math.random() < 0.3) {
+                        // 30%概率找到特殊物品
+                        const specialItems = ['设计图', '日记', '照片', '钥匙', '地图'];
+                        const item = specialItems[Math.floor(Math.random() * specialItems.length)];
+                        result += ` 以及一张${item}`;
+                        this.addEvent(`找到了特殊的${item}`, 'success');
+                    }
+                    
+                    this.addEvent(result, 'success');
+                    
+                    // 显示探索结果
+                    document.getElementById('explore-title').textContent = `🧭 探索${location}成功`;
+                    document.getElementById('explore-result').innerHTML = `
+                        <div style="text-align: center; padding: 15px;">
+                            <div style="font-size: 48px; margin-bottom: 10px;">🎉</div>
+                            <div style="font-size: 16px; margin-bottom: 10px; color: #2ecc71;">探索成功！</div>
+                            <div style="margin-bottom: 15px; font-size: 14px;">${result}</div>
+                            <div style="color: #2ecc71; font-size: 12px;">
+                                队伍安全返回基地
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // 探索失败
+                    const damage = Math.floor(Math.random() * 30) + 10;
+                    const survivor = availableSurvivors[0];
+                    survivor.health -= damage;
+                    
+                    result = `探索${location}失败！${survivor.name}受伤（-${damage}健康）`;
+                    this.addEvent(result, 'danger');
+                    
+                    document.getElementById('explore-title').textContent = `⚠️ 探索${location}失败`;
+                    document.getElementById('explore-result').innerHTML = `
+                        <div style="text-align: center; padding: 15px;">
+                            <div style="font-size: 48px; margin-bottom: 10px;">😨</div>
+                            <div style="font-size: 16px; margin-bottom: 10px; color: #e74c3c;">探索失败！</div>
+                            <div style="margin-bottom: 15px; font-size: 14px;">${result}</div>
+                            <div style="color: #e74c3c; font-size: 12px;">
+                                队伍遭遇危险，匆忙撤退
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // 隐藏探索面板，显示结果
+                document.getElementById('explore-panel').style.display = 'none';
+                document.getElementById('explore-modal').style.display = 'flex';
+                
+                this.updateUI();
+                this.playSound(success ? 'success' : 'error');
+            }
+            
+            getExploreRewards(location) {
+                const rewards = {
+                    '废墟': { '材料': 30, '药品': 10 },
+                    '医院': { '药品': 40, '材料': 15 },
+                    '超市': { '食物': 50, '水': 30 },
+                    '军事基地': { '弹药': 80, '材料': 40 },
+                    '农场': { '食物': 60, '水': 20 },
+                    '研究所废墟': { '材料': 25, '药品': 20 }
+                };
+                
+                const base = rewards[location] || { '材料': 20 };
+                const result = {};
+                
+                for (const [resource, amount] of Object.entries(base)) {
+                    const variation = Math.floor(Math.random() * 20) - 10; // -10到+10的随机变化
+                    result[resource] = Math.max(5, amount + variation);
+                }
+                
+                return result;
+            }
+            
+            // ====== 战斗系统 ======
+            spawnEnemy() {
+                if (this.combatActive || this.enemies.length > 0) return;
+                
+                const enemyTypes = [
+                    { type: '普通丧尸', health: 50, damage: 10, speed: 1, icon: '🧟' },
+                    { type: '快速感染者', health: 30, damage: 15, speed: 2, icon: '🏃‍♂️' },
+                    { type: '巨型丧尸', health: 100, damage: 20, speed: 0.5, icon: '👹' },
+                    { type: '变异犬', health: 40, damage: 12, speed: 3, icon: '🐕' },
+                    { type: '辐射丧尸', health: 60, damage: 18, speed: 1, icon: '☢️' }
+                ];
+                
+                const enemyType = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+                const count = Math.min(3, Math.floor(this.gameState.threat / 2) + 1);
+                
+                for (let i = 0; i < count; i++) {
+                    const enemy = {
+                        ...enemyType,
+                        id: this.enemies.length + 1,
+                        maxHealth: enemyType.health,
+                        health: enemyType.health,
+                        x: 550 + i * 40,
+                        y: Math.random() * 300 + 50
+                    };
+                    this.enemies.push(enemy);
+                }
+                
+                this.addEvent(`⚠️ ${count}个${enemyType.type}正在接近基地！`, 'danger');
+                
+                // 自动开始战斗
+                setTimeout(() => {
+                    if (!this.combatActive && this.enemies.length > 0) {
+                        this.startCombat();
+                    }
+                }, 3000);
+                
+                this.updateUI();
+                this.playSound('combat');
+            }
+            
+            startCombat() {
+                if (this.enemies.length === 0) {
+                    this.showNotification('当前没有敌人', 'info');
+                    return;
+                }
+                
+                this.combatActive = true;
+                this.currentEnemy = this.enemies[0];
+                
+                document.getElementById('enemy-info').innerHTML = `
+                    <div class="enemy-card">
+                        <div style="font-size: 48px;">${this.currentEnemy.icon}</div>
+                        <div style="font-size: 18px; margin: 10px 0; color: #e74c3c;">${this.currentEnemy.type}</div>
+                        <div>❤️ 生命值: ${this.currentEnemy.health}/${this.currentEnemy.maxHealth}</div>
+                        <div>⚔️ 伤害: ${this.currentEnemy.damage}</div>
+                        <div>🎯 剩余敌人: ${this.enemies.length}</div>
+                    </div>
+                `;
+                
+                document.getElementById('combat-log').innerHTML = 
+                    `<div style="color: #e74c3c;">${this.currentEnemy.type}出现在基地外围！</div>`;
+                
+                document.getElementById('combat-modal').style.display = 'flex';
+            }
+            
+            combatAction(action) {
+                if (!this.currentEnemy) return;
+                
+                const log = document.getElementById('combat-log');
+                
+                switch(action) {
+                    case 'attack':
+                        // 玩家攻击
+                        const playerDamage = 20 + Math.floor(Math.random() * 15);
+                        this.currentEnemy.health -= playerDamage;
+                        
+                        log.innerHTML += `<div>你的队伍对${this.currentEnemy.type}造成${playerDamage}点伤害！</div>`;
+                        
+                        // 敌人反击
+                        if (this.currentEnemy.health > 0) {
+                            const enemyDamage = this.currentEnemy.damage - Math.floor(Math.random() * 5);
+                            const randomSurvivor = this.survivors[Math.floor(Math.random() * this.survivors.length)];
+                            randomSurvivor.health -= enemyDamage;
+                            
+                            log.innerHTML += `<div>${this.currentEnemy.type}反击，${randomSurvivor.name}受到${enemyDamage}点伤害！</div>`;
+                        }
+                        break;
+                        
+                    case 'defend':
+                        log.innerHTML += `<div>你的队伍采取防御姿态，减少了下一次伤害！</div>`;
+                        break;
+                        
+                    case 'flee':
+                        log.innerHTML += `<div>你的队伍撤退了！损失了部分资源。</div>`;
+                        this.resources['材料'].amount = Math.max(0, this.resources['材料'].amount - 20);
+                        this.resources['食物'].amount = Math.max(0, this.resources['食物'].amount - 15);
+                        this.endCombat(false);
+                        return;
+                }
+                
+                // 检查敌人是否死亡
+                if (this.currentEnemy.health <= 0) {
+                    log.innerHTML += `<div style="color: #2ecc71;">✅ 击败了${this.currentEnemy.type}！</div>`;
+                    
+                    // 掉落奖励
+                    const rewards = ['材料', '药品', '弹药'];
+                    const reward = rewards[Math.floor(Math.random() * rewards.length)];
+                    const amount = Math.floor(Math.random() * 30) + 15;
+                    
+                    this.resources[reward].amount += amount;
+                    this.addEvent(`击败${this.currentEnemy.type}，获得${amount}${reward}`, 'success');
+                    
+                    // 移除敌人
+                    this.enemies.shift();
+                    
+                    // 检查成就
+                    if (this.enemies.length === 0) {
+                        this.checkAchievement('zombie_slayer');
+                    }
+                    
+                    this.endCombat(this.enemies.length === 0);
+                } else {
+                    log.scrollTop = log.scrollHeight;
+                }
+                
+                this.updateUI();
+                this.playSound('combat');
+            }
+            
+            endCombat(victory) {
+                this.combatActive = false;
+                this.currentEnemy = null;
+                
+                setTimeout(() => {
+                    document.getElementById('combat-modal').style.display = 'none';
+                }, 2000);
+                
+                if (victory) {
+                    this.addEvent('成功击退所有敌人！士气大振！', 'success');
+                    this.gameState.morale = Math.min(100, this.gameState.morale + 15);
+                    this.gameState.threat = Math.max(1, this.gameState.threat - 1);
+                }
+                
+                this.updateUI();
+            }
+            
+            checkCombat() {
+                if (this.enemies.length > 0) {
+                    this.startCombat();
+                } else {
+                    this.showNotification('当前没有敌人', 'info');
+                }
+            }
+            
+            // ====== 科技研究系统 ======
+            canResearchTech(tech) {
+                if (!tech) return false;
+                if (this.gameState.tech.has(tech.id)) return false;
+                if (this.resources['材料'].amount < tech.cost) return false;
+                
+                // 检查前置科技
+                for (const req of tech.require) {
+                    if (!this.gameState.tech.has(req)) return false;
+                }
+                
+                return true;
+            }
+            
+            showResearchModal(techId) {
+                const tech = this.techTree.find(t => t.id === techId);
+                if (!tech) return;
+                
+                if (this.gameState.tech.has(techId)) {
+                    this.showNotification('该科技已研究完成', 'info');
+                    return;
+                }
+                
+                const canResearch = this.canResearchTech(tech);
+                
+                // 创建研究面板
+                const modal = document.createElement('div');
+                modal.className = `research-modal ${canResearch ? '' : 'insufficient-materials'}`;
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: #2c3e50;
+                    border: 2px solid ${canResearch ? '#3498db' : '#e74c3c'};
+                    border-radius: 12px;
+                    padding: 15px;
+                    z-index: 1001;
+                    width: 90%;
+                    max-width: 350px;
+                    backdrop-filter: blur(10px);
+                    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+                `;
+                
+                let requirements = '';
+                if (tech.require.length > 0) {
+                    const reqNames = tech.require.map(r => this.techTree.find(t => t.id === r)?.name || r);
+                    requirements = `
+                        <div style="background: rgba(0,0,0,0.2); border-radius: 6px; padding: 8px; margin: 8px 0; font-size: 12px;">
+                            <div style="color: #f39c12; margin-bottom: 4px;">前置科技：</div>
+                            <div>${reqNames.join('、')}</div>
+                        </div>
+                    `;
+                }
+                
+                modal.innerHTML = `
+                    <div style="text-align: center; margin-bottom: 12px;">
+                        <div style="font-size: 40px; margin-bottom: 8px;">${tech.icon}</div>
+                        <div style="font-size: 18px; color: ${canResearch ? '#3498db' : '#e74c3c'}; margin-bottom: 5px;">
+                            ${tech.name}
+                        </div>
+                        <div style="color: #aabbee; font-size: 13px; margin-bottom: 10px;">${tech.desc}</div>
+                    </div>
+                    
+                    ${requirements}
+                    
+                    <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 12px;">
+                            <span style="color: #8899cc;">所需材料</span>
+                            <span style="color: ${canResearch ? '#2ecc71' : '#e74c3c'}; font-weight: bold;">
+                                ${tech.cost} 材料
+                                ${canResearch ? '✅' : '❌'}
+                            </span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                            <span style="color: #8899cc;">当前库存</span>
+                            <span style="color: #f39c12; font-weight: bold;">
+                                ${Math.floor(this.resources['材料'].amount)} 材料
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; margin-bottom: 15px;">
+                        <div style="color: #8899cc; margin-bottom: 5px; font-size: 12px;">研究时间</div>
+                        <div style="color: #3498db; font-size: 16px; font-weight: bold;">
+                            ${tech.time} 小时
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 8px;">
+                        ${canResearch ? `
+                            <button id="confirm-research" 
+                                    style="flex: 2; background: linear-gradient(135deg, #2ecc71, #27ae60); 
+                                           color: white; border: none; padding: 10px; border-radius: 8px; 
+                                           cursor: pointer; font-weight: bold; font-size: 14px;">
+                                🔬 开始研究
+                            </button>
+                        ` : `
+                            <button id="close-research" 
+                                    style="flex: 2; background: linear-gradient(135deg, #e74c3c, #c0392b); 
+                                           color: white; border: none; padding: 10px; border-radius: 8px; 
+                                           cursor: pointer; font-weight: bold; font-size: 14px;">
+                                ❌ ${tech.require.length > 0 ? '未满足前置条件' : '材料不足'}
+                            </button>
+                        `}
+                        
+                        <button id="cancel-research" 
+                                style="flex: 1; background: rgba(255,255,255,0.1); 
+                                       color: #ddd; border: 1px solid #666; padding: 10px; border-radius: 8px; 
+                                       cursor: pointer; font-weight: bold; font-size: 12px;">
+                            关闭
+                        </button>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                // 绑定按钮事件
+                if (canResearch) {
+                    modal.querySelector('#confirm-research').addEventListener('click', () => {
+                        this.startResearch(tech);
+                        modal.remove();
+                    });
+                } else {
+                    modal.querySelector('#close-research').addEventListener('click', () => {
+                        modal.remove();
+                        if (tech.require.length > 0) {
+                            this.showNotification('未满足前置科技条件', 'warning');
+                        } else {
+                            this.showNotification('材料不足，无法研究', 'danger');
+                        }
+                    });
+                }
+                
+                modal.querySelector('#cancel-research').addEventListener('click', () => {
+                    modal.remove();
+                });
+                
+                // 点击外部关闭
+                setTimeout(() => {
+                    const closeHandler = (e) => {
+                        if (!modal.contains(e.target) && !e.target.closest('.tech-item')) {
+                            modal.remove();
+                            document.removeEventListener('click', closeHandler);
+                        }
+                    };
+                    document.addEventListener('click', closeHandler);
+                }, 100);
+            }
+            
+            startResearch(tech) {
+                // 扣除材料
+                this.resources['材料'].amount -= tech.cost;
+                
+                // 添加到研究中
+                this.gameState.tech.add(tech.id);
+                
+                // 显示通知
+                this.showNotification(`开始研究 ${tech.name}，需要${tech.time}小时`, 'success');
+                
+                // 更新UI
+                this.updateUI();
+                this.checkAchievement('tech_master');
+                
+                // 模拟研究完成（实际应该用游戏时间）
+                setTimeout(() => {
+                    this.showNotification(`${tech.name} 研究完成！🎉`, 'success');
+                    this.applyTechEffect(tech.id);
+                    this.updateUI();
+                }, tech.time * 1000 * (1 / this.gameState.settings.speed)); // 根据游戏速度调整
+                
+                this.playSound('success');
+            }
+            
+            applyTechEffect(techId) {
+                switch(techId) {
+                    case 'basic_farming':
+                        this.resources['食物'].prod *= 1.2;
+                        break;
+                    case 'water_purify':
+                        this.resources['水'].cons *= 0.7;
+                        break;
+                    case 'advanced_defense':
+                        this.gameState.threat = Math.max(1, this.gameState.threat - 2);
+                        break;
+                    case 'solar_power':
+                        this.resources['电力'].prod += 15;
+                        break;
+                    case 'advanced_medicine':
+                        this.survivors.forEach(s => s.health = Math.min(100, s.health + 20));
+                        break;
+                    case 'reinforced_structure':
+                        this.buildings.forEach(b => b.efficiency *= 1.3);
+                        break;
+                    case 'hydroponics':
+                        this.resources['食物'].prod += 5;
+                        this.resources['水'].cons += 2;
+                        break;
+                    case 'recycling':
+                        Object.values(this.resources).forEach(r => {
+                            if (r.cons > 0) r.cons *= 0.75;
+                        });
+                        break;
+                    case 'surveillance':
+                        this.addEvent('监控系统已启用，威胁预警能力提升', 'success');
+                        break;
+                    case 'education':
+                        this.survivors.forEach(s => {
+                            if (s.experience < 100) s.experience += 20;
+                        });
+                        break;
+                    case 'automation':
+                        this.buildings.forEach(b => {
+                            if (b.workers.length > 0) b.workers.pop();
+                        });
+                        break;
+                    case 'biotech':
+                        this.survivors.forEach(s => {
+                            s.health = Math.min(100, s.health + 30);
+                            s.energy = Math.min(100, s.energy + 30);
+                        });
+                        break;
+                }
+            }
+            
+            // ====== 成就系统 ======
+            checkAchievements() {
+                this.achievementList.forEach(achievement => {
+                    if (!this.gameState.achievements.has(achievement.id) && achievement.condition()) {
+                        this.unlockAchievement(achievement.id);
+                    }
+                });
+            }
+            
+            checkAchievement(achievementId) {
+                const achievement = this.achievementList.find(a => a.id === achievementId);
+                if (achievement && !this.gameState.achievements.has(achievementId) && achievement.condition()) {
+                    this.unlockAchievement(achievementId);
+                }
+            }
+            
+            unlockAchievement(achievementId) {
+                const achievement = this.achievementList.find(a => a.id === achievementId);
+                if (achievement && !this.gameState.achievements.has(achievementId)) {
+                    this.gameState.achievements.add(achievementId);
+                    this.addEvent(`🏆 成就解锁：${achievement.name} - ${achievement.desc}`, 'success');
+                    
+                    // 成就奖励
+                    switch(achievementId) {
+                        case 'first_light':
+                            this.resources['材料'].amount += 50;
+                            break;
+                        case 'dawn_breaker':
+                            this.gameState.morale += 20;
+                            break;
+                        case 'ark_heart':
+                            this.resources['食物'].amount += 100;
+                            this.resources['水'].amount += 80;
+                            break;
+                        case 'civilization_spark':
+                            this.gameState.tech.add('education');
+                            break;
+                        case 'legend':
+                            this.addEvent('🎉 恭喜达成全成就！你是真正的废土传奇！', 'success');
+                            break;
+                    }
+                    
+                    this.updateAchievements();
+                    this.saveGame();
+                }
+            }
+            
+            showAchievements() {
+                this.updateAchievements();
+                document.getElementById('achievements-modal').style.display = 'flex';
+            }
+            
+            // ====== 设置系统 ======
+            showSettings() {
+                document.getElementById('settings-modal').style.display = 'flex';
+            }
+            
+            // ====== 快捷菜单 ======
+            showQuickMenu() {
+                const menu = document.createElement('div');
+                menu.style.cssText = `
+                    position: fixed;
+                    bottom: 50px;
+                    right: 10px;
+                    background: #2c3e50;
+                    border: 2px solid #3498db;
+                    border-radius: 10px;
+                    padding: 10px;
+                    z-index: 1000;
+                    min-width: 140px;
+                    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+                    animation: fadeIn 0.2s ease;
+                `;
+                
+                menu.innerHTML = `
+                    <div style="color: #3498db; font-weight: bold; margin-bottom: 8px; text-align: center; font-size: 12px;">快捷菜单</div>
+                    <button class="btn btn-small" onclick="game.showResearchModal('basic_farming')" style="width: 100%; margin: 3px 0; padding: 5px; font-size: 10px;">
+                        🔬 研究农业
+                    </button>
+                    <button class="btn btn-small" onclick="game.recruitSurvivor()" style="width: 100%; margin: 3px 0; padding: 5px; font-size: 10px;">
+                        📢 招募幸存者
+                    </button>
+                    <button class="btn btn-small" onclick="game.showAchievements()" style="width: 100%; margin: 3px 0; padding: 5px; font-size: 10px;">
+                        🏆 查看成就
+                    </button>
+                    <button class="btn btn-small" onclick="game.toggleExplorePanel()" style="width: 100%; margin: 3px 0; padding: 5px; font-size: 10px;">
+                        🧭 探索地点
+                    </button>
+                    <button class="btn btn-small btn-danger" onclick="this.parentElement.remove()" style="width: 100%; margin: 3px 0; padding: 5px; font-size: 10px;">
+                        关闭菜单
+                    </button>
+                `;
+                
+                document.body.appendChild(menu);
+                
+                // 点击外部关闭
+                setTimeout(() => {
+                    const closeHandler = (e) => {
+                        if (!menu.contains(e.target) && e.target.id !== 'quick-menu') {
+                            menu.remove();
+                            document.removeEventListener('click', closeHandler);
+                        }
+                    };
+                    document.addEventListener('click', closeHandler);
+                }, 100);
+            }
+            
+            // ====== 随机事件 ======
+            randomEvent() {
+                const events = [
+                    { 
+                        message: '🌧️ 下了一场雨，收集到一些干净的水', 
+                        effect: () => this.resources['水'].amount += 30 
+                    },
+                    { 
+                        message: '🎁 发现了废弃的物资箱', 
+                        effect: () => {
+                            this.resources['材料'].amount += 20;
+                            this.resources['食物'].amount += 15;
+                        }
+                    },
+                    { 
+                        message: '🤢 有人食物中毒了', 
+                        effect: () => {
+                            const s = this.survivors[Math.floor(Math.random() * this.survivors.length)];
+                            s.health -= 20;
+                            s.hunger += 30;
+                        }
+                    },
+                    { 
+                        message: '💊 找到了医疗用品', 
+                        effect: () => this.resources['药品'].amount += 25 
+                    },
+                    { 
+                        message: '🔧 改进了生产设备，效率提升', 
+                        effect: () => {
+                            this.resources['材料'].prod += 1;
+                            this.resources['食物'].prod += 0.5;
+                        }
+                    },
+                    { 
+                        message: '⚡ 太阳能板效率提升', 
+                        effect: () => {
+                            if (this.gameState.tech.has('solar_power')) {
+                                this.resources['电力'].prod += 5;
+                            }
+                        }
+                    },
+                    { 
+                        message: '🌱 农作物丰收', 
+                        effect: () => {
+                            this.resources['食物'].amount += 40;
+                            if (this.gameState.tech.has('basic_farming')) {
+                                this.resources['食物'].amount += 20;
+                            }
+                        }
+                    },
+                    { 
+                        message: '🛠️ 幸存者学会了新技能', 
+                        effect: () => {
+                            const s = this.survivors[Math.floor(Math.random() * this.survivors.length)];
+                            s.experience += 25;
+                            if (s.experience >= 100) {
+                                s.level++;
+                                s.experience = 0;
+                                this.addEvent(`${s.name}升级到${s.level}级！`, 'success');
+                            }
+                        }
+                    }
+                ];
+                
+                const event = events[Math.floor(Math.random() * events.length)];
+                this.addEvent(event.message, 'info');
+                event.effect();
+            }
+            
+            // ====== 画布绘制 ======
+            drawBase() {
+                if (!this.ctx) return;
+                
+                const ctx = this.ctx;
+                const width = this.canvas.width;
+                const height = this.canvas.height;
+                
+                // 清除画布
+                ctx.clearRect(0, 0, width, height);
+                
+                // 绘制背景
+                ctx.fillStyle = '#1a1a2e';
+                ctx.fillRect(0, 0, width, height);
+                
+                // 绘制网格
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+                ctx.lineWidth = 1;
+                const gridSize = 40;
+                for (let x = 0; x < width; x += gridSize) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, height);
+                    ctx.stroke();
+                }
+                for (let y = 0; y < height; y += gridSize) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(width, y);
+                    ctx.stroke();
+                }
+                
+                // 绘制基地边界
+                ctx.strokeStyle = 'rgba(52, 152, 219, 0.3)';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([10, 5]);
+                ctx.strokeRect(20, 20, width - 40, height - 40);
+                ctx.setLineDash([]);
+                
+                // 绘制建筑
+                this.buildings.forEach(building => {
+                    this.drawBuilding(building);
+                });
+                
+                // 绘制敌人
+                this.enemies.forEach(enemy => {
+                    this.drawEnemy(enemy);
+                });
+            }
+            
+            drawBuilding(building) {
+                const ctx = this.ctx;
+                const scale = this.canvas.width / 600;
+                const x = building.x * scale;
+                const y = building.y * scale;
+                const size = 45 * scale;
+                
+                // 建筑颜色
+                const colors = {
+                    '指挥中心': '#3498db', '宿舍': '#2ecc71', '厨房': '#e74c3c',
+                    '医疗站': '#9b59b6', '瞭望塔': '#f1c40f', '仓库': '#95a5a6',
+                    '研究所': '#1abc9c', '水处理厂': '#3498db', '发电站': '#f39c12',
+                    '训练场': '#e74c3c', '农场': '#2ecc71', '围墙': '#7f8c8d',
+                    '哨塔': '#d35400', '工坊': '#34495e', '娱乐室': '#8e44ad',
+                    '通讯站': '#2980b9', '军械库': '#c0392b', '温室': '#27ae60'
+                };
+                
+                // 建筑主体
+                ctx.fillStyle = colors[building.type] || '#34495e';
+                ctx.fillRect(x, y, size, size);
+                
+                // 边框
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.lineWidth = 1.5;
+                ctx.strokeRect(x, y, size, size);
+                
+                // 建筑图标
+                const icon = this.getBuildingEmoji(building.type);
+                ctx.fillStyle = 'white';
+                ctx.font = `${16 * scale}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(icon, x + size/2, y + size/2);
+                
+                // 等级
+                ctx.font = `${8 * scale}px Arial`;
+                ctx.fillText(`Lv.${building.level}`, x + size/2, y + size + 12 * scale);
+                
+                // 工人指示
+                if (building.workers.length > 0) {
+                    ctx.fillStyle = '#2ecc71';
+                    ctx.beginPath();
+                    ctx.arc(x + size - 6 * scale, y + 6 * scale, 4 * scale, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            
+            drawEnemy(enemy) {
+                if (!enemy) return;
+                
+                const ctx = this.ctx;
+                const scale = this.canvas.width / 600;
+                const x = enemy.x * scale;
+                const y = enemy.y * scale;
+                const size = 25 * scale;
+                
+                // 敌人主体
+                ctx.fillStyle = '#e74c3c';
+                ctx.beginPath();
+                ctx.arc(x, y, size/2, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // 敌人图标
+                ctx.fillStyle = 'white';
+                ctx.font = `${12 * scale}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(enemy.icon, x, y);
+                
+                // 血条
+                const healthPercent = enemy.health / enemy.maxHealth;
+                ctx.fillStyle = '#e74c3c';
+                ctx.fillRect(x - size/2, y - size - 4, size, 3);
+                ctx.fillStyle = '#2ecc71';
+                ctx.fillRect(x - size/2, y - size - 4, size * healthPercent, 3);
+            }
+        }
+
+        // ====== 游戏启动 ======
+        let game;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // 创建游戏实例
+            game = new SurvivalGame();
+            window.game = game; // 方便调试
+            
+            // 添加PWA安装提示
+            if ('serviceWorker' in navigator && 'PushManager' in window) {
+                window.addEventListener('beforeinstallprompt', (e) => {
+                    e.preventDefault();
+                    const installBtn = document.createElement('button');
+                    installBtn.innerHTML = '📱 添加到桌面';
+                    installBtn.className = 'btn btn-success';
+                    installBtn.style.cssText = 'position: fixed; top: 10px; right: 10px; z-index: 9999;';
+                    installBtn.addEventListener('click', () => {
+                        e.prompt();
+                        installBtn.remove();
+                    });
+                    document.body.appendChild(installBtn);
+                    
+                    setTimeout(() => installBtn.remove(), 10000);
+                });
+            }
+            
+            console.log('🏰 《废土方舟》已启动！');
+            console.log('🎮 版本: 1.0 (PWA手机优化版)');
+            console.log('📱 适配: 手机竖屏全屏');
+            console.log('🎵 功能: 背景音乐/音效系统');
+            console.log('🏆 包含: 25个成就系统');
+            console.log('🔬 科技: 12项研究项目');
+            console.log('🏗️ 建筑: 18种建筑类型');
+            console.log('👥 幸存者: 50+随机名字');
+        });
+
+        // ====== PWA Service Worker 注册 ======
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(err => {
+                    console.log('Service Worker 注册失败:', err);
+                });
+            });
+        }
+    </script>
+        <link rel="stylesheet" href="manifest.json">
+        <script src="sw.js"></script>
+</body>
+</html>
