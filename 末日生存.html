@@ -44,6 +44,2083 @@
             }
         }
 
+        /* ====== 横竖屏切换样式 ====== */
+        body.portrait-mode #game-container {
+            flex-direction: column;
+        }
+        
+        body.landscape-mode #game-container {
+            flex-direction: row;
+        }
+        
+        body.portrait-mode #main-content {
+            flex-direction: column;
+        }
+        
+        body.landscape-mode #main-content {
+            flex-direction: row;
+        }
+        
+        body.portrait-mode #map-container {
+            height: 50vh;
+            min-height: 300px;
+        }
+        
+        body.landscape-mode #map-container {
+            flex: 1;
+            min-height: 0;
+        }
+        
+        body.portrait-mode #control-panel {
+            flex-direction: row;
+            height: auto;
+        }
+        
+        body.landscape-mode #control-panel {
+            flex-direction: column;
+            width: 120px;
+        }
+
+        /* ====== 加载动画 ====== */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a2e;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        /* ====== 游戏主容器 ====== */
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+            gap: 5px;
+            display: none;
+        }
+
+        /* ====== 顶部状态栏 ====== */
+        #status-bar {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            border-radius: 8px;
+            padding: 5px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #3498db;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+            height: 45px;
+            font-size: 12px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin: 0 3px;
+            flex-shrink: 0;
+        }
+
+        .status-icon {
+            font-size: 14px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .status-value {
+            font-size: 13px;
+            font-weight: bold;
+            color: #fff;
+            white-space: nowrap;
+        }
+
+        /* ====== 主内容区域 ====== */
+        #main-content {
+            flex: 1;
+            display: flex;
+            gap: 5px;
+            min-height: 0;
+        }
+
+        /* ====== 中央地图区域 ====== */
+        #map-container {
+            flex: 1;
+            background: rgba(25, 30, 45, 0.95);
+            border-radius: 8px;
+            border: 1px solid #444;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #base-canvas {
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* ====== 控制面板 ====== */
+        #control-panel {
+            display: flex;
+            gap: 5px;
+            padding: 8px;
+            background: rgba(30, 35, 50, 0.95);
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+
+        /* ====== 通用按钮样式 ====== */
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            padding: 5px 10px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            height: 30px;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-danger { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .btn-success { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+        .btn-warning { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .btn-purple { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+
+        .btn-small {
+            padding: 3px 6px;
+            font-size: 10px;
+            height: 24px;
+        }
+
+        /* ====== 弹窗系统 ====== */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: relative;
+            background: #2c3e50;
+            border-radius: 10px;
+            padding: 15px;
+            width: 95%;
+            max-width: 400px;
+            border: 2px solid #3498db;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 15px;
+            color: #3498db;
+            margin-bottom: 10px;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* ====== 增强关闭按钮样式 ====== */
+        .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            z-index: 1001;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .close-btn:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+        }
+
+        .close-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ====== 资源面板样式 ====== */
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px;
+            margin-bottom: 5px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            font-size: 11px;
+        }
+
+        .resource-icon {
+            font-size: 14px;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        .resource-bar {
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin: 2px 0;
+            overflow: hidden;
+        }
+
+        .resource-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.5s;
+        }
+
+        /* ====== 科技树样式 ====== */
+        .tech-item {
+            background: rgba(52, 152, 219, 0.1);
+            border: 1px solid #3498db;
+            border-radius: 6px;
+            padding: 6px;
+            margin: 3px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 11px;
+        }
+
+        .tech-item:hover {
+            background: rgba(52, 152, 219, 0.2);
+        }
+
+        .tech-item.researched {
+            background: rgba(46, 204, 113, 0.2);
+            border-color: #2ecc71;
+        }
+
+        .tech-item.insufficient {
+            background: rgba(231, 76, 60, 0.1);
+            border-color: #e74c3c;
+            opacity: 0.7;
+        }
+
+        /* ====== 成就样式 ====== */
+        .achievement-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px;
+            margin: 4px 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+            font-size: 11px;
+        }
+
+        .achievement-item.locked {
+            opacity: 0.5;
+            filter: grayscale(1);
+        }
+
+        .achievement-icon {
+            font-size: 16px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        /* ====== 设置项样式 ====== */
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            margin: 5px 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #666;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #3498db;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* ====== 战斗界面样式 ====== */
+        .enemy-card {
+            background: rgba(231, 76, 60, 0.2);
+            border: 2px solid #e74c3c;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 6px 0;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .combat-log {
+            height: 80px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 6px;
+            padding: 6px;
+            margin: 6px 0;
+            font-size: 11px;
+        }
+
+        .combat-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin-top: 8px;
+        }
+
+        /* ====== 动画定义 ====== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ====== 通知系统 ====== */
+        #notification-container {
+            position: fixed;
+            top: 50px;
+            right: 10px;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            max-width: 250px;
+        }
+
+        .notification {
+            background: #2c3e50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            animation: fadeIn 0.3s, fadeOut 0.3s 2.7s forwards;
+            font-size: 12px;
+        }
+
+        .notification.success { border-left-color: #2ecc71; }
+        .notification.warning { border-left-color: #f39c12; }
+        .notification.danger { border-left-color: #e74c3c; }
+
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+
+        /* ====== 安装提示 ====== */
+        #install-prompt {
+            position: fixed;
+            top: 50px;
+            right: 10px;
+            background: #2ecc71;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            animation: fadeIn 0.3s;
+            z-index: 1002;
+            font-size: 12px;
+            display: none;
+        }
+
+        #install-prompt button {
+            background: white;
+            color: #2ecc71;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        /* ====== 时间显示样式 ====== */
+        #time-display {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+        
+        /* ====== 音量滑块样式 ====== */
+        input[type="range"] {
+            width: 100px;
+            height: 8px;
+            -webkit-appearance: none;
+            background: #34495e;
+            border-radius: 4px;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #3498db;
+            cursor: pointer;
+        }
+        
+        /* ====== 音乐控制容器 ====== */
+        .music-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body class="portrait-mode">
+    <!-- 加载屏幕 -->
+    <div id="loading-screen">
+        <div class="loading-spinner"></div>
+        <div style="font-size: 18px; color: #3498db; margin-bottom: 10px; font-weight: bold;">废土方舟</div>
+        <div style="font-size: 12px; color: #8899cc; text-align: center; max-width: 300px;">
+            加载中...
+        </div>
+    </div>
+
+    <!-- 安装提示 -->
+    <div id="install-prompt">
+        📱 想添加到桌面吗？
+        <button id="install-btn">安装</button>
+    </div>
+
+    <!-- 主游戏界面 -->
+    <div id="game-container">
+        <!-- 顶部状态栏 -->
+        <div id="status-bar">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="status-item">
+                    <span class="status-icon">📅</span>
+                    <span class="status-value" id="day-count">第1天</span>
+                </div>
+                
+                <div class="status-item">
+                    <span class="status-icon">⏰</span>
+                    <span class="status-value" id="time-display">06:00:00</span>
+                </div>
+                
+                <div class="status-item">
+                    <span class="status-icon">☁️</span>
+                    <span class="status-value" id="weather">晴朗</span>
+                </div>
+                
+                <button class="btn btn-small btn-success" id="btn-explore">
+                    <span>🧭</span>
+                    <span>探索</span>
+                </button>
+                
+                <button class="btn btn-small btn-purple" id="btn-settings">
+                    <span>⚙️</span>
+                    <span>设置</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 主内容区域 -->
+        <div id="main-content">
+            <!-- 中央地图区域 -->
+            <div id="map-container">
+                <canvas id="base-canvas"></canvas>
+            </div>
+        </div>
+
+        <!-- 控制面板 -->
+        <div id="control-panel">
+            <button class="btn btn-success" id="btn-resources">
+                <span>📦</span>
+                <span>资源</span>
+            </button>
+            <button class="btn btn-purple" id="btn-tech">
+                <span>🔬</span>
+                <span>科技</span>
+            </button>
+            <button class="btn btn-warning" id="btn-upgrade">
+                <span>⬆️</span>
+                <span>升级</span>
+            </button>
+            <button class="btn" id="btn-achievements">
+                <span>🏆</span>
+                <span>成就</span>
+            </button>
+            <button class="btn btn-success" id="btn-save">
+                <span>💾</span>
+                <span>保存</span>
+            </button>
+            <button class="btn" id="btn-load">
+                <span>📂</span>
+                <span>加载</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 通知容器 -->
+    <div id="notification-container"></div>
+
+    <!-- ====== 弹窗系统 ====== -->
+    
+    <!-- 资源管理弹窗 -->
+    <div id="resources-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">📦 资源管理</div>
+            <button class="close-btn" onclick="document.getElementById('resources-modal').style.display='none'">×</button>
+            <div id="resources-list" style="margin-top: 10px;"></div>
+        </div>
+    </div>
+
+    <!-- 科技树弹窗 -->
+    <div id="tech-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">🔬 科技树</div>
+            <button class="close-btn" onclick="document.getElementById('tech-modal').style.display='none'">×</button>
+            <div id="tech-list" style="margin-top: 10px;"></div>
+        </div>
+    </div>
+
+    <!-- 基地升级弹窗 -->
+    <div id="upgrade-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">⬆️ 基地升级</div>
+            <button class="close-btn" onclick="document.getElementById('upgrade-modal').style.display='none'">×</button>
+            <div id="upgrade-list" style="margin-top: 10px;"></div>
+        </div>
+    </div>
+
+    <!-- 成就弹窗 -->
+    <div id="achievements-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">🏆 成就系统</div>
+            <button class="close-btn" onclick="document.getElementById('achievements-modal').style.display='none'">×</button>
+            <div id="achievements-list" style="margin-top: 10px;"></div>
+        </div>
+    </div>
+
+    <!-- 探索弹窗 -->
+    <div id="explore-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">🧭 探索废土</div>
+            <button class="close-btn" onclick="document.getElementById('explore-modal').style.display='none'">×</button>
+            <div id="explore-options" style="margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;"></div>
+        </div>
+    </div>
+
+    <!-- 设置弹窗 -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">⚙️ 游戏设置</div>
+            <button class="close-btn" onclick="document.getElementById('settings-modal').style.display='none'">×</button>
+            
+            <div class="settings-item">
+                <span>🎵 背景音乐</span>
+                <div class="music-controls">
+                    <label class="switch">
+                        <input type="checkbox" id="music-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                    <button class="btn btn-small" id="btn-change-music" style="padding: 3px 8px;">
+                        切换音乐
+                    </button>
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <span>🔊 音乐音量</span>
+                <input type="range" id="music-volume" min="0" max="100" value="30">
+            </div>
+            
+            <div class="settings-item">
+                <span>⚡ 游戏速度</span>
+                <select id="game-speed" style="background: #34495e; color: white; border: 1px solid #555; padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+                    <option value="0.1">0.1x (极慢)</option>
+                    <option value="0.5">0.5x (慢速)</option>
+                    <option value="1">1x (正常)</option>
+                    <option value="2">2x (快速)</option>
+                    <option value="5">5x (极快)</option>
+                </select>
+            </div>
+            
+            <div class="settings-item">
+                <span>🔄 屏幕方向</span>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-small" id="btn-portrait" style="padding: 3px 8px;">📱 竖屏</button>
+                    <button class="btn btn-small" id="btn-landscape" style="padding: 3px 8px;">🔄 横屏</button>
+                </div>
+            </div>
+            
+            <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <button class="btn btn-danger" id="btn-exit-game" style="width: 100%; margin-bottom: 8px;">
+                    🚪 退出游戏
+                </button>
+            </div>
+            
+            <div style="margin-top: 15px; font-size: 10px; color: #8899cc; text-align: center;">
+                《废土方舟》最终版 v1.0<br>
+                生存天数: <span id="settings-game-day">1</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 战斗弹窗 -->
+    <div id="combat-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">⚔️ 丧尸来袭！</div>
+            <button class="close-btn" onclick="document.getElementById('combat-modal').style.display='none'">×</button>
+            <div id="enemy-info"></div>
+            <div class="combat-log" id="combat-log"></div>
+            <div class="combat-actions">
+                <button class="btn btn-success" id="btn-attack">🗡️ 攻击</button>
+                <button class="btn" id="btn-defend">🛡️ 防御</button>
+                <button class="btn btn-danger" id="btn-flee">🏃 撤退</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 代码 -->
+    <script>
+        // ====== 游戏核心类 ======
+        class SurvivalGame {
+            constructor() {
+                // 游戏状态
+                this.gameState = {
+                    day: 1,
+                    hour: 6,
+                    minute: 0,
+                    second: 0,
+                    weather: 'clear',
+                    paused: false,
+                    threat: 1,
+                    tech: new Set(),
+                    explored: new Set(),
+                    achievements: new Set(),
+                    settings: {
+                        music: true,
+                        speed: 1,
+                        orientation: 'portrait',
+                        volume: 0.3
+                    }
+                };
+                
+                // 资源系统
+                this.resources = {
+                    '食物': { amount: 100, max: 500, prod: 5, cons: 8, icon: '🍎' },
+                    '水': { amount: 80, max: 300, prod: 3, cons: 6, icon: '💧' },
+                    '材料': { amount: 50, max: 1000, prod: 2, cons: 1, icon: '🔨' },
+                    '药品': { amount: 20, max: 200, prod: 0.5, cons: 0.2, icon: '💊' },
+                    '弹药': { amount: 50, max: 500, prod: 1, cons: 0, icon: '🔫' }
+                };
+                
+                // 幸存者
+                this.survivorNames = ['张伟', '李娜', '王刚', '赵敏', '刘强', '陈静', '孙浩', '周婷'];
+                this.survivors = [
+                    this.createRandomSurvivor(1),
+                    this.createRandomSurvivor(2),
+                    this.createRandomSurvivor(3)
+                ];
+                
+                // 建筑
+                this.buildings = [
+                    { id: 1, type: '指挥中心', level: 1, x: 150, y: 100 },
+                    { id: 2, type: '宿舍', level: 1, x: 100, y: 160 },
+                    { id: 3, type: '厨房', level: 1, x: 200, y: 160 }
+                ];
+                
+                // 事件日志
+                this.events = [
+                    { time: '06:00:00', message: '新的一天开始了', type: 'info' }
+                ];
+                
+                // 科技树
+                this.techTree = [
+                    { id: 'basic_farming', name: '基础农业', cost: 50, desc: '食物产量+20%', time: 24, icon: '🌱', require: [] },
+                    { id: 'water_purify', name: '净水技术', cost: 40, desc: '水消耗-30%', time: 18, icon: '💧', require: [] },
+                    { id: 'advanced_defense', name: '高级防御', cost: 60, desc: '防御力+50%', time: 36, icon: '🛡️', require: [] },
+                    { id: 'solar_power', name: '太阳能技术', cost: 70, desc: '材料+10/小时', time: 48, icon: '☀️', require: ['advanced_defense'] }
+                ];
+                
+                // 成就系统
+                this.achievementList = [
+                    { id: 'first_light', name: '第一道光', desc: '建造第一个建筑', icon: '🏗️', condition: () => this.buildings.length >= 4 },
+                    { id: 'dawn_breaker', name: '破晓之人', desc: '生存超过7天', icon: '🌅', condition: () => this.gameState.day >= 7 },
+                    { id: 'ark_heart', name: '方舟之心', desc: '收容5名幸存者', icon: '❤️', condition: () => this.survivors.length >= 5 },
+                    { id: 'explorer', name: '探索者', desc: '探索所有地点', icon: '🧭', condition: () => this.gameState.explored.size >= 4 },
+                    { id: 'zombie_slayer', name: '丧尸杀手', desc: '击败10个敌人', icon: '🧟', condition: () => this.gameState.threat >= 3 }
+                ];
+                
+                // 探索地点
+                this.exploreLocations = [
+                    { name: '废墟', risk: 0.2, icon: '🏚️', rewards: { '材料': 30, '药品': 10 } },
+                    { name: '医院', risk: 0.4, icon: '🏥', rewards: { '药品': 40, '材料': 15 } },
+                    { name: '超市', risk: 0.3, icon: '🛒', rewards: { '食物': 50, '水': 30 } },
+                    { name: '军事基地', risk: 0.6, icon: '🎖️', rewards: { '弹药': 80, '材料': 40 } }
+                ];
+                
+                // 建筑升级选项
+                this.buildingUpgrades = [
+                    { name: '强化墙壁', cost: 100, desc: '基地防御+20%', effect: () => this.gameState.threat = Math.max(1, this.gameState.threat - 1) },
+                    { name: '扩大仓库', cost: 150, desc: '所有资源上限+50', effect: () => Object.values(this.resources).forEach(r => r.max += 50) },
+                    { name: '改善供水', cost: 120, desc: '水产量+5/小时', effect: () => this.resources['水'].prod += 5 },
+                    { name: '自动防御', cost: 200, desc: '自动击退少量丧尸', effect: () => this.addEvent('自动防御系统已启用', 'success') }
+                ];
+                
+                // 敌人系统
+                this.enemies = [];
+                this.combatActive = false;
+                this.currentEnemy = null;
+                
+                // 音频系统（增强版）
+                this.audio = {
+                    bgMusic: null,
+                    bgMusicVolume: 0.3,
+                    currentTrack: 0,
+                    musicEnabled: true,
+                    tracks: [
+                        { name: '废土主题', url: 'https://assets.mixkit.co/music/preview/mixkit-game-level-music-689.mp3' },
+                        { name: '生存主题', url: 'https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3' },
+                        { name: '探索主题', url: 'https://assets.mixkit.co/music/preview/mixkit-driving-ambition-32.mp3' }
+                    ]
+                };
+                
+                // 初始化
+                this.init();
+            }
+            
+            init() {
+                this.initCanvas();
+                this.setupUI();
+                this.initAudio();
+                this.startGameLoop();
+                this.loadGame();
+                
+                setTimeout(() => {
+                    document.getElementById('loading-screen').style.opacity = '0';
+                    setTimeout(() => {
+                        document.getElementById('loading-screen').style.display = 'none';
+                        document.getElementById('game-container').style.display = 'flex';
+                        this.showNotification('废土方舟已启动', 'success');
+                    }, 500);
+                }, 1500);
+            }
+            
+            initCanvas() {
+                this.canvas = document.getElementById('base-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.resizeCanvas();
+                this.drawBase();
+                window.addEventListener('resize', () => this.resizeCanvas());
+            }
+            
+            resizeCanvas() {
+                const container = document.getElementById('map-container');
+                this.canvas.width = container.clientWidth;
+                this.canvas.height = container.clientHeight;
+                this.drawBase();
+            }
+            
+            initAudio() {
+                if (!this.audio.musicEnabled) return;
+                
+                // 创建音频元素
+                this.audio.bgMusic = new Audio();
+                this.audio.bgMusic.loop = true;
+                this.audio.bgMusic.volume = this.audio.bgMusicVolume;
+                
+                // 设置第一首音乐
+                this.loadMusicTrack(this.audio.currentTrack);
+                
+                // 音频事件监听
+                this.audio.bgMusic.addEventListener('ended', () => {
+                    this.audio.currentTrack = (this.audio.currentTrack + 1) % this.audio.tracks.length;
+                    this.loadMusicTrack(this.audio.currentTrack);
+                    this.audio.bgMusic.play().catch(e => console.log('背景音乐自动切换失败'));
+                });
+                
+                // 尝试播放音乐
+                this.tryPlayMusic();
+            }
+            
+            loadMusicTrack(index) {
+                if (this.audio.tracks[index]) {
+                    this.audio.bgMusic.src = this.audio.tracks[index].url;
+                    // 静音加载
+                    this.audio.bgMusic.muted = true;
+                    this.audio.bgMusic.load();
+                    this.audio.bgMusic.muted = false;
+                }
+            }
+            
+            tryPlayMusic() {
+                if (this.gameState.settings.music && this.audio.bgMusic) {
+                    const playPromise = this.audio.bgMusic.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(e => {
+                            console.log('背景音乐播放失败，需要用户交互');
+                            // 显示提示，需要用户交互才能播放音乐
+                            this.showNotification('点击任意位置以启用背景音乐', 'info', 5000);
+                            
+                            // 添加一次性点击事件来启用音频
+                            const enableAudio = () => {
+                                this.audio.bgMusic.play().then(() => {
+                                    console.log('背景音乐已启用');
+                                    this.showNotification('背景音乐已启用', 'success');
+                                }).catch(e2 => {
+                                    console.log('用户拒绝播放音乐');
+                                });
+                                
+                                // 移除事件监听
+                                document.removeEventListener('click', enableAudio);
+                                document.removeEventListener('touchstart', enableAudio);
+                            };
+                            
+                            document.addEventListener('click', enableAudio);
+                            document.addEventListener('touchstart', enableAudio);
+                        });
+                    }
+                }
+            }
+            
+            setupUI() {
+                this.updateUI();
+                this.bindEvents();
+                this.generateExploreOptions();
+                this.updateAchievementsList();
+                this.setupModalCloseButtons();
+            }
+            
+            bindEvents() {
+                // 状态栏按钮
+                document.getElementById('btn-explore').addEventListener('click', () => {
+                    document.getElementById('explore-modal').style.display = 'flex';
+                });
+                
+                document.getElementById('btn-settings').addEventListener('click', () => {
+                    this.showSettings();
+                });
+                
+                // 控制面板按钮
+                document.getElementById('btn-resources').addEventListener('click', () => {
+                    this.showResourcesModal();
+                });
+                
+                document.getElementById('btn-tech').addEventListener('click', () => {
+                    this.showTechModal();
+                });
+                
+                document.getElementById('btn-upgrade').addEventListener('click', () => {
+                    this.showUpgradeModal();
+                });
+                
+                document.getElementById('btn-achievements').addEventListener('click', () => {
+                    this.showAchievementsModal();
+                });
+                
+                document.getElementById('btn-save').addEventListener('click', () => {
+                    this.saveGame();
+                });
+                
+                document.getElementById('btn-load').addEventListener('click', () => {
+                    this.loadGame();
+                });
+                
+                // 设置面板
+                document.getElementById('music-toggle').addEventListener('change', (e) => {
+                    this.gameState.settings.music = e.target.checked;
+                    this.audio.musicEnabled = e.target.checked;
+                    
+                    if (e.target.checked) {
+                        if (!this.audio.bgMusic) {
+                            this.initAudio();
+                        } else {
+                            this.tryPlayMusic();
+                        }
+                        this.showNotification('背景音乐已开启', 'success');
+                    } else {
+                        if (this.audio.bgMusic) {
+                            this.audio.bgMusic.pause();
+                        }
+                        this.showNotification('背景音乐已关闭', 'warning');
+                    }
+                    this.saveSettings();
+                });
+                
+                // 音乐切换按钮
+                document.getElementById('btn-change-music').addEventListener('click', () => {
+                    this.changeMusicTrack();
+                });
+                
+                // 音量控制
+                document.getElementById('music-volume').addEventListener('input', (e) => {
+                    const volume = e.target.value / 100;
+                    this.audio.bgMusicVolume = volume;
+                    this.gameState.settings.volume = volume;
+                    if (this.audio.bgMusic) {
+                        this.audio.bgMusic.volume = volume;
+                    }
+                    this.saveSettings();
+                });
+                
+                document.getElementById('game-speed').addEventListener('change', (e) => {
+                    this.gameState.settings.speed = parseFloat(e.target.value);
+                    this.saveSettings();
+                });
+                
+                document.getElementById('btn-portrait').addEventListener('click', () => {
+                    this.setOrientation('portrait');
+                });
+                
+                document.getElementById('btn-landscape').addEventListener('click', () => {
+                    this.setOrientation('landscape');
+                });
+                
+                document.getElementById('btn-exit-game').addEventListener('click', () => {
+                    if (confirm('确定要退出游戏吗？')) {
+                        this.saveGame();
+                        window.close();
+                    }
+                });
+                
+                // 战斗按钮
+                document.getElementById('btn-attack').addEventListener('click', () => this.combatAction('attack'));
+                document.getElementById('btn-defend').addEventListener('click', () => this.combatAction('defend'));
+                document.getElementById('btn-flee').addEventListener('click', () => this.combatAction('flee'));
+                
+                // 地图点击
+                this.canvas.addEventListener('click', (e) => {
+                    const rect = this.canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    this.buildings.forEach(building => {
+                        const scale = this.canvas.width / 400;
+                        const bX = building.x * scale;
+                        const bY = building.y * scale;
+                        const size = 40 * scale;
+                        
+                        if (x >= bX && x <= bX + size && y >= bY && y <= bY + size) {
+                            this.showBuildingInfo(building);
+                        }
+                    });
+                });
+                
+                // PWA安装提示
+                let deferredPrompt;
+                window.addEventListener('beforeinstallprompt', (e) => {
+                    e.preventDefault();
+                    deferredPrompt = e;
+                    document.getElementById('install-prompt').style.display = 'block';
+                });
+                
+                document.getElementById('install-btn').addEventListener('click', async () => {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        const { outcome } = await deferredPrompt.userChoice;
+                        if (outcome === 'accepted') {
+                            document.getElementById('install-prompt').style.display = 'none';
+                        }
+                    }
+                });
+            }
+            
+            setupModalCloseButtons() {
+                // 为所有弹窗添加ESC键关闭
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.closeAllModals();
+                    }
+                });
+                
+                // 为所有弹窗添加点击背景关闭
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            modal.style.display = 'none';
+                        }
+                    });
+                });
+            }
+            
+            closeAllModals() {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    modal.style.display = 'none';
+                });
+            }
+            
+            setOrientation(orientation) {
+                this.gameState.settings.orientation = orientation;
+                document.body.className = orientation + '-mode';
+                this.saveSettings();
+                setTimeout(() => {
+                    this.resizeCanvas();
+                }, 100);
+            }
+            
+            changeMusicTrack() {
+                if (!this.audio.musicEnabled || !this.audio.bgMusic) return;
+                
+                this.audio.currentTrack = (this.audio.currentTrack + 1) % this.audio.tracks.length;
+                this.loadMusicTrack(this.audio.currentTrack);
+                
+                const currentTrack = this.audio.tracks[this.audio.currentTrack];
+                this.audio.bgMusic.play().then(() => {
+                    this.showNotification(`切换音乐：${currentTrack.name}`, 'success');
+                }).catch(e => {
+                    console.log('音乐切换播放失败');
+                });
+            }
+            
+            updateUI() {
+                // 状态栏
+                document.getElementById('day-count').textContent = `第${this.gameState.day}天`;
+                
+                // 格式化时间显示（时:分:秒）
+                const timeStr = `${this.gameState.hour.toString().padStart(2, '0')}:${this.gameState.minute.toString().padStart(2, '0')}:${this.gameState.second.toString().padStart(2, '0')}`;
+                document.getElementById('time-display').textContent = timeStr;
+                
+                const weatherMap = {
+                    'clear': '☀️晴朗', 'rain': '🌧️雨天', 
+                    'fog': '🌫️雾天', 'storm': '⛈️暴风雨'
+                };
+                document.getElementById('weather').textContent = 
+                    weatherMap[this.gameState.weather] || this.gameState.weather;
+                
+                document.getElementById('settings-game-day').textContent = this.gameState.day;
+                
+                // 画布
+                this.drawBase();
+            }
+            
+            showResourcesModal() {
+                const container = document.getElementById('resources-list');
+                container.innerHTML = '';
+                
+                for (const [name, data] of Object.entries(this.resources)) {
+                    const percent = (data.amount / data.max) * 100;
+                    const color = percent > 50 ? '#2ecc71' : percent > 20 ? '#f39c12' : '#e74c3c';
+                    
+                    const item = document.createElement('div');
+                    item.className = 'resource-item';
+                    item.innerHTML = `
+                        <div class="resource-icon">${data.icon}</div>
+                        <div style="flex: 1;">
+                            <div>${name}</div>
+                            <div class="resource-bar">
+                                <div class="resource-fill" style="width: ${percent}%; background: ${color};"></div>
+                            </div>
+                            <div style="font-size: 10px; color: #aaa;">
+                                ${Math.floor(data.amount)}/${data.max}
+                                <span style="color: ${data.prod > data.cons ? '#2ecc71' : '#e74c3c'}; margin-left: 5px;">
+                                    ${data.prod > data.cons ? '+' : ''}${(data.prod - data.cons).toFixed(1)}/h
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                }
+                
+                const modal = document.getElementById('resources-modal');
+                modal.style.display = 'flex';
+                
+                // 将弹窗内容滚动到顶部
+                setTimeout(() => {
+                    const modalContent = modal.querySelector('.modal-content');
+                    if (modalContent) {
+                        modalContent.scrollTop = 0;
+                    }
+                }, 10);
+            }
+            
+            showTechModal() {
+                const container = document.getElementById('tech-list');
+                container.innerHTML = '';
+                
+                this.techTree.forEach(tech => {
+                    const canResearch = this.canResearchTech(tech);
+                    const researched = this.gameState.tech.has(tech.id);
+                    
+                    const item = document.createElement('div');
+                    item.className = `tech-item ${researched ? 'researched' : ''} ${!canResearch && !researched ? 'insufficient' : ''}`;
+                    item.innerHTML = `
+                        <div>${tech.icon} ${tech.name}</div>
+                        <div style="font-size: 10px; color: #8899cc;">${tech.desc}</div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                            <span style="color: #f39c12; font-size: 10px;">${tech.cost}材料</span>
+                            ${researched ? 
+                                '<span style="color: #2ecc71; font-size: 10px;">✅已研究</span>' : 
+                                canResearch ? 
+                                `<button class="btn btn-small" onclick="game.researchTech('${tech.id}')" style="padding: 2px 8px;">研究</button>` :
+                                '<span style="color: #e74c3c; font-size: 10px;">🔒未解锁</span>'
+                            }
+                        </div>
+                    `;
+                    
+                    if (tech.require.length > 0) {
+                        const reqNames = tech.require.map(r => this.techTree.find(t => t.id === r)?.name || r);
+                        item.innerHTML += `<div style="font-size: 9px; color: #f39c12; margin-top: 3px;">需要: ${reqNames.join(', ')}</div>`;
+                    }
+                    
+                    container.appendChild(item);
+                });
+                
+                const modal = document.getElementById('tech-modal');
+                modal.style.display = 'flex';
+                
+                setTimeout(() => {
+                    const modalContent = modal.querySelector('.modal-content');
+                    if (modalContent) {
+                        modalContent.scrollTop = 0;
+                    }
+                }, 10);
+            }
+            
+            showUpgradeModal() {
+                const container = document.getElementById('upgrade-list');
+                container.innerHTML = '';
+                
+                this.buildingUpgrades.forEach(upgrade => {
+                    const canAfford = this.resources['材料'].amount >= upgrade.cost;
+                    
+                    const item = document.createElement('div');
+                    item.className = `tech-item ${canAfford ? '' : 'insufficient'}`;
+                    item.innerHTML = `
+                        <div style="font-weight: bold; margin-bottom: 3px;">${upgrade.name}</div>
+                        <div style="font-size: 10px; color: #8899cc; margin-bottom: 5px;">${upgrade.desc}</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: #f39c12; font-size: 11px;">${upgrade.cost}材料</span>
+                            ${canAfford ? 
+                                `<button class="btn btn-small" onclick="game.purchaseUpgrade(${JSON.stringify(upgrade).replace(/"/g, '&quot;')})" style="padding: 2px 8px;">升级</button>` :
+                                '<span style="color: #e74c3c; font-size: 10px;">材料不足</span>'
+                            }
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+                
+                const modal = document.getElementById('upgrade-modal');
+                modal.style.display = 'flex';
+                
+                setTimeout(() => {
+                    const modalContent = modal.querySelector('.modal-content');
+                    if (modalContent) {
+                        modalContent.scrollTop = 0;
+                    }
+                }, 10);
+            }
+            
+            showAchievementsModal() {
+                const container = document.getElementById('achievements-list');
+                container.innerHTML = '';
+                
+                this.achievementList.forEach(achievement => {
+                    const unlocked = this.gameState.achievements.has(achievement.id);
+                    
+                    const item = document.createElement('div');
+                    item.className = `achievement-item ${unlocked ? '' : 'locked'}`;
+                    item.innerHTML = `
+                        <div class="achievement-icon">${achievement.icon}</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: bold; font-size: 12px;">${achievement.name}</div>
+                            <div style="font-size: 10px; color: #8899cc;">${achievement.desc}</div>
+                            <div style="font-size: 9px; color: ${unlocked ? '#2ecc71' : '#e74c3c'}; margin-top: 3px;">
+                                ${unlocked ? '✅ 已解锁' : '🔒 未解锁'}
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+                
+                const modal = document.getElementById('achievements-modal');
+                modal.style.display = 'flex';
+                
+                setTimeout(() => {
+                    const modalContent = modal.querySelector('.modal-content');
+                    if (modalContent) {
+                        modalContent.scrollTop = 0;
+                    }
+                }, 10);
+            }
+            
+            generateExploreOptions() {
+                const container = document.getElementById('explore-options');
+                container.innerHTML = '';
+                
+                this.exploreLocations.forEach(location => {
+                    const button = document.createElement('button');
+                    button.className = 'btn';
+                    button.style.flexDirection = 'column';
+                    button.style.height = 'auto';
+                    button.style.padding = '10px 5px';
+                    button.innerHTML = `
+                        <span style="font-size: 24px;">${location.icon}</span>
+                        <span style="font-size: 12px; margin-top: 5px;">${location.name}</span>
+                        <span style="font-size: 10px; color: ${location.risk < 0.3 ? '#2ecc71' : location.risk < 0.5 ? '#f39c12' : '#e74c3c'};">
+                            ${location.risk < 0.3 ? '低风险' : location.risk < 0.5 ? '中风险' : '高风险'}
+                        </span>
+                    `;
+                    
+                    button.addEventListener('click', () => {
+                        this.exploreLocation(location);
+                        document.getElementById('explore-modal').style.display = 'none';
+                    });
+                    
+                    container.appendChild(button);
+                });
+            }
+            
+            showSettings() {
+                const modal = document.getElementById('settings-modal');
+                modal.style.display = 'flex';
+                
+                setTimeout(() => {
+                    const modalContent = modal.querySelector('.modal-content');
+                    if (modalContent) {
+                        modalContent.scrollTop = 0;
+                    }
+                }, 10);
+            }
+            
+            // ====== 游戏循环 ======
+            startGameLoop() {
+                setInterval(() => {
+                    this.updateGame();
+                }, 1000 / this.gameState.settings.speed);
+            }
+            
+            updateGame() {
+                // 时间流逝（秒级更新）
+                this.gameState.second++;
+                if (this.gameState.second >= 60) {
+                    this.gameState.second = 0;
+                    this.gameState.minute++;
+                    
+                    if (this.gameState.minute >= 60) {
+                        this.gameState.minute = 0;
+                        this.gameState.hour++;
+                        
+                        if (this.gameState.hour >= 24) {
+                            this.gameState.hour = 0;
+                            this.gameState.day++;
+                            this.addEvent(`第${this.gameState.day}天开始了`, 'info');
+                            
+                            // 每天增加威胁
+                            if (this.gameState.day % 3 === 0) {
+                                this.gameState.threat = Math.min(10, this.gameState.threat + 1);
+                                this.addEvent('威胁等级提升了！', 'warning');
+                            }
+                        }
+                    }
+                }
+                
+                // 随机天气
+                if (Math.random() < 0.001) { // 降低天气变化频率
+                    const weathers = ['clear', 'rain', 'fog', 'storm'];
+                    this.gameState.weather = weathers[Math.floor(Math.random() * weathers.length)];
+                }
+                
+                // 每秒更新资源
+                for (const [name, data] of Object.entries(this.resources)) {
+                    const net = (data.prod - data.cons) / 3600; // 每秒产量
+                    data.amount = Math.max(0, Math.min(data.amount + net, data.max));
+                }
+                
+                // 每分钟更新幸存者状态
+                if (this.gameState.second === 0) {
+                    this.survivors.forEach(survivor => {
+                        survivor.hunger += 0.1;
+                        survivor.energy -= 0.05;
+                        
+                        if (survivor.hunger > 80) survivor.health -= 0.2;
+                        if (survivor.energy < 30) survivor.health -= 0.1;
+                        
+                        // 自动恢复
+                        if (survivor.hunger < 20 && survivor.energy > 70) {
+                            survivor.health = Math.min(100, survivor.health + 0.05);
+                        }
+                        
+                        // 限制范围
+                        survivor.hunger = Math.max(0, Math.min(100, survivor.hunger));
+                        survivor.energy = Math.max(0, Math.min(100, survivor.energy));
+                        survivor.health = Math.max(0, Math.min(100, survivor.health));
+                        
+                        // 死亡检查
+                        if (survivor.health <= 0) {
+                            this.handleDeath(survivor);
+                        }
+                    });
+                }
+                
+                // 每小时随机事件
+                if (this.gameState.minute === 0 && this.gameState.second === 0 && Math.random() < 0.3) {
+                    this.randomEvent();
+                }
+                
+                // 随机敌人
+                if (Math.random() < 0.0005 + this.gameState.threat * 0.0001) {
+                    this.spawnEnemy();
+                }
+                
+                // 检查成就
+                this.checkAchievements();
+                
+                // 更新UI
+                this.updateUI();
+            }
+            
+            // ====== 游戏功能方法 ======
+            createRandomSurvivor(id) {
+                const name = this.survivorNames[Math.floor(Math.random() * this.survivorNames.length)];
+                const skills = ['建造', '医疗', '战斗', '探索', '研究'];
+                const skill = skills[Math.floor(Math.random() * skills.length)];
+                
+                return {
+                    id: id,
+                    name: name,
+                    health: 70 + Math.floor(Math.random() * 30),
+                    hunger: 40 + Math.floor(Math.random() * 40),
+                    energy: 60 + Math.floor(Math.random() * 40),
+                    skill: skill,
+                    status: '空闲',
+                    experience: 0,
+                    level: 1
+                };
+            }
+            
+            addEvent(message, type = 'info') {
+                const time = `${this.gameState.hour.toString().padStart(2, '0')}:${this.gameState.minute.toString().padStart(2, '0')}:${this.gameState.second.toString().padStart(2, '0')}`;
+                this.events.push({ time, message, type });
+                
+                this.showNotification(message, type);
+            }
+            
+            showNotification(message, type = 'info', duration = 3000) {
+                const container = document.getElementById('notification-container');
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                
+                // 设置自定义样式
+                notification.style.animation = `fadeIn 0.3s, fadeOut 0.3s ${duration - 300}ms forwards`;
+                
+                container.appendChild(notification);
+                
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, duration);
+            }
+            
+            // ====== 建筑系统 ======
+            buildStructure(type, cost) {
+                if (this.resources['材料'].amount < cost) {
+                    this.showNotification(`材料不足！需要${cost}材料`, 'danger');
+                    return;
+                }
+                
+                this.resources['材料'].amount -= cost;
+                
+                const newId = this.buildings.length + 1;
+                const x = 50 + (this.buildings.length % 4) * 80;
+                const y = 50 + Math.floor(this.buildings.length / 4) * 70;
+                
+                const building = {
+                    id: newId,
+                    type: type,
+                    level: 1,
+                    x: Math.min(x, 320),
+                    y: Math.min(y, 210)
+                };
+                
+                this.buildings.push(building);
+                
+                switch(type) {
+                    case '厨房':
+                        this.resources['食物'].prod += 3;
+                        break;
+                    case '医疗站':
+                        this.resources['药品'].prod += 2;
+                        break;
+                    case '仓库':
+                        Object.values(this.resources).forEach(r => r.max += 200);
+                        break;
+                }
+                
+                this.addEvent(`建造了新的${type}`, 'success');
+                this.checkAchievement('first_light');
+                this.updateUI();
+            }
+            
+            showBuildingInfo(building) {
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.8);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 1000;
+                `;
+                
+                modal.innerHTML = `
+                    <div class="modal-content" style="max-width: 250px;">
+                        <div class="modal-title">${this.getBuildingEmoji(building.type)} ${building.type}</div>
+                        <button class="close-btn" style="top: 8px; right: 8px;">×</button>
+                        <div style="padding: 10px;">
+                            <div style="margin-bottom: 8px; color: #aabbee;">等级: ${building.level}</div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-close-building" 
+                                        style="flex: 1; background: #e74c3c;">
+                                    关闭
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                modal.querySelector('.btn-close-building').addEventListener('click', () => {
+                    modal.remove();
+                });
+                
+                modal.querySelector('.close-btn').addEventListener('click', () => {
+                    modal.remove();
+                });
+                
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.remove();
+                    }
+                });
+            }
+            
+            getBuildingEmoji(type) {
+                const emojis = {
+                    '指挥中心': '🏢', '宿舍': '🛏️', '厨房': '🍳', '医疗站': '🏥',
+                    '瞭望塔': '🔭', '仓库': '📦', '研究所': '🔬'
+                };
+                return emojis[type] || '🏠';
+            }
+            
+            purchaseUpgrade(upgrade) {
+                if (this.resources['材料'].amount < upgrade.cost) {
+                    this.showNotification(`需要${upgrade.cost}材料`, 'danger');
+                    return;
+                }
+                
+                this.resources['材料'].amount -= upgrade.cost;
+                upgrade.effect();
+                this.addEvent(`${upgrade.name}升级完成`, 'success');
+                document.getElementById('upgrade-modal').style.display = 'none';
+                this.updateUI();
+            }
+            
+            // ====== 幸存者系统 ======
+            recruitSurvivor() {
+                const maxPopulation = 4 + this.buildings.filter(b => b.type === '宿舍').length * 4;
+                if (this.survivors.length >= maxPopulation) {
+                    this.showNotification('人口已达上限，需要建造更多宿舍', 'warning');
+                    return;
+                }
+                
+                if (this.resources['食物'].amount < 20 || this.resources['水'].amount < 15) {
+                    this.showNotification('资源不足，无法招募幸存者', 'danger');
+                    return;
+                }
+                
+                this.resources['食物'].amount -= 20;
+                this.resources['水'].amount -= 15;
+                
+                const newId = this.survivors.length + 1;
+                const newSurvivor = this.createRandomSurvivor(newId);
+                this.survivors.push(newSurvivor);
+                
+                this.addEvent(`${newSurvivor.name}加入了基地`, 'success');
+                this.checkAchievement('ark_heart');
+                this.updateUI();
+            }
+            
+            handleDeath(survivor) {
+                const index = this.survivors.findIndex(s => s.id === survivor.id);
+                if (index !== -1) {
+                    this.addEvent(`😢 ${survivor.name}不幸去世了...`, 'danger');
+                    this.survivors.splice(index, 1);
+                    this.updateUI();
+                }
+            }
+            
+            // ====== 探索系统 ======
+            exploreLocation(location) {
+                if (this.resources['食物'].amount < 10 || this.resources['水'].amount < 5) {
+                    this.showNotification('资源不足，无法探索', 'danger');
+                    return;
+                }
+                
+                this.resources['食物'].amount -= 10;
+                this.resources['水'].amount -= 5;
+                
+                let result = '';
+                let success = Math.random() > location.risk;
+                
+                this.gameState.explored.add(location.name);
+                this.checkAchievement('explorer');
+                
+                if (success) {
+                    // 成功探索
+                    result = `探索${location.name}成功！获得：`;
+                    for (const [resource, amount] of Object.entries(location.rewards)) {
+                        this.resources[resource].amount = Math.min(
+                            this.resources[resource].max,
+                            this.resources[resource].amount + amount
+                        );
+                        result += ` ${amount}${resource}`;
+                    }
+                    
+                    this.addEvent(result, 'success');
+                    this.showNotification('探索成功！', 'success');
+                } else {
+                    // 探索失败
+                    result = `探索${location.name}失败！损失了部分资源`;
+                    this.resources['材料'].amount = Math.max(0, this.resources['材料'].amount - 10);
+                    this.addEvent(result, 'danger');
+                    this.showNotification('探索失败！', 'danger');
+                }
+                
+                this.updateUI();
+            }
+            
+            // ====== 战斗系统 ======
+            spawnEnemy() {
+                if (this.combatActive || this.enemies.length > 0) return;
+                
+                const enemyType = { 
+                    type: '丧尸', 
+                    health: 50 + this.gameState.threat * 10, 
+                    damage: 10 + this.gameState.threat * 2, 
+                    speed: 1, 
+                    icon: '🧟' 
+                };
+                
+                const enemy = {
+                    ...enemyType,
+                    id: 1,
+                    maxHealth: enemyType.health,
+                    health: enemyType.health
+                };
+                
+                this.enemies.push(enemy);
+                this.addEvent(`⚠️ 丧尸正在接近基地！`, 'danger');
+                
+                setTimeout(() => {
+                    if (!this.combatActive && this.enemies.length > 0) {
+                        this.startCombat();
+                    }
+                }, 2000);
+            }
+            
+            startCombat() {
+                if (this.enemies.length === 0) return;
+                
+                this.combatActive = true;
+                this.currentEnemy = this.enemies[0];
+                
+                document.getElementById('enemy-info').innerHTML = `
+                    <div class="enemy-card">
+                        <div style="font-size: 48px;">${this.currentEnemy.icon}</div>
+                        <div style="font-size: 18px; margin: 10px 0; color: #e74c3c;">${this.currentEnemy.type}</div>
+                        <div>❤️ 生命值: ${this.currentEnemy.health}/${this.currentEnemy.maxHealth}</div>
+                        <div>⚔️ 伤害: ${this.currentEnemy.damage}</div>
+                    </div>
+                `;
+                
+                document.getElementById('combat-log').innerHTML = 
+                    `<div style="color: #e74c3c;">${this.currentEnemy.type}出现在基地外围！</div>`;
+                
+                const modal = document.getElementById('combat-modal');
+                modal.style.display = 'flex';
+                
+                setTimeout(() => {
+                    const modalContent = modal.querySelector('.modal-content');
+                    if (modalContent) {
+                        modalContent.scrollTop = 0;
+                    }
+                }, 10);
+            }
+            
+            combatAction(action) {
+                if (!this.currentEnemy) return;
+                
+                const log = document.getElementById('combat-log');
+                
+                switch(action) {
+                    case 'attack':
+                        const playerDamage = 20 + Math.floor(Math.random() * 15) + this.survivors.length * 2;
+                        this.currentEnemy.health -= playerDamage;
+                        
+                        log.innerHTML += `<div>你的队伍对${this.currentEnemy.type}造成${playerDamage}点伤害！</div>`;
+                        
+                        if (this.currentEnemy.health > 0) {
+                            const enemyDamage = this.currentEnemy.damage - Math.floor(Math.random() * 5);
+                            log.innerHTML += `<div>${this.currentEnemy.type}反击，造成${enemyDamage}点伤害！</div>`;
+                        }
+                        break;
+                        
+                    case 'defend':
+                        log.innerHTML += `<div>你的队伍采取防御姿态，减少了下一次伤害！</div>`;
+                        break;
+                        
+                    case 'flee':
+                        log.innerHTML += `<div>你的队伍撤退了！损失了部分资源。</div>`;
+                        this.resources['材料'].amount = Math.max(0, this.resources['材料'].amount - 20);
+                        this.resources['食物'].amount = Math.max(0, this.resources['食物'].amount - 15);
+                        this.endCombat(false);
+                        return;
+                }
+                
+                if (this.currentEnemy.health <= 0) {
+                    log.innerHTML += `<div style="color: #2ecc71;">✅ 击败了${this.currentEnemy.type}！</div>`;
+                    
+                    const reward = Math.floor(Math.random() * 30) + 15;
+                    this.resources['弹药'].amount += reward;
+                    this.addEvent(`击败${this.currentEnemy.type}，获得${reward}弹药`, 'success');
+                    
+                    this.enemies.shift();
+                    
+                    if (this.enemies.length === 0) {
+                        this.checkAchievement('zombie_slayer');
+                    }
+                    
+                    this.endCombat(this.enemies.length === 0);
+                } else {
+                    log.scrollTop = log.scrollHeight;
+                }
+                
+                this.updateUI();
+            }
+            
+            endCombat(victory) {
+                this.combatActive = false;
+                this.currentEnemy = null;
+                
+                setTimeout(() => {
+                    document.getElementById('combat-modal').style.display = 'none';
+                }, 2000);
+                
+                if (victory) {
+                    this.addEvent('成功击退敌人！', 'success');
+                }
+                
+                this.updateUI();
+            }
+            
+            // ====== 科技系统 ======
+            canResearchTech(tech) {
+                if (!tech) return false;
+                if (this.gameState.tech.has(tech.id)) return false;
+                if (this.resources['材料'].amount < tech.cost) return false;
+                
+                for (const req of tech.require) {
+                    if (!this.gameState.tech.has(req)) return false;
+                }
+                
+                return true;
+            }
+            
+            researchTech(techId) {
+                const tech = this.techTree.find(t => t.id === techId);
+                if (!tech) return;
+                
+                if (this.gameState.tech.has(techId)) {
+                    this.showNotification('该科技已研究完成', 'info');
+                    return;
+                }
+                
+                if (!this.canResearchTech(tech)) {
+                    if (this.resources['材料'].amount < tech.cost) {
+                        this.showNotification(`材料不足！需要${tech.cost}材料`, 'danger');
+                    } else if (tech.require.length > 0) {
+                        this.showNotification('未满足前置科技条件', 'warning');
+                    }
+                    return;
+                }
+                
+                this.resources['材料'].amount -= tech.cost;
+                this.gameState.tech.add(tech.id);
+                
+                this.showNotification(`开始研究 ${tech.name}`, 'success');
+                this.updateUI();
+                
+                setTimeout(() => {
+                    this.showNotification(`${tech.name} 研究完成！`, 'success');
+                    this.applyTechEffect(tech.id);
+                    this.updateUI();
+                }, tech.time * 1000 * (1 / this.gameState.settings.speed));
+            }
+            
+            applyTechEffect(techId) {
+                switch(techId) {
+                    case 'basic_farming':
+                        this.resources['食物'].prod *= 1.2;
+                        break;
+                    case 'water_purify':
+                        this.resources['水'].cons *= 0.7;
+                        break;
+                    case 'advanced_defense':
+                        this.gameState.threat = Math.max(1, this.gameState.threat - 2);
+                        break;
+                    case 'solar_power':
+                        this.resources['材料'].prod += 10;
+                        break;
+                }
+            }
+            
+            // ====== 成就系统 ======
+            checkAchievements() {
+                this.achievementList.forEach(achievement => {
+                    if (!this.gameState.achievements.has(achievement.id) && achievement.condition()) {
+                        this.unlockAchievement(achievement.id);
+                    }
+                });
+            }
+            
+            unlockAchievement(achievementId) {
+                const achievement = this.achievementList.find(a => a.id === achievementId);
+                if (achievement && !this.gameState.achievements.has(achievementId)) {
+                    this.gameState.achievements.add(achievementId);
+                    this.addEvent(`🏆 成就解锁：${achievement.name}`, 'success');
+                    this.showAchievementsModal();
+                    this.saveGame();
+                }
+            }
+            
+            // ====== 画布绘制 ======
+            drawBase() {
+                if (!this.ctx) return;
+                
+                const ctx = this.ctx;
+                const width = this.canvas.width;
+                const height = this.canvas.height;
+                
+                // 清除画布
+                ctx.clearRect(0, 0, width, height);
+                
+                // 绘制背景
+                ctx.fillStyle = '#1a1a2e';
+                ctx.fillRect(0, 0, width, height);
+                
+                // 绘制网格
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+                ctx.lineWidth = 1;
+                const gridSize = 40;
+                for (let x = 0; x < width; x += gridSize) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, height);
+                    ctx.stroke();
+                }
+                for (let y = 0; y < height; y += gridSize) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(width, y);
+                    ctx.stroke();
+                }
+                
+                // 绘制基地边界
+                ctx.strokeStyle = 'rgba(52, 152, 219, 0.3)';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([10, 5]);
+                ctx.strokeRect(20, 20, width - 40, height - 40);
+                ctx.setLineDash([]);
+                
+                // 绘制建筑
+                this.buildings.forEach(building => {
+                    this.drawBuildingOnCanvas(building);
+                });
+            }
+            
+            drawBuildingOnCanvas(building) {
+                const ctx = this.ctx;
+                const scale = Math.min(this.canvas.width / 400, this.canvas.height / 300);
+                const x = building.x * scale;
+                const y = building.y * scale;
+                const size = 35 * scale;
+                
+                // 建筑颜色
+                const colors = {
+                    '指挥中心': '#3498db', '宿舍': '#2ecc71', '厨房': '#e74c3c',
+                    '医疗站': '#9b59b6', '瞭望塔': '#f1c40f', '仓库': '#95a5a6',
+                    '研究所': '#1abc9c'
+                };
+                
+                // 建筑主体
+                ctx.fillStyle = colors[building.type] || '#34495e';
+                ctx.fillRect(x, y, size, size);
+                
+                // 边框
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.lineWidth = 1.5;
+                ctx.strokeRect(x, y, size, size);
+                
+                // 建筑图标
+                const icon = this.getBuildingEmoji(building.type);
+                ctx.fillStyle = 'white';
+                ctx.font = `${14 * scale}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(icon, x + size/2, y + size/2);
+                
+                // 等级
+                ctx.font = `${8 * scale}px Arial`;
+                ctx.fillText(`Lv.${building.level}`, x + size/2, y + size + 10 * scale);
+            }
+            
+            // ====== 保存/加载系统 ======
+            saveGame() {
+                const saveData = {
+                    gameState: this.gameState,
+                    resources: this.resources,
+                    survivors: this.survivors,
+                    buildings: this.buildings,
+                    tech: Array.from(this.gameState.tech),
+                    achievements: Array.from(this.gameState.achievements),
+                    explored: Array.from(this.gameState.explored)
+                };
+                
+                try {
+                    localStorage.setItem('废土方舟_save', JSON.stringify(saveData));
+                    this.showNotification('游戏进度已保存！', 'success');
+                } catch (e) {
+                    this.showNotification('保存失败：存储空间不足', 'danger');
+                }
+            }
+            
+            saveSettings() {
+                localStorage.setItem('废土方舟_settings', JSON.stringify(this.gameState.settings));
+            }
+            
+            loadGame() {
+                try {
+                    const saveData = localStorage.getItem('废土方舟_save');
+                    if (saveData) {
+                        const data = JSON.parse(saveData);
+                        this.gameState = { ...this.gameState, ...data.gameState };
+                        this.resources = data.resources || this.resources;
+                        this.survivors = data.survivors || this.survivors;
+                        this.buildings = data.buildings || this.buildings;
+                        this.gameState.tech = new Set(data.tech || []);
+                        this.gameState.achievements = new Set(data.achievements || []);
+                        this.gameState.explored = new Set(data.explored || []);
+                        this.showNotification('读取存档成功！', 'success');
+                    } else {
+                        this.showNotification('没有找到存档', 'warning');
+                    }
+                    
+                    const settingsData = localStorage.getItem('废土方舟_settings');
+                    if (settingsData) {
+                        this.gameState.settings = { ...this.gameState.settings, ...JSON.parse(settingsData) };
+                        this.applySettingsToUI();
+                    }
+                } catch (e) {
+                    console.error('读取存档失败:', e);
+                    this.showNotification('读取存档失败', 'danger');
+                }
+            }
+            
+            applySettingsToUI() {
+                document.getElementById('music-toggle').checked = this.gameState.settings.music;
+                document.getElementById('game-speed').value = this.gameState.settings.speed;
+                
+                // 恢复音量设置
+                const volumeSlider = document.getElementById('music-volume');
+                if (volumeSlider) {
+                    volumeSlider.value = this.gameState.settings.volume * 100;
+                    this.audio.bgMusicVolume = this.gameState.settings.volume;
+                    if (this.audio.bgMusic) {
+                        this.audio.bgMusic.volume = this.gameState.settings.volume;
+                    }
+                }
+                
+                // 应用屏幕方向
+                this.setOrientation(this.gameState.settings.orientation);
+                
+                if (this.gameState.settings.music && this.audio.bgMusic) {
+                    this.tryPlayMusic();
+                }
+            }
+            
+            // ====== 随机事件 ====== */
+            randomEvent() {
+                const events = [
+                    { 
+                        message: '🌧️ 下了一场雨，收集到一些干净的水', 
+                        effect: () => this.resources['水'].amount += 30 
+                    },
+                    { 
+                        message: '🎁 发现了废弃的物资箱', 
+                        effect: () => {
+                            this.resources['材料'].amount += 20;
+                            this.resources['食物'].amount += 15;
+                        }
+                    },
+                    { 
+                        message: '💊 找到了医疗用品', 
+                        effect: () => this.resources['药品'].amount += 25 
+                    }
+                ];
+                
+                const event = events[Math.floor(Math.random() * events.length)];
+                this.addEvent(event.message, 'info');
+                event.effect();
+            }
+            
+            checkAchievement(achievementId) {
+                const achievement = this.achievementList.find(a => a.id === achievementId);
+                if (achievement && !this.gameState.achievements.has(achievementId) && achievement.condition()) {
+                    this.unlockAchievement(achievementId);
+                }
+            }
+        }
+
+        // ====== 游戏启动 ======
+        let game;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            game = new SurvivalGame();
+            window.game = game;
+            
+            console.log('🏰 《废土方舟》最终版已启动！');
+            console.log('🎵 背景音乐系统已加载');
+            console.log('📱 支持横竖屏切换');
+            console.log('⏰ 时间系统：时:分:秒显示');
+            console.log('⚡ 游戏速度：多档可选');
+            console.log('🎮 所有弹窗均有增强关闭按钮');
+            
+            // 注册Service Worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').then(() => {
+                    console.log('Service Worker 注册成功');
+                }).catch(err => {
+                    console.log('Service Worker 注册失败:', err);
+                });
+            }
+        });
+    </script>
+</body>
+</html>        }
+
+        /* ====== PWA全屏优化 ====== */
+        @media (display-mode: standalone) {
+            body {
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+        }
+
         /* 横屏提示 */
         @media (orientation: landscape) and (max-height: 600px) {
             body::before {
@@ -3102,4 +5179,5 @@
         <link rel="stylesheet" href="manifest.json">
         <script src="sw.js"></script>
 </body>
+
 </html>
