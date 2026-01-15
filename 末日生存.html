@@ -1977,6 +1977,13 @@
                             this.showBuildingDetail(building);
                         }
                     }, { passive: true });
+                    const recruitBtn = document.getElementById('recruit-btn');
+                    if (recruitBtn) {
+                        recruitBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            this.recruitSurvivor();
+                        }, { passive: true });}
                 }
                 
                 // 模态窗口关闭按钮
@@ -3812,3 +3819,4 @@
     </script>
 </body>
 </html>
+
