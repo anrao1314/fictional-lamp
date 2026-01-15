@@ -1,0 +1,439 @@
+{
+  "id": "shadow_legion",
+  "name": "暗影军团",
+  "version": "1.0",
+  "description": "添加高级军事科技、神秘怪物和暗影探索内容的扩展包",
+  "author": "废土方舟开发组",
+  "icon": "🦾",
+  "releaseDate": "2024-01-15",
+  "installed": true,
+  "installDate": "2024-01-15T10:30:00Z",
+  
+  "buildings": {
+    "available": [
+      {
+        "id": "cybernetics_lab",
+        "type": "赛博实验室",
+        "cost": {
+          "materials": 450,
+          "energy": 180,
+          "techPoints": 100
+        },
+        "effect": "研发赛博植入体，幸存者属性+30%",
+        "icon": "🧪",
+        "color": "#8e44ad",
+        "description": "研发赛博增强技术，提高幸存者各项能力"
+      },
+      {
+        "id": "stealth_generator",
+        "type": "隐形力场发生器",
+        "cost": {
+          "materials": 380,
+          "energy": 250,
+          "techPoints": 80
+        },
+        "effect": "减少怪物袭击频率-40%，预警时间+50%",
+        "icon": "🛸",
+        "color": "#3498db",
+        "description": "生成隐形力场，降低基地被发现的概率"
+      },
+      {
+        "id": "plasma_foundry",
+        "type": "等离子铸造厂",
+        "cost": {
+          "materials": 520,
+          "energy": 300,
+          "ammunition": 150
+        },
+        "effect": "生产等离子武器，弹药产量+40/小时",
+        "icon": "🔥",
+        "color": "#e74c3c",
+        "description": "制造高级能量武器，显著提升防御能力"
+      },
+      {
+        "id": "quantum_computer",
+        "type": "量子计算机",
+        "cost": {
+          "materials": 600,
+          "energy": 400,
+          "techPoints": 150
+        },
+        "effect": "科研速度+80%，资源计算效率+25%",
+        "icon": "💻",
+        "color": "#1abc9c",
+        "description": "量子计算系统，大幅提升科研和管理效率"
+      },
+      {
+        "id": "teleportation_pad",
+        "type": "传送平台",
+        "cost": {
+          "materials": 550,
+          "energy": 350,
+          "techPoints": 120
+        },
+        "effect": "探索时间-60%，探索成功率+35%",
+        "icon": "🌀",
+        "color": "#9b59b6",
+        "description": "瞬移技术，极大缩短探索距离和时间"
+      }
+    ]
+  },
+  
+  "techTree": [
+    {
+      "id": "cybernetics",
+      "name": "赛博增强学",
+      "cost": 180,
+      "effect": "解锁赛博植入体，幸存者健康+40%",
+      "icon": "🔋",
+      "requires": ["genetics", "ai_system"],
+      "researchTime": 8,
+      "description": "将机械与人体结合的技术"
+    },
+    {
+      "id": "plasma_tech",
+      "name": "等离子技术",
+      "cost": 220,
+      "effect": "等离子武器伤害+50%，能量消耗-30%",
+      "icon": "⚡",
+      "requires": ["nuclear_power"],
+      "researchTime": 10,
+      "description": "掌握高温等离子体的武器化应用"
+    },
+    {
+      "id": "quantum_field",
+      "name": "量子场论",
+      "cost": 280,
+      "effect": "解锁量子传送，随机事件概率+50%",
+      "icon": "⚛️",
+      "requires": ["quantum_tech"],
+      "researchTime": 12,
+      "description": "理解并操纵量子场的高级理论"
+    },
+    {
+      "id": "stealth_tech",
+      "name": "隐形科技",
+      "cost": 200,
+      "effect": "基地隐形等级+3，怪物发现概率-60%",
+      "icon": "👁️‍🗨️",
+      "requires": ["ai_system"],
+      "researchTime": 9,
+      "description": "先进的光学和电磁隐形技术"
+    },
+    {
+      "id": "exoskeleton",
+      "name": "动力外骨骼",
+      "cost": 160,
+      "effect": "幸存者负重+100%，工作效率+40%",
+      "icon": "🦿",
+      "requires": ["advanced_construction"],
+      "researchTime": 7,
+      "description": "增强人体力量和工作能力的机械外骨骼"
+    }
+  ],
+  
+  "monsterTypes": [
+    {
+      "id": "cyber_zombie",
+      "name": "赛博僵尸",
+      "description": "被机械改造的僵尸，拥有电子眼和强化肢体",
+      "hp": 95,
+      "maxHp": 95,
+      "damage": 28,
+      "speed": 2,
+      "reward": {
+        "materials": 45,
+        "energy": 35,
+        "techPoints": 20
+      },
+      "icon": "🤖",
+      "color": "#34495e",
+      "spawnChance": 0.12,
+      "abilities": ["电磁脉冲", "自我修复", "热能视觉"]
+    },
+    {
+      "id": "shadow_stalker",
+      "name": "暗影潜行者",
+      "description": "能在阴影中移动的怪物，攻击时才会显形",
+      "hp": 70,
+      "maxHp": 70,
+      "damage": 35,
+      "speed": 4,
+      "reward": {
+        "materials": 40,
+        "ammunition": 25,
+        "techPoints": 18
+      },
+      "icon": "👤",
+      "color": "#2c3e50",
+      "spawnChance": 0.08,
+      "abilities": ["隐形", "背刺", "阴影跳跃"]
+    },
+    {
+      "id": "plasma_beast",
+      "name": "等离子兽",
+      "description": "体内充满等离子能量的变异生物",
+      "hp": 110,
+      "maxHp": 110,
+      "damage": 40,
+      "speed": 1,
+      "reward": {
+        "energy": 60,
+        "materials": 55,
+        "techPoints": 25
+      },
+      "icon": "🐉",
+      "color": "#e74c3c",
+      "spawnChance": 0.06,
+      "abilities": ["等离子吐息", "过热", "能量护盾"]
+    },
+    {
+      "id": "quantum_phantom",
+      "name": "量子幽灵",
+      "description": "存在于量子态的怪物，难以被传统武器伤害",
+      "hp": 65,
+      "maxHp": 65,
+      "damage": 30,
+      "speed": 3,
+      "reward": {
+        "techPoints": 40,
+        "energy": 45,
+        "materials": 35
+      },
+      "icon": "👻",
+      "color": "#9b59b6",
+      "spawnChance": 0.04,
+      "abilities": ["量子态", "相位转移", "概率攻击"]
+    },
+    {
+      "id": "nanite_swarm",
+      "name": "纳米集群",
+      "description": "由无数纳米机器人组成的集群意识",
+      "hp": 85,
+      "maxHp": 85,
+      "damage": 25,
+      "speed": 2,
+      "reward": {
+        "materials": 50,
+        "techPoints": 30,
+        "medicine": 20
+      },
+      "icon": "🦠",
+      "color": "#1abc9c",
+      "spawnChance": 0.05,
+      "abilities": ["分裂", "吞噬", "重组"]
+    }
+  ],
+  
+  "exploreLocations": [
+    {
+      "name": "赛博实验室废墟",
+      "risk": "高",
+      "time": 28,
+      "rewards": {
+        "techPoints": 60,
+        "energy": 120,
+        "materials": 80
+      },
+      "icon": "🔬",
+      "desc": "前文明的高级研究设施，危险但充满科技宝藏"
+    },
+    {
+      "name": "量子隧道",
+      "risk": "极高",
+      "time": 35,
+      "rewards": {
+        "techPoints": 100,
+        "energy": 180,
+        "materials": 120,
+        "ammunition": 90
+      },
+      "icon": "🌀",
+      "desc": "不稳定的量子空间通道，回报丰厚但极其危险"
+    },
+    {
+      "name": "暗影军团基地",
+      "risk": "高",
+      "time": 30,
+      "rewards": {
+        "ammunition": 150,
+        "materials": 100,
+        "techPoints": 70,
+        "medicine": 60
+      },
+      "icon": "🏰",
+      "desc": "神秘军事组织的废弃基地，内有先进武器库存"
+    },
+    {
+      "name": "纳米机器人生产中心",
+      "risk": "中",
+      "time": 25,
+      "rewards": {
+        "materials": 110,
+        "techPoints": 45,
+        "energy": 90
+      },
+      "icon": "🏭",
+      "desc": "自动化纳米工厂，可能仍在运作"
+    },
+    {
+      "name": "等离子反应堆",
+      "risk": "极高",
+      "time": 32,
+      "rewards": {
+        "energy": 200,
+        "techPoints": 80,
+        "materials": 90
+      },
+      "icon": "⚛️",
+      "desc": "不稳定但强大的能源设施，辐射极高"
+    }
+  ],
+  
+  "achievementsList": [
+    {
+      "id": "cyber_master",
+      "name": "赛博领主",
+      "description": "建造所有赛博科技建筑",
+      "icon": "🤖",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "解锁终极赛博武器"
+    },
+    {
+      "id": "shadow_hunter",
+      "name": "暗影猎手",
+      "description": "击杀50只暗影军团怪物",
+      "icon": "🎯",
+      "unlocked": false,
+      "type": "gold",
+      "reward": "获得暗影伪装技能"
+    },
+    {
+      "id": "quantum_explorer",
+      "name": "量子探险家",
+      "description": "探索所有量子相关地点",
+      "icon": "🌀",
+      "unlocked": false,
+      "type": "gold",
+      "reward": "量子传送冷却时间-50%"
+    },
+    {
+      "id": "plasma_engineer",
+      "name": "等离子工程师",
+      "description": "研发所有等离子科技",
+      "icon": "🔥",
+      "unlocked": false,
+      "type": "silver",
+      "reward": "等离子武器伤害+25%"
+    },
+    {
+      "id": "nanite_collector",
+      "name": "纳米收集者",
+      "description": "收集1000个纳米材料",
+      "icon": "🦠",
+      "unlocked": false,
+      "type": "silver",
+      "reward": "解锁纳米修复技术"
+    },
+    {
+      "id": "stealth_phantom",
+      "name": "隐形幽灵",
+      "description": "连续3天不被怪物袭击",
+      "icon": "👻",
+      "unlocked": false,
+      "type": "bronze",
+      "reward": "永久隐形概率+10%"
+    }
+  ],
+  
+  "newFeatures": {
+    "cyberImplants": {
+      "available": [
+        {
+          "id": "neural_enhancer",
+          "name": "神经增强器",
+          "cost": { "techPoints": 50, "materials": 100 },
+          "effect": "幸存者学习速度+50%",
+          "description": "增强大脑处理能力的植入体"
+        },
+        {
+          "id": "synthetic_muscle",
+          "name": "合成肌肉纤维",
+          "cost": { "techPoints": 40, "materials": 80 },
+          "effect": "体力+60%，恢复速度+40%",
+          "description": "人造肌肉组织，显著增强力量"
+        },
+        {
+          "id": "optical_enhancement",
+          "name": "光学增强眼",
+          "cost": { "techPoints": 60, "materials": 120 },
+          "effect": "探索成功率+35%，战斗命中+25%",
+          "description": "提供夜视、热成像和望远功能"
+        }
+      ]
+    },
+    
+    "plasmaWeapons": {
+      "available": [
+        {
+          "id": "plasma_rifle",
+          "name": "等离子步枪",
+          "cost": { "materials": 150, "energy": 100 },
+          "damage": "45-65",
+          "effect": "对机械类敌人伤害+100%",
+          "description": "标准等离子能量武器"
+        },
+        {
+          "id": "quantum_disruptor",
+          "name": "量子干扰器",
+          "cost": { "techPoints": 120, "energy": 150 },
+          "damage": "60-80",
+          "effect": "无视敌人30%防御",
+          "description": "基于量子干扰原理的武器"
+        }
+      ]
+    },
+    
+    "stealthMechanics": {
+      "stealthLevel": 0,
+      "maxStealth": 5,
+      "detectionReduction": [0, 10, 25, 40, 60, 80],
+      "upgrades": [
+        { "level": 1, "cost": { "materials": 200 }, "effect": "基础隐形力场" },
+        { "level": 2, "cost": { "materials": 300, "energy": 150 }, "effect": "热信号屏蔽" },
+        { "level": 3, "cost": { "techPoints": 100, "materials": 400 }, "effect": "电磁隐形" },
+        { "level": 4, "cost": { "techPoints": 150, "energy": 200 }, "effect": "量子迷彩" },
+        { "level": 5, "cost": { "techPoints": 200, "materials": 500 }, "effect": "完美隐形" }
+      ]
+    }
+  },
+  
+  "specialEvents": [
+    {
+      "id": "quantum_anomaly",
+      "name": "量子异常事件",
+      "triggerChance": 0.01,
+      "description": "时空结构出现异常，发生不可预测的事件",
+      "possibleOutcomes": [
+        "资源复制：所有资源翻倍",
+        "时间跳跃：游戏时间前进3天",
+        "空间扭曲：随机传送一个探索队伍",
+        "能量潮汐：能源产量暂时+200%",
+        "现实崩塌：随机损失一个建筑"
+      ]
+    },
+    {
+      "id": "nanite_infection",
+      "name": "纳米机器人感染事件",
+      "triggerChance": 0.015,
+      "description": "基地被纳米机器人感染，需要紧急处理",
+      "effects": [
+        "幸存者健康-30%",
+        "建筑效率-25%",
+        "持续3小时",
+        "成功后获得纳米技术奖励"
+      ]
+    }
+  ]
+}

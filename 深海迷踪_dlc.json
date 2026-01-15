@@ -1,0 +1,679 @@
+{
+  "id": "deep_sea_mysteries",
+  "name": "深海迷踪",
+  "version": "1.0",
+  "description": "添加海洋探索、水下建筑和深海生物内容的扩展包",
+  "author": "废土方舟开发组",
+  "icon": "🌊",
+  "releaseDate": "2024-03-15",
+  "installed": true,
+  "installDate": "2024-03-15T11:00:00Z",
+  
+  "buildings": {
+    "available": [
+      {
+        "id": "underwater_base",
+        "type": "水下基地",
+        "cost": {
+          "materials": 600,
+          "energy": 400,
+          "techPoints": 250
+        },
+        "effect": "建立水下居住区，解锁深海探索",
+        "icon": "🏰",
+        "color": "#3498db",
+        "description": "压力适应型水下居住设施"
+      },
+      {
+        "id": "deep_sea_miner",
+        "type": "深海采矿站",
+        "cost": {
+          "materials": 450,
+          "energy": 350,
+          "water": 200
+        },
+        "effect": "开采深海矿藏，稀有材料产量+50/小时",
+        "icon": "⛏️",
+        "color": "#7f8c8d",
+        "description": "适应极端压力的深海资源开采设施"
+      },
+      {
+        "id": "submarine_dock",
+        "type": "潜艇船坞",
+        "cost": {
+          "materials": 550,
+          "energy": 380,
+          "techPoints": 200
+        },
+        "effect": "建造和维护潜艇，探索范围+500%",
+        "icon": "🚢",
+        "color": "#2c3e50",
+        "description": "深潜器建造和维修设施"
+      },
+      {
+        "id": "coral_farm",
+        "type": "珊瑚农场",
+        "cost": {
+          "materials": 320,
+          "water": 250,
+          "medicine": 100
+        },
+        "effect": "养殖特殊珊瑚，药用资源产量+40/小时",
+        "icon": "🐚",
+        "color": "#e74c3c",
+        "description": "人工珊瑚生态系统"
+      },
+      {
+        "id": "hydrothermal_plant",
+        "type": "热液发电厂",
+        "cost": {
+          "materials": 500,
+          "energy": 300,
+          "water": 300
+        },
+        "effect": "利用地热发电，能源产量+150/小时",
+        "icon": "🌋",
+        "color": "#f39c12",
+        "description": "深海热液喷口能量采集设施"
+      },
+      {
+        "id": "aquaculture_center",
+        "type": "水产养殖中心",
+        "cost": {
+          "materials": 380,
+          "water": 200,
+          "food": 150
+        },
+        "effect": "大规模水产养殖，食物产量+120/小时",
+        "icon": "🐟",
+        "color": "#1abc9c",
+        "description": "先进的海产品养殖系统"
+      }
+    ]
+  },
+  
+  "techTree": [
+    {
+      "id": "pressure_adaptation",
+      "name": "压力适应技术",
+      "cost": 160,
+      "effect": "水下生存能力，深海探索深度+2000米",
+      "icon": "🌊",
+      "requires": [],
+      "researchTime": 8,
+      "description": "适应深海极端压力的生命支持技术"
+    },
+    {
+      "id": "deep_sea_mining",
+      "name": "深海采矿技术",
+      "cost": 180,
+      "effect": "深海资源开采效率+80%",
+      "icon": "⛏️",
+      "requires": ["pressure_adaptation"],
+      "researchTime": 9,
+      "description": "极端环境下资源开采的先进技术"
+    },
+    {
+      "id": "submarine_design",
+      "name": "潜艇设计学",
+      "cost": 200,
+      "effect": "潜艇速度和耐久度+60%",
+      "icon": "🚢",
+      "requires": ["pressure_adaptation"],
+      "researchTime": 10,
+      "description": "先进深海航行器设计原理"
+    },
+    {
+      "id": "marine_biology",
+      "name": "海洋生物学",
+      "cost": 150,
+      "effect": "海洋生物研究速度+100%",
+      "icon": "🔬",
+      "requires": [],
+      "researchTime": 7,
+      "description": "深海生态系统研究"
+    },
+    {
+      "id": "underwater_construction",
+      "name": "水下建筑学",
+      "cost": 190,
+      "effect": "水下建筑建造速度+70%",
+      "icon": "🏗️",
+      "requires": ["pressure_adaptation", "advanced_construction"],
+      "researchTime": 9,
+      "description": "深海环境下的特殊建筑技术"
+    },
+    {
+      "id": "abyssal_exploration",
+      "name": "深渊探索技术",
+      "cost": 250,
+      "effect": "可探索最深海沟，发现稀有资源",
+      "icon": "🌌",
+      "requires": ["pressure_adaptation", "submarine_design", "deep_sea_mining"],
+      "researchTime": 12,
+      "description": "万米深海探索的终极技术"
+    }
+  ],
+  
+  "monsterTypes": [
+    {
+      "id": "giant_squid",
+      "name": "巨型章鱼",
+      "description": "深海中的掠食者，触手长达20米",
+      "hp": 120,
+      "maxHp": 120,
+      "damage": 35,
+      "speed": 3,
+      "reward": {
+        "food": 80,
+        "materials": 55,
+        "medicine": 45
+      },
+      "icon": "🐙",
+      "color": "#8e44ad",
+      "spawnChance": 0.10,
+      "abilities": ["触手缠绕", "墨汁喷射", "伪装", "再生"]
+    },
+    {
+      "id": "anglerfish_mutant",
+      "name": "变异琵琶鱼",
+      "description": "发光的深海鱼类，尺寸巨大化",
+      "hp": 85,
+      "maxHp": 85,
+      "damage": 30,
+      "speed": 2,
+      "reward": {
+        "food": 70,
+        "energy": 50,
+        "medicine": 40
+      },
+      "icon": "🐡",
+      "color": "#f1c40f",
+      "spawnChance": 0.12,
+      "abilities": ["发光诱饵", "电击", "毒刺", "黑暗适应"]
+    },
+    {
+      "id": "deep_sea_kraken",
+      "name": "深渊海怪",
+      "description": "传说中的深海巨兽",
+      "hp": 180,
+      "maxHp": 180,
+      "damage": 45,
+      "speed": 2,
+      "reward": {
+        "materials": 90,
+        "food": 120,
+        "energy": 70,
+        "techPoints": 60
+      },
+      "icon": "🐋",
+      "color": "#34495e",
+      "spawnChance": 0.06,
+      "abilities": ["漩涡生成", "触手攻击", "深海恐惧", "高压适应"]
+    },
+    {
+      "id": "bioluminescent_jellyfish",
+      "name": "生物发光水母群",
+      "description": "成群的发光水母，美丽而致命",
+      "hp": 70,
+      "maxHp": 70,
+      "damage": 25,
+      "speed": 1,
+      "reward": {
+        "medicine": 60,
+        "energy": 55,
+        "materials": 40
+      },
+      "icon": "🎐",
+      "color": "#3498db",
+      "spawnChance": 0.15,
+      "abilities": ["群体毒刺", "发光干扰", "麻痹毒素", "群体意识"]
+    },
+    {
+      "id": "abyssal_horror",
+      "name": "深渊恐魔",
+      "description": "栖息在深海沟的未知生物",
+      "hp": 140,
+      "maxHp": 140,
+      "damage": 40,
+      "speed": 1,
+      "reward": {
+        "techPoints": 75,
+        "materials": 85,
+        "energy": 65,
+        "medicine": 70
+      },
+      "icon": "👾",
+      "color": "#2c3e50",
+      "spawnChance": 0.05,
+      "abilities": ["压力攻击", "黑暗吞噬", "深海呼唤", "未知恐惧"]
+    }
+  ],
+  
+  "eliteMonsters": [
+    {
+      "id": "leviathan",
+      "name": "利维坦",
+      "description": "神话级的海洋巨兽，长达千米",
+      "hp": 400,
+      "maxHp": 400,
+      "damage": 65,
+      "speed": 3,
+      "reward": {
+        "food": 200,
+        "materials": 180,
+        "energy": 150,
+        "techPoints": 120,
+        "medicine": 110,
+        "water": 200
+      },
+      "icon": "🐉",
+      "color": "#3498db",
+      "spawnChance": 0.008,
+      "abilities": ["海啸召唤", "吞噬", "深海霸主", "不朽身躯", "神话存在"]
+    },
+    {
+      "id": "sea_serpent",
+      "name": "海蛇",
+      "description": "古老的蛇形海洋生物",
+      "hp": 280,
+      "maxHp": 280,
+      "damage": 55,
+      "speed": 4,
+      "reward": {
+        "materials": 150,
+        "food": 180,
+        "medicine": 100,
+        "techPoints": 90,
+        "energy": 120
+      },
+      "icon": "🐍",
+      "color": "#27ae60",
+      "spawnChance": 0.01,
+      "abilities": ["缠绕攻击", "毒液喷射", "快速游动", "水下隐蔽", "古老智慧"]
+    }
+  ],
+  
+  "exploreLocations": [
+    {
+      "name": "海底火山带",
+      "risk": "高",
+      "time": 38,
+      "rewards": {
+        "energy": 180,
+        "materials": 120,
+        "techPoints": 80,
+        "medicine": 90
+      },
+      "icon": "🌋",
+      "desc": "活跃的海底火山区域，资源丰富但危险"
+    },
+    {
+      "name": "深海热液喷口",
+      "risk": "极高",
+      "time": 42,
+      "rewards": {
+        "energy": 250,
+        "techPoints": 110,
+        "materials": 140,
+        "medicine": 100
+      },
+      "icon": "♨️",
+      "desc": "深海极端生态系统，有独特生物和矿物"
+    },
+    {
+      "name": "沉没城市",
+      "risk": "高",
+      "time": 36,
+      "rewards": {
+        "materials": 160,
+        "techPoints": 130,
+        "food": 110,
+        "medicine": 95
+      },
+      "icon": "🏛️",
+      "desc": "前文明沉入海底的城市遗迹"
+    },
+    {
+      "name": "珊瑚礁迷宫",
+      "risk": "中",
+      "time": 32,
+      "rewards": {
+        "medicine": 120,
+        "food": 140,
+        "materials": 100,
+        "water": 130
+      },
+      "icon": "🐚",
+      "desc": "复杂的水下珊瑚礁生态系统"
+    },
+    {
+      "name": "深海沟",
+      "risk": "终极",
+      "time": 48,
+      "rewards": {
+        "materials": 200,
+        "energy": 220,
+        "techPoints": 180,
+        "medicine": 160,
+        "food": 150,
+        "water": 180
+      },
+      "icon": "🕳️",
+      "desc": "地球最深处，压力最大的区域"
+    },
+    {
+      "name": "沉船墓地",
+      "risk": "中",
+      "time": 34,
+      "rewards": {
+        "materials": 130,
+        "ammunition": 110,
+        "techPoints": 90,
+        "food": 100
+      },
+      "icon": "🚢",
+      "desc": "大量沉船聚集的水下区域"
+    }
+  ],
+  
+  "achievementsList": [
+    {
+      "id": "deep_sea_explorer",
+      "name": "深海探险家",
+      "description": "探索所有深海区域",
+      "icon": "🌊",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "解锁深海领主称号"
+    },
+    {
+      "id": "leviathan_slayer",
+      "name": "利维坦猎手",
+      "description": "击败利维坦",
+      "icon": "⚔️",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "获得海神三叉戟"
+    },
+    {
+      "id": "underwater_architect",
+      "name": "水下建筑师",
+      "description": "建造所有水下建筑",
+      "icon": "🏗️",
+      "unlocked": false,
+      "type": "gold",
+      "reward": "水下建筑效率+50%"
+    },
+    {
+      "id": "marine_biologist",
+      "name": "海洋生物学家",
+      "description": "发现50种深海生物",
+      "icon": "🔬",
+      "unlocked": false,
+      "type": "gold",
+      "reward": "海洋研究速度+100%"
+    },
+    {
+      "id": "submarine_captain",
+      "name": "潜艇舰长",
+      "description": "航行距离达到10000海里",
+      "icon": "🚢",
+      "unlocked": false,
+      "type": "silver",
+      "reward": "潜艇速度+40%"
+    },
+    {
+      "id": "pearl_diver",
+      "name": "珍珠潜水员",
+      "description": "收集100颗深海珍珠",
+      "icon": "💎",
+      "unlocked": false,
+      "type": "silver",
+      "reward": "水下资源发现率+30%"
+    },
+    {
+      "id": "abyssal_conqueror",
+      "name": "深渊征服者",
+      "description": "到达海洋最深处",
+      "icon": "🏆",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "解锁深渊科技"
+    }
+  ],
+  
+  "newFeatures": {
+    "submarineTypes": [
+      {
+        "id": "exploration_sub",
+        "name": "探索型潜艇",
+        "cost": { "materials": 300, "energy": 200 },
+        "capabilities": ["深海探测", "样本采集", "中等深度"],
+        "maxDepth": 4000,
+        "description": "基础深海探索潜艇"
+      },
+      {
+        "id": "mining_sub",
+        "name": "采矿潜艇",
+        "cost": { "materials": 400, "energy": 250 },
+        "capabilities": ["深海采矿", "资源运输", "重载作业"],
+        "maxDepth": 3000,
+        "description": "专业资源开采潜艇"
+      },
+      {
+        "id": "combat_sub",
+        "name": "战斗潜艇",
+        "cost": { "materials": 450, "ammunition": 300 },
+        "capabilities": ["深海战斗", "鱼雷攻击", "声呐探测"],
+        "maxDepth": 2500,
+        "description": "水下战斗专用潜艇"
+      },
+      {
+        "id": "abyssal_sub",
+        "name": "深渊潜艇",
+        "cost": { "materials": 600, "energy": 400, "techPoints": 200 },
+        "capabilities": ["万米深潜", "极端环境", "科学研究"],
+        "maxDepth": 11000,
+        "description": "可到达海洋最深处的终极潜艇"
+      }
+    ],
+    
+    "deepSeaResources": {
+      "resources": [
+        {
+          "id": "deep_sea_minerals",
+          "name": "深海矿物",
+          "description": "深海特有的稀有矿物",
+          "uses": ["高级建筑", "科技研究", "武器制造"],
+          "rarity": "稀有",
+          "baseValue": 50
+        },
+        {
+          "id": "bioluminescent_materials",
+          "name": "生物发光材料",
+          "description": "深海生物发光器官提取物",
+          "uses": ["照明", "能源", "医疗"],
+          "rarity": "罕见",
+          "baseValue": 40
+        },
+        {
+          "id": "abyssal_pearls",
+          "name": "深渊珍珠",
+          "description": "深海贝类产生的完美珍珠",
+          "uses": ["装饰", "贸易", "仪式"],
+          "rarity": "非常稀有",
+          "baseValue": 100
+        },
+        {
+          "id": "hydrothermal_minerals",
+          "name": "热液矿物",
+          "description": "热液喷口附近形成的特殊矿物",
+          "uses": ["能量核心", "高级合金", "催化剂"],
+          "rarity": "稀有",
+          "baseValue": 70
+        }
+      ]
+    },
+    
+    "underwaterCombat": {
+      "weapons": [
+        {
+          "id": "harpoon_gun",
+          "name": "鱼叉枪",
+          "description": "水下专用穿刺武器",
+          "damage": "25-35",
+          "range": "中",
+          "special": ["穿透护甲", "可回收", "无声攻击"]
+        },
+        {
+          "id": "sonic_cannon",
+          "name": "声波炮",
+          "description": "利用声波攻击的武器",
+          "damage": "30-45",
+          "range": "长",
+          "special": ["范围攻击", "无视护甲", "水下传播"]
+        },
+        {
+          "id": "torpedo_launcher",
+          "name": "鱼雷发射器",
+          "description": "水下重武器",
+          "damage": "50-80",
+          "range": "极长",
+          "special": ["高爆伤害", "追踪目标", "大范围冲击"]
+        }
+      ],
+      
+      "defenses": [
+        {
+          "id": "pressure_armor",
+          "name": "压力护甲",
+          "description": "抵抗深海压力的特殊护甲",
+          "protection": "高压抵抗+80%，物理防御+30",
+          "requirements": "压力适应技术"
+        },
+        {
+          "id": "sonic_shield",
+          "name": "声波护盾",
+          "description": "防御声波攻击的能量护盾",
+          "protection": "声波伤害-70%，能量消耗中",
+          "requirements": "潜艇设计学"
+        }
+      ]
+    }
+  },
+  
+  "specialEvents": [
+    {
+      "id": "deep_sea_current",
+      "name": "深海洋流事件",
+      "triggerChance": 0.015,
+      "description": "强大的洋流改变海底地形",
+      "effects": [
+        "资源点位置变化",
+        "发现新的探索区域",
+        "运输速度×2",
+        "持续6小时",
+        "可能发现隐藏遗迹"
+      ]
+    },
+    {
+      "id": "bioluminescent_bloom",
+      "name": "生物发光大爆发",
+      "triggerChance": 0.012,
+      "description": "深海生物大规模发光现象",
+      "effects": [
+        "所有水下区域可见度+100%",
+        "发现稀有生物概率+50%",
+        "能量产量暂时+80%",
+        "持续8小时",
+        "可能吸引捕食者"
+      ]
+    },
+    {
+      "id": "abyssal_uprising",
+      "name": "深渊生物暴动",
+      "triggerChance": 0.008,
+      "description": "深海生物大规模向浅海迁移",
+      "effects": [
+        "大量深海怪物出现",
+        "海洋资源大幅增加",
+        "基地可能被袭击",
+        "持续24小时",
+        "解决后获得深渊知识"
+      ]
+    }
+  ],
+  
+  "underwaterBiomes": {
+    "biomes": [
+      {
+        "id": "continental_shelf",
+        "name": "大陆架",
+        "depth": "0-200米",
+        "features": ["阳光充足", "生物多样", "资源中等"],
+        "resources": ["常规鱼类", "浅海矿物", "海草"],
+        "dangerLevel": "低"
+      },
+      {
+        "id": "twilight_zone",
+        "name": "暮光区",
+        "depth": "200-1000米",
+        "features": ["光线微弱", "生物发光", "资源丰富"],
+        "resources": ["深海鱼类", "稀有矿物", "发光生物"],
+        "dangerLevel": "中"
+      },
+      {
+        "id": "midnight_zone",
+        "name": "午夜区",
+        "depth": "1000-4000米",
+        "features": ["完全黑暗", "高压环境", "奇特生物"],
+        "resources": ["珍稀矿物", "热液矿藏", "未知生物"],
+        "dangerLevel": "高"
+      },
+      {
+        "id": "abyssal_zone",
+        "name": "深渊区",
+        "depth": "4000-6000米",
+        "features": ["极端高压", "寒冷", "稀有资源"],
+        "resources": ["深渊矿物", "古代遗物", "神秘生物"],
+        "dangerLevel": "极高"
+      },
+      {
+        "id": "hadal_zone",
+        "name": "超深渊区",
+        "depth": "6000-11000米",
+        "features": ["地狱级压力", "未知领域", "终极秘密"],
+        "resources": ["神话材料", "终极科技", "宇宙知识"],
+        "dangerLevel": "终极"
+      }
+    ]
+  },
+  
+  "seaQuests": [
+    {
+      "id": "find_atlantis",
+      "name": "寻找亚特兰蒂斯",
+      "description": "探索传说中的沉没大陆",
+      "requirements": { "abyssal_exploration": true, "submarine": "深渊潜艇" },
+      "rewards": {
+        "techPoints": 500,
+        "ancient_knowledge": "失落文明科技",
+        "unlock": "亚特兰蒂斯遗迹访问权"
+      },
+      "difficulty": "史诗"
+    },
+    {
+      "id": "challenge_kraken",
+      "name": "挑战克拉肯",
+      "description": "在深海与传说中的海怪战斗",
+      "requirements": { "combat_sub": true, "pressure_armor": true },
+      "rewards": {
+        "prestige": "海怪猎手称号",
+        "materials": "克拉肯材料",
+        "unlock": "深海霸主技能"
+      },
+      "difficulty": "传说"
+    }
+  ]
+}

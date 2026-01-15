@@ -1,0 +1,560 @@
+{
+  "id": "eco_oasis",
+  "name": "生态绿洲",
+  "version": "1.0",
+  "description": "添加自然恢复、生态建筑和变异生物的扩展包",
+  "author": "废土方舟开发组",
+  "icon": "🌿",
+  "releaseDate": "2024-01-15",
+  "installed": true,
+  "installDate": "2024-01-15T10:30:00Z",
+  
+  "buildings": {
+    "available": [
+      {
+        "id": "biodome",
+        "type": "生态穹顶",
+        "cost": {
+          "materials": 400,
+          "water": 200,
+          "energy": 150
+        },
+        "effect": "内部气候控制，所有资源生产+25%",
+        "icon": "🏛️",
+        "color": "#27ae60",
+        "description": "人造生态环境，提供理想的生长条件"
+      },
+      {
+        "id": "genetic_archive",
+        "type": "基因库",
+        "cost": {
+          "materials": 350,
+          "medicine": 120,
+          "techPoints": 90
+        },
+        "effect": "保存濒危物种基因，解锁新作物",
+        "icon": "🧬",
+        "color": "#8e44ad",
+        "description": "保存前文明生物基因，用于生态恢复"
+      },
+      {
+        "id": "purification_tower",
+        "type": "净化塔",
+        "cost": {
+          "materials": 280,
+          "energy": 180,
+          "water": 150
+        },
+        "effect": "净化周围环境，辐射减少-60%",
+        "icon": "🗼",
+        "color": "#3498db",
+        "description": "过滤空气和水源中的辐射与污染物"
+      },
+      {
+        "id": "mycelium_network",
+        "type": "菌丝网络",
+        "cost": {
+          "materials": 220,
+          "food": 150,
+          "water": 100
+        },
+        "effect": "地下通讯网络，资源共享效率+30%",
+        "icon": "🍄",
+        "color": "#8b4513",
+        "description": "利用真菌网络连接基地各处，提高效率"
+      },
+      {
+        "id": "vertical_farm",
+        "type": "垂直农场",
+        "cost": {
+          "materials": 320,
+          "energy": 120,
+          "water": 180
+        },
+        "effect": "立体种植，食物产量+80/小时",
+        "icon": "🏢",
+        "color": "#2ecc71",
+        "description": "多层种植系统，最大化土地利用效率"
+      },
+      {
+        "id": "symbiosis_chamber",
+        "type": "共生培育室",
+        "cost": {
+          "materials": 380,
+          "medicine": 100,
+          "techPoints": 110
+        },
+        "effect": "培育共生生物，幸存者健康恢复+50%",
+        "icon": "🔬",
+        "color": "#16a085",
+        "description": "研究生物共生关系，开发治疗应用"
+      }
+    ]
+  },
+  
+  "techTree": [
+    {
+      "id": "bioremediation",
+      "name": "生物修复技术",
+      "cost": 160,
+      "effect": "使用微生物净化环境，污染清除+70%",
+      "icon": "🦠",
+      "requires": ["genetics"],
+      "researchTime": 7,
+      "description": "利用微生物分解污染物，恢复自然环境"
+    },
+    {
+      "id": "permaculture",
+      "name": "永续农业",
+      "cost": 140,
+      "effect": "自给自足生态系统，资源消耗-40%",
+      "icon": "🌾",
+      "requires": ["basic_farming"],
+      "researchTime": 6,
+      "description": "模仿自然生态的农业生产系统"
+    },
+    {
+      "id": "genetic_engineering",
+      "name": "基因工程",
+      "cost": 200,
+      "effect": "改造作物和生物，产量+60%",
+      "icon": "🧬",
+      "requires": ["medical_research"],
+      "researchTime": 9,
+      "description": "精确编辑生物基因的技术"
+    },
+    {
+      "id": "aquaponics",
+      "name": "鱼菜共生",
+      "cost": 120,
+      "effect": "鱼类和植物共生，食物+水联合生产",
+      "icon": "🐟",
+      "requires": ["basic_farming", "water_purification"],
+      "researchTime": 5,
+      "description": "结合水产养殖和水耕栽培的生态系统"
+    },
+    {
+      "id": "fungal_intelligence",
+      "name": "菌类智能",
+      "cost": 180,
+      "effect": "利用真菌网络，通讯效率+50%",
+      "icon": "🍄",
+      "requires": [],
+      "researchTime": 8,
+      "description": "研究真菌的生物计算能力"
+    },
+    {
+      "id": "terraformation",
+      "name": "地形改造",
+      "cost": 250,
+      "effect": "改变局部环境，解锁高级生态建筑",
+      "icon": "🌍",
+      "requires": ["bioremediation", "genetic_engineering"],
+      "researchTime": 12,
+      "description": "大规模改变环境以适合人类居住"
+    }
+  ],
+  
+  "monsterTypes": [
+    {
+      "id": "mutated_fungus",
+      "name": "变异真菌群",
+      "description": "巨大化的真菌生物，释放孢子云",
+      "hp": 80,
+      "maxHp": 80,
+      "damage": 18,
+      "speed": 1,
+      "reward": {
+        "food": 40,
+        "medicine": 35,
+        "materials": 25
+      },
+      "icon": "🍄",
+      "color": "#8b4513",
+      "spawnChance": 0.15,
+      "abilities": ["孢子感染", "缓慢扩散", "再生"]
+    },
+    {
+      "id": "vine_horror",
+      "name": "藤蔓恐魔",
+      "description": "具有攻击性的变异植物，用藤蔓捕食",
+      "hp": 95,
+      "maxHp": 95,
+      "damage": 25,
+      "speed": 2,
+      "reward": {
+        "materials": 40,
+        "food": 35,
+        "water": 30
+      },
+      "icon": "🌿",
+      "color": "#27ae60",
+      "spawnChance": 0.10,
+      "abilities": ["藤蔓缠绕", "光合作用", "毒刺"]
+    },
+    {
+      "id": "radiant_deer",
+      "name": "辐射驯鹿",
+      "description": "受辐射变异的鹿，角发出诡异光芒",
+      "hp": 65,
+      "maxHp": 65,
+      "damage": 20,
+      "speed": 4,
+      "reward": {
+        "food": 50,
+        "materials": 30,
+        "energy": 25
+      },
+      "icon": "🦌",
+      "color": "#e74c3c",
+      "spawnChance": 0.12,
+      "abilities": ["辐射光环", "快速移动", "角击"]
+    },
+    {
+      "id": "swarm_beetle",
+      "name": "集群甲虫",
+      "description": "成千上万只变异甲虫组成的集群",
+      "hp": 75,
+      "maxHp": 75,
+      "damage": 15,
+      "speed": 3,
+      "reward": {
+        "materials": 45,
+        "medicine": 20,
+        "food": 25
+      },
+      "icon": "🪲",
+      "color": "#d35400",
+      "spawnChance": 0.18,
+      "abilities": ["数量优势", "腐蚀酸液", "飞行"]
+    },
+    {
+      "id": "moss_golem",
+      "name": "苔藓巨像",
+      "description": "由植物和岩石组成的巨大生物",
+      "hp": 140,
+      "maxHp": 140,
+      "damage": 35,
+      "speed": 0.5,
+      "reward": {
+        "materials": 70,
+        "food": 40,
+        "water": 50
+      },
+      "icon": "🗿",
+      "color": "#7f8c8d",
+      "spawnChance": 0.06,
+      "abilities": ["石肤", "投掷岩石", "扎根恢复"]
+    }
+  ],
+  
+  "eliteMonsters": [
+    {
+      "id": "ancient_tree",
+      "name": "远古巨树",
+      "description": "存活了数百年的变异古树，具有原始智慧",
+      "hp": 250,
+      "maxHp": 250,
+      "damage": 45,
+      "speed": 0.3,
+      "reward": {
+        "materials": 120,
+        "food": 80,
+        "water": 70,
+        "techPoints": 60,
+        "medicine": 50
+      },
+      "icon": "🌳",
+      "color": "#27ae60",
+      "spawnChance": 0.02,
+      "abilities": ["召唤藤蔓", "生命吸取", "自然之怒", "扎根回血"]
+    },
+    {
+      "id": "spore_mother",
+      "name": "孢子母体",
+      "description": "巨大的真菌生物，不断释放新孢子",
+      "hp": 180,
+      "maxHp": 180,
+      "damage": 30,
+      "speed": 0.5,
+      "reward": {
+        "medicine": 90,
+        "food": 60,
+        "materials": 80,
+        "techPoints": 45,
+        "water": 55
+      },
+      "icon": "🍄",
+      "color": "#8b4513",
+      "spawnChance": 0.015,
+      "abilities": ["孢子雨", "感染传播", "真菌再生", "召唤菌兽"]
+    }
+  ],
+  
+  "exploreLocations": [
+    {
+      "name": "失落植物园",
+      "risk": "中",
+      "time": 24,
+      "rewards": {
+        "food": 120,
+        "water": 90,
+        "medicine": 70,
+        "materials": 60
+      },
+      "icon": "🌴",
+      "desc": "前文明的植物研究基地，可能有珍稀植物种子"
+    },
+    {
+      "name": "纯净水源地",
+      "risk": "低",
+      "time": 20,
+      "rewards": {
+        "water": 200,
+        "food": 80,
+        "medicine": 40
+      },
+      "icon": "💧",
+      "desc": "罕见的未受污染水源，对基地至关重要"
+    },
+    {
+      "name": "真菌森林",
+      "risk": "高",
+      "time": 28,
+      "rewards": {
+        "medicine": 110,
+        "food": 90,
+        "materials": 80,
+        "techPoints": 40
+      },
+      "icon": "🍄",
+      "desc": "奇异的真菌生态系统，充满未知与危险"
+    },
+    {
+      "name": "变异动物巢穴",
+      "risk": "高",
+      "time": 26,
+      "rewards": {
+        "food": 150,
+        "materials": 100,
+        "medicine": 80,
+        "ammunition": 70
+      },
+      "icon": "🦝",
+      "desc": "变异生物的聚集地，危险但资源丰富"
+    },
+    {
+      "name": "生态研究站",
+      "risk": "中",
+      "time": 22,
+      "rewards": {
+        "techPoints": 70,
+        "medicine": 90,
+        "materials": 80,
+        "food": 70
+      },
+      "icon": "🔬",
+      "desc": "前文明的生态研究设施，有重要科研资料"
+    },
+    {
+      "name": "再生绿洲",
+      "risk": "极高",
+      "time": 34,
+      "rewards": {
+        "water": 150,
+        "food": 200,
+        "medicine": 120,
+        "techPoints": 90,
+        "materials": 110,
+        "energy": 100
+      },
+      "icon": "🏝️",
+      "desc": "传说中的自然恢复区域，回报极丰但守卫森严"
+    }
+  ],
+  
+  "achievementsList": [
+    {
+      "id": "eco_pioneer",
+      "name": "生态先锋",
+      "description": "建造所有生态建筑",
+      "icon": "🌱",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "解锁终极生态技术"
+    },
+    {
+      "id": "nature_guardian",
+      "name": "自然守护者",
+      "description": "净化10个污染区域",
+      "icon": "🛡️",
+      "unlocked": false,
+      "type": "gold",
+      "reward": "获得自然亲和能力"
+    },
+    {
+      "id": "green_thumb",
+      "name": "绿手指",
+      "description": "生产5000食物",
+      "icon": "👍",
+      "unlocked": false,
+      "type": "silver",
+      "reward": "农作物生长速度+30%"
+    },
+    {
+      "id": "biologist",
+      "name": "生物学家",
+      "description": "收集50种不同生物样本",
+      "icon": "🧬",
+      "unlocked": false,
+      "type": "gold",
+      "reward": "解锁基因库扩展功能"
+    },
+    {
+      "id": "fungal_expert",
+      "name": "真菌专家",
+      "description": "研究真菌智能科技",
+      "icon": "🍄",
+      "unlocked": false,
+      "type": "bronze",
+      "reward": "菌类资源产量+25%"
+    },
+    {
+      "id": "terraformer",
+      "name": "地形改造者",
+      "description": "完成地形改造研究",
+      "icon": "🌍",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "解锁高级环境控制"
+    },
+    {
+      "id": "symbiosis_master",
+      "name": "共生大师",
+      "description": "建立5个共生关系",
+      "icon": "🤝",
+      "unlocked": false,
+      "type": "silver",
+      "reward": "所有共生效果+20%"
+    }
+  ],
+  
+  "newFeatures": {
+    "ecologicalZones": {
+      "types": [
+        {
+          "id": "forest_zone",
+          "name": "森林区",
+          "requirements": { "materials": 200, "water": 150 },
+          "effects": ["食物产量+30%", "木材资源+25%", "幸存者心情+10%"],
+          "upgradeable": true
+        },
+        {
+          "id": "wetland_zone",
+          "name": "湿地区",
+          "requirements": { "water": 250, "materials": 180 },
+          "effects": ["水产量+40%", "鱼类资源+35%", "净化效率+20%"],
+          "upgradeable": true
+        },
+        {
+          "id": "garden_zone",
+          "name": "花园区",
+          "requirements": { "food": 150, "water": 100 },
+          "effects": ["农作物生长+25%", "药用植物+20%", "美观度+15%"],
+          "upgradeable": true
+        }
+      ]
+    },
+    
+    "symbioticRelationships": {
+      "available": [
+        {
+          "id": "plant_fungus",
+          "name": "植物-真菌共生",
+          "requirements": { "food": 100, "medicine": 50 },
+          "effects": ["食物产量+25%", "药用效果+20%", "生长速度+15%"],
+          "description": "植物与真菌的互利关系"
+        },
+        {
+          "id": "fish_plant",
+          "name": "鱼-植物共生",
+          "requirements": { "water": 150, "food": 80 },
+          "effects": ["水产产量+30%", "水净化+25%", "肥料产量+20%"],
+          "description": "鱼菜共生系统"
+        },
+        {
+          "id": "insect_plant",
+          "name": "昆虫-植物共生",
+          "requirements": { "food": 120, "materials": 70 },
+          "effects": ["授粉效率+35%", "害虫控制+25%", "生物多样性+15%"],
+          "description": "有益昆虫与植物的关系"
+        }
+      ]
+    },
+    
+    "geneticModification": {
+      "crops": [
+        {
+          "id": "rad_resistant_wheat",
+          "name": "抗辐射小麦",
+          "requirements": { "techPoints": 40, "food": 80 },
+          "effects": ["可在污染区生长", "产量+20%", "营养价值+15%"],
+          "researchTime": 4
+        },
+        {
+          "id": "fast_growth_beans",
+          "name": "速生豆类",
+          "requirements": { "techPoints": 35, "water": 60 },
+          "effects": ["生长周期-40%", "产量+15%", "固氮能力+25%"],
+          "researchTime": 3
+        },
+        {
+          "id": "medicinal_mushrooms",
+          "name": "药用蘑菇",
+          "requirements": { "techPoints": 45, "medicine": 70 },
+          "effects": ["药用价值+40%", "可在黑暗中生长", "抗菌效果+30%"],
+          "researchTime": 5
+        }
+      ]
+    }
+  },
+  
+  "specialEvents": [
+    {
+      "id": "bloom_event",
+      "name": "大开花事件",
+      "triggerChance": 0.02,
+      "description": "基地内的植物突然同时开花",
+      "effects": [
+        "食物产量暂时+100%",
+        "幸存者心情+30%",
+        "持续2小时",
+        "可能吸引特殊昆虫"
+      ]
+    },
+    {
+      "id": "mushroom_ring",
+      "name": "蘑菇圈事件",
+      "triggerChance": 0.015,
+      "description": "神秘的蘑菇圈出现在基地周围",
+      "effects": [
+        "随机资源大幅增加",
+        "可能触发真菌相关事件",
+        "可持续1-3天",
+        "有极低概率出现稀有真菌"
+      ]
+    },
+    {
+      "id": "animal_migration",
+      "name": "动物迁徙事件",
+      "triggerChance": 0.012,
+      "description": "大群变异动物经过基地附近",
+      "effects": [
+        "狩猎机会：食物+150-300",
+        "可能带来危险",
+        "持续6小时",
+        "可能发现稀有动物种类"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,782 @@
+{
+  "id": "psychic_domain",
+  "name": "心灵领域",
+  "version": "1.0",
+  "description": "添加心灵感应、念动力和精神操控内容的扩展包",
+  "author": "废土方舟开发组",
+  "icon": "🧠",
+  "releaseDate": "2024-05-01",
+  "installed": true,
+  "installDate": "2024-05-01T11:00:00Z",
+  
+  "buildings": {
+    "available": [
+      {
+        "id": "telepathy_tower",
+        "type": "心灵感应塔",
+        "cost": {
+          "materials": 400,
+          "energy": 350,
+          "techPoints": 250
+        },
+        "effect": "增强心灵感应范围，精神通讯距离+500%",
+        "icon": "🗼",
+        "color": "#9b59b6",
+        "description": "放大和定向精神信号的塔状结构"
+      },
+      {
+        "id": "psionic_training_chamber",
+        "type": "灵能训练室",
+        "cost": {
+          "materials": 350,
+          "medicine": 200,
+          "energy": 300
+        },
+        "effect": "训练灵能潜力，幸存者精神能力成长速度+200%",
+        "icon": "🏋️",
+        "color": "#3498db",
+        "description": "专门培养和强化精神能力的设施"
+      },
+      {
+        "id": "dream_laboratory",
+        "type": "梦境实验室",
+        "cost": {
+          "materials": 450,
+          "medicine": 300,
+          "techPoints": 280
+        },
+        "effect": "研究和操控梦境，解锁潜意识力量",
+        "icon": "💤",
+        "color": "#8e44ad",
+        "description": "探索和利用梦境世界的先进设施"
+      },
+      {
+        "id": "collective_consciousness_hub",
+        "type": "集体意识枢纽",
+        "cost": {
+          "materials": 600,
+          "energy": 500,
+          "techPoints": 400
+        },
+        "effect": "连接所有幸存者思维，群体决策效率+150%",
+        "icon": "🧩",
+        "color": "#2c3e50",
+        "description": "创建心灵网络的中心节点"
+      },
+      {
+        "id": "mental_barrier_generator",
+        "type": "精神屏障发生器",
+        "cost": {
+          "materials": 480,
+          "energy": 420,
+          "techPoints": 320
+        },
+        "effect": "生成精神防护屏障，抵抗心灵攻击+80%",
+        "icon": "🛡️",
+        "color": "#1abc9c",
+        "description": "保护基地免受精神入侵的防御系统"
+      },
+      {
+        "id": "precognition_chamber",
+        "type": "预知冥想室",
+        "cost": {
+          "materials": 520,
+          "medicine": 350,
+          "techPoints": 380
+        },
+        "effect": "预见未来事件，预警准确率+75%",
+        "icon": "🔮",
+        "color": "#e74c3c",
+        "description": "通过深度冥想窥视未来的特殊设施"
+      }
+    ]
+  },
+  
+  "techTree": [
+    {
+      "id": "basic_telepathy",
+      "name": "基础心灵感应",
+      "cost": 160,
+      "effect": "解锁无声通讯，无需语言交流",
+      "icon": "💭",
+      "requires": [],
+      "researchTime": 8,
+      "description": "最基本的精神交流能力"
+    },
+    {
+      "id": "telekinesis",
+      "name": "念动力",
+      "cost": 200,
+      "effect": "用思维移动物体，远程操作能力解锁",
+      "icon": "✋",
+      "requires": ["basic_telepathy"],
+      "researchTime": 10,
+      "description": "通过精神力量操控物理世界"
+    },
+    {
+      "id": "psychic_projection",
+      "name": "精神投射",
+      "cost": 180,
+      "effect": "意识离开身体，远程观察和互动",
+      "icon": "👤",
+      "requires": ["basic_telepathy"],
+      "researchTime": 9,
+      "description": "将意识投射到远处的技术"
+    },
+    {
+      "id": "empathic_sensing",
+      "name": "共情感知",
+      "cost": 150,
+      "effect": "感知他人情绪，社交成功率+50%",
+      "icon": "❤️",
+      "requires": [],
+      "researchTime": 7,
+      "description": "感受和理解他人情感的能力"
+    },
+    {
+      "id": "mental_combat",
+      "name": "精神战斗",
+      "cost": 220,
+      "effect": "直接攻击敌人意识，无视物理防御",
+      "icon": "⚔️",
+      "requires": ["telekinesis", "psychic_projection"],
+      "researchTime": 11,
+      "description": "在精神层面进行攻击和防御的技术"
+    },
+    {
+      "id": "cosmic_consciousness",
+      "name": "宇宙意识",
+      "cost": 300,
+      "effect": "连接宇宙意识，获得终极智慧和预知",
+      "icon": "🌌",
+      "requires": ["basic_telepathy", "psychic_projection", "mental_combat"],
+      "researchTime": 15,
+      "description": "意识与宇宙整体连接的终极状态"
+    }
+  ],
+  
+  "newResource": {
+    "psychicEnergy": {
+      "name": "精神能量",
+      "description": "使用精神能力所需的能量",
+      "icon": "✨",
+      "color": "#9b59b6",
+      "baseProduction": 60,
+      "baseMax": 1200,
+      "productionBuildings": ["心灵感应塔", "灵能训练室"],
+      "consumptionRate": 0.5
+    }
+  },
+  
+  "monsterTypes": [
+    {
+      "id": "psychic_vampire",
+      "name": "心灵吸血鬼",
+      "description": "以他人精神能量为食的寄生生物",
+      "hp": 85,
+      "maxHp": 85,
+      "damage": 32,
+      "speed": 2,
+      "reward": {
+        "psychicEnergy": 50,
+        "medicine": 40,
+        "techPoints": 35
+      },
+      "icon": "🧛",
+      "color": "#8e44ad",
+      "spawnChance": 0.12,
+      "abilities": ["精神吸取", "恐惧投射", "思维控制", "隐形"]
+    },
+    {
+      "id": "nightmare_manifestation",
+      "name": "噩梦具现体",
+      "description": "从集体恐惧中诞生的精神实体",
+      "hp": 95,
+      "maxHp": 95,
+      "damage": 36,
+      "speed": 3,
+      "reward": {
+        "psychicEnergy": 60,
+        "techPoints": 50,
+        "medicine": 45
+      },
+      "icon": "😱",
+      "color": "#2c3e50",
+      "spawnChance": 0.10,
+      "abilities": ["恐惧光环", "幻觉攻击", "精神污染", "梦境入侵"]
+    },
+    {
+      "id": "telekinetic_horror",
+      "name": "念动力恐魔",
+      "description": "拥有强大念动力的变异生物",
+      "hp": 110,
+      "maxHp": 110,
+      "damage": 40,
+      "speed": 2,
+      "reward": {
+        "psychicEnergy": 70,
+        "materials": 55,
+        "techPoints": 60
+      },
+      "icon": "👁️",
+      "color": "#3498db",
+      "spawnChance": 0.08,
+      "abilities": ["物体操控", "力场护盾", "重力操控", "精神冲击"]
+    },
+    {
+      "id": "collective_hive_mind",
+      "name": "集体蜂巢思维",
+      "description": "多个意识融合形成的群体意识",
+      "hp": 130,
+      "maxHp": 130,
+      "damage": 38,
+      "speed": 1,
+      "reward": {
+        "psychicEnergy": 80,
+        "techPoints": 70,
+        "medicine": 65
+      },
+      "icon": "🐝",
+      "color": "#f39c12",
+      "spawnChance": 0.07,
+      "abilities": ["群体思维", "意识同步", "精神网络", "思维复制"]
+    },
+    {
+      "id": "void_walker",
+      "name": "虚空行者",
+      "description": "来自精神虚空维度的存在",
+      "hp": 120,
+      "maxHp": 120,
+      "damage": 42,
+      "speed": 3,
+      "reward": {
+        "psychicEnergy": 90,
+        "techPoints": 80,
+        "energy": 70
+      },
+      "icon": "🌌",
+      "color": "#34495e",
+      "spawnChance": 0.06,
+      "abilities": ["维度穿梭", "存在抹除", "虚空能量", "精神侵蚀"]
+    }
+  ],
+  
+  "eliteMonsters": [
+    {
+      "id": "dream_eater",
+      "name": "食梦者",
+      "description": "以梦境为食的古老精神存在",
+      "hp": 220,
+      "maxHp": 220,
+      "damage": 55,
+      "speed": 3,
+      "reward": {
+        "psychicEnergy": 150,
+        "techPoints": 120,
+        "medicine": 110,
+        "materials": 100,
+        "energy": 95
+      },
+      "icon": "🍽️",
+      "color": "#9b59b6",
+      "spawnChance": 0.015,
+      "abilities": ["梦境吞噬", "现实扭曲", "恐惧制造", "永恒噩梦", "精神寄生"]
+    },
+    {
+      "id": "psychic_entity",
+      "name": "纯粹精神实体",
+      "description": "没有物理形态的纯精神存在",
+      "hp": 180,
+      "maxHp": 180,
+      "damage": 60,
+      "speed": 4,
+      "reward": {
+        "psychicEnergy": 180,
+        "techPoints": 150,
+        "energy": 130,
+        "medicine": 120,
+        "materials": 110
+      },
+      "icon": "👁️‍🗨️",
+      "color": "#3498db",
+      "spawnChance": 0.012,
+      "abilities": ["物理免疫", "意识入侵", "记忆操控", "现实感知", "精神风暴"]
+    }
+  ],
+  
+  "exploreLocations": [
+    {
+      "name": "心灵研究所废墟",
+      "risk": "高",
+      "time": 38,
+      "rewards": {
+        "psychicEnergy": 140,
+        "techPoints": 120,
+        "medicine": 110,
+        "materials": 100
+      },
+      "icon": "🏢",
+      "desc": "前文明精神研究的顶级设施"
+    },
+    {
+      "name": "梦境交汇点",
+      "risk": "极高",
+      "time": 42,
+      "rewards": {
+        "psychicEnergy": 180,
+        "techPoints": 150,
+        "medicine": 130,
+        "energy": 120
+      },
+      "icon": "💤",
+      "desc": "多个梦境世界交汇的神秘地点"
+    },
+    {
+      "name": "精神虚空裂隙",
+      "risk": "高",
+      "time": 40,
+      "rewards": {
+        "psychicEnergy": 160,
+        "techPoints": 140,
+        "energy": 130,
+        "medicine": 120
+      },
+      "icon": "🌀",
+      "desc": "连接精神虚空的稳定通道"
+    },
+    {
+      "name": "集体潜意识海洋",
+      "risk": "中",
+      "time": 36,
+      "rewards": {
+        "psychicEnergy": 130,
+        "techPoints": 110,
+        "medicine": 100,
+        "food": 90
+      },
+      "icon": "🌊",
+      "desc": "全人类潜意识汇聚的精神海洋"
+    },
+    {
+      "name": "预知神庙遗迹",
+      "risk": "高",
+      "time": 44,
+      "rewards": {
+        "psychicEnergy": 170,
+        "techPoints": 160,
+        "medicine": 140,
+        "materials": 130
+      },
+      "icon": "🏛️",
+      "desc": "古代先知使用的神秘神庙"
+    },
+    {
+      "name": "意识起源之地",
+      "risk": "终极",
+      "time": 54,
+      "rewards": {
+        "psychicEnergy": 250,
+        "techPoints": 220,
+        "medicine": 200,
+        "energy": 190,
+        "materials": 180,
+        "food": 170,
+        "water": 170
+      },
+      "icon": "🌅",
+      "desc": "所有意识的起源点，蕴藏终极精神秘密"
+    }
+  ],
+  
+  "achievementsList": [
+    {
+      "id": "master_telepath",
+      "name": "心灵感应大师",
+      "description": "掌握所有心灵通讯技术",
+      "icon": "💭",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "解锁全域心灵网络"
+    },
+    {
+      "id": "telekinetic_prodigy",
+      "name": "念动力天才",
+      "description": "用念动力举起100吨物体",
+      "icon": "✋",
+      "unlocked": false,
+      "type": "gold",
+      "reward": "念动力力量+50%"
+    },
+    {
+      "id": "dreamwalker",
+      "name": "梦境行者",
+      "description": "探索100个不同梦境",
+      "icon": "🚶",
+      "unlocked": false,
+      "type": "gold",
+      "reward": "梦境操控能力+40%"
+    },
+    {
+      "id": "psychic_warrior",
+      "name": "精神战士",
+      "description": "用精神能力击败100个敌人",
+      "icon": "⚔️",
+      "unlocked": false,
+      "type": "silver",
+      "reward": "精神攻击伤害+35%"
+    },
+    {
+      "id": "empath_sage",
+      "name": "共情智者",
+      "description": "完全理解10个人的所有情感",
+      "icon": "❤️",
+      "unlocked": false,
+      "type": "silver",
+      "reward": "社交成功率+60%"
+    },
+    {
+      "id": "precognition_master",
+      "name": "预知大师",
+      "description": "准确预言50个未来事件",
+      "icon": "🔮",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "未来预测准确率+80%"
+    },
+    {
+      "id": "cosmic_awareness",
+      "name": "宇宙觉醒者",
+      "description": "达到宇宙意识境界",
+      "icon": "🌠",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "解锁终极精神能力"
+    }
+  ],
+  
+  "newFeatures": {
+    "psychicAbilities": {
+      "abilityCategories": [
+        {
+          "id": "communication_abilities",
+          "name": "通讯能力",
+          "abilities": [
+            {
+              "id": "mind_speak",
+              "name": "心灵对话",
+              "cost": { "psychicEnergy": 10 },
+              "effect": "与单一目标进行无声交流",
+              "range": "100米",
+              "description": "基础心灵通讯"
+            },
+            {
+              "id": "group_telepathy",
+              "name": "群体心灵感应",
+              "cost": { "psychicEnergy": 25 },
+              "effect": "同时与多个目标心灵交流",
+              "range": "50米",
+              "description": "多人精神会议"
+            }
+          ]
+        },
+        {
+          "id": "combat_abilities",
+          "name": "战斗能力",
+          "abilities": [
+            {
+              "id": "psychic_blast",
+              "name": "精神冲击",
+              "cost": { "psychicEnergy": 20 },
+              "effect": "直接攻击目标意识",
+              "damage": "30-45精神伤害",
+              "description": "基础精神攻击"
+            },
+            {
+              "id": "mental_shield",
+              "name": "精神护盾",
+              "cost": { "psychicEnergy": 15 },
+              "effect": "防御精神攻击，持续30秒",
+              "protection": "精神伤害-70%",
+              "description": "保护意识的基本防御"
+            }
+          ]
+        },
+        {
+          "id": "utility_abilities",
+          "name": "实用能力",
+          "abilities": [
+            {
+              "id": "telekinesis",
+              "name": "念动力",
+              "cost": { "psychicEnergy": 5 },
+              "effect": "移动最多10kg物体",
+              "range": "20米",
+              "description": "基础物体操控"
+            },
+            {
+              "id": "clairvoyance",
+              "name": "千里眼",
+              "cost": { "psychicEnergy": 30 },
+              "effect": "远程观察指定地点",
+              "range": "1公里",
+              "duration": "5分钟",
+              "description": "远程视觉能力"
+            }
+          ]
+        }
+      ],
+      
+      "abilityProgression": {
+        "levels": ["觉醒", "熟练", "专家", "大师", "宗师"],
+        "experienceRequired": [0, 100, 500, 2000, 10000],
+        "unlockRequirements": "需要对应科技研究和灵能训练"
+      }
+    },
+    
+    "dreamWorld": {
+      "dreamLayers": [
+        {
+          "id": "personal_dream",
+          "name": "个人梦境",
+          "depth": "表层",
+          "features": ["个体潜意识", "日常记忆", "情绪反映"],
+          "resources": ["记忆碎片", "情感能量", "个人符号"],
+          "dangerLevel": "低"
+        },
+        {
+          "id": "shared_dream",
+          "name": "共享梦境",
+          "depth": "中层",
+          "features": ["集体潜意识", "文化符号", "神话原型"],
+          "resources": ["集体记忆", "文化能量", "原型力量"],
+          "dangerLevel": "中"
+        },
+        {
+          "id": "lucid_dream",
+          "name": "清醒梦境",
+          "depth": "深层",
+          "features": ["意识控制", "现实塑造", "时间扭曲"],
+          "resources": ["意识结晶", "现实碎片", "时间沙"],
+          "dangerLevel": "高"
+        },
+        {
+          "id": "collective_unconscious",
+          "name": "集体无意识",
+          "depth": "底层",
+          "features": ["人类根源", "原始本能", "宇宙连接"],
+          "resources": ["本源能量", "原始印记", "宇宙回响"],
+          "dangerLevel": "极高"
+        }
+      ],
+      
+      "dreamNavigation": {
+        "navigationTools": ["梦之罗盘", "意识锚点", "清醒药剂"],
+        "dangers": ["梦魇生物", "梦境迷宫", "意识迷失"],
+        "rewards": ["精神成长", "隐藏知识", "现实影响"]
+      }
+    },
+    
+    "mentalStates": {
+      "states": [
+        {
+          "id": "normal_state",
+          "name": "正常状态",
+          "effects": ["能力正常", "消耗标准", "风险低"],
+          "description": "日常精神状态"
+        },
+        {
+          "id": "focused_state",
+          "name": "专注状态",
+          "effects": ["能力+20%", "消耗+10%", "持续时间有限"],
+          "description": "高度集中精神的状态"
+        },
+        {
+          "id": "meditative_state",
+          "name": "冥想状态",
+          "effects": ["恢复速度+50%", "防御+30%", "无法行动"],
+          "description": "深度冥想恢复状态"
+        },
+        {
+          "id": "trance_state",
+          "name": "出神状态",
+          "effects": ["精神能力+50%", "物理防御-50%", "风险高"],
+          "description": "意识脱离身体的状态"
+        },
+        {
+          "id": "psychotic_break",
+          "name": "精神崩溃",
+          "effects": ["能力失控", "随机效果", "极度危险"],
+          "description": "精神过度使用的危险状态"
+        }
+      ],
+      
+      "stateManagement": {
+        "transitionTime": 10,
+        "stabilityCheck": "每小时自动检测",
+        "recoveryMethods": ["休息", "药物", "心理治疗", "精神疏导"]
+      }
+    }
+  },
+  
+  "specialEvents": [
+    {
+      "id": "psychic_awakening",
+      "name": "心灵觉醒事件",
+      "triggerChance": 0.01,
+      "description": "大量幸存者同时觉醒精神能力",
+      "effects": [
+        "随机幸存者获得精神能力",
+        "灵能训练效率×3",
+        "精神能量产量+100%",
+        "持续48小时",
+        "可能引发精神风暴"
+      ]
+    },
+    {
+      "id": "reality_glitch",
+      "name": "现实故障事件",
+      "triggerChance": 0.005,
+      "description": "集体意识影响现实结构",
+      "outcomes": [
+        {
+          "probability": 40,
+          "result": "良性现实扭曲，获得特殊资源"
+        },
+        {
+          "probability": 30,
+          "result": "中性现象，观察和学习机会"
+        },
+        {
+          "probability": 20,
+          "result": "危险现实异常，需要紧急处理"
+        },
+        {
+          "probability": 10,
+          "result": "现实重构，永久性改变环境"
+        }
+      ]
+    },
+    {
+      "id": "dream_invasion",
+      "name": "梦境入侵事件",
+      "triggerChance": 0.008,
+      "description": "梦境生物进入现实世界",
+      "effects": [
+        "梦魇实体在现实出现",
+        "幸存者睡眠受影响",
+        "需要建立梦境屏障",
+        "持续72小时",
+        "解决后获得梦境控制技术"
+      ]
+    }
+  ],
+  
+  "psychicDisciplines": {
+    "disciplines": [
+      {
+        "id": "telepathic_discipline",
+        "name": "心灵感应学派",
+        "focus": "意识和通讯",
+        "specializations": ["读心术", "思维传输", "记忆操控", "意识链接"],
+        "ultimateAbility": "全域心灵网络"
+      },
+      {
+        "id": "telekinesis_discipline",
+        "name": "念动力学派",
+        "focus": "物质操控",
+        "specializations": ["物体移动", "力场控制", "分子操控", "重力操纵"],
+        "ultimateAbility": "现实重构"
+      },
+      {
+        "id": "precognitive_discipline",
+        "name": "预知学派",
+        "focus": "时间和未来",
+        "specializations": ["短期预知", "长期预言", "概率感知", "时间观察"],
+        "ultimateAbility": "命运操控"
+      },
+      {
+        "id": "empathic_discipline",
+        "name": "共情学派",
+        "focus": "情感和关系",
+        "specializations": ["情绪感知", "情感影响", "心灵治疗", "群体共情"],
+        "ultimateAbility": "集体心灵愈合"
+      }
+    ],
+    
+    "disciplineTraining": {
+      "trainingTime": "7天基础，30天精通，90天大师",
+      "trainingCost": { "psychicEnergy": 50, "medicine": 30, "techPoints": 20 },
+      "compatibilityCheck": "根据幸存者天赋决定最佳学派"
+    }
+  },
+  
+  "mentalHealthSystem": {
+    "mentalAttributes": [
+      {
+        "attribute": "理智",
+        "description": "保持现实认知的能力",
+        "baseValue": 100,
+        "threats": ["精神攻击", "恐怖经历", "超自然现象"],
+        "protection": ["心理训练", "稳定环境", "社会支持"]
+      },
+      {
+        "attribute": "意志力",
+        "description": "抵抗外界影响的能力",
+        "baseValue": 80,
+        "threats": ["心理操控", "精神污染", "群体压力"],
+        "protection": ["意志训练", "明确目标", "个人信念"]
+      },
+      {
+        "attribute": "精神稳定性",
+        "description": "保持精神平衡的能力",
+        "baseValue": 90,
+        "threats": ["精神过载", "能力失控", "心理创伤"],
+        "protection": ["定期冥想", "心理疏导", "适度休息"]
+      }
+    ],
+    
+    "mentalDisorders": [
+      {
+        "disorder": "精神分裂",
+        "symptoms": ["幻听", "妄想", "思维混乱"],
+        "treatment": ["药物治疗", "心理治疗", "环境控制"],
+        "recoveryChance": 70
+      },
+      {
+        "disorder": "创伤后应激障碍",
+        "symptoms": ["闪回", "回避行为", "过度警觉"],
+        "treatment": ["暴露疗法", "支持团体", "放松训练"],
+        "recoveryChance": 85
+      },
+      {
+        "disorder": "现实感知障碍",
+        "symptoms": ["现实扭曲感", "存在质疑", "时间混乱"],
+        "treatment": ["现实锚定", "认知疗法", "感官训练"],
+        "recoveryChance": 60
+      }
+    ],
+    
+    "mentalCareFacilities": {
+      "types": [
+        {
+          "id": "therapy_room",
+          "name": "心理治疗室",
+          "effect": "基础心理治疗，理智恢复+10/天",
+          "cost": { "materials": 100, "medicine": 50 }
+        },
+        {
+          "id": "meditation_garden",
+          "name": "冥想花园",
+          "effect": "自然放松，精神稳定性+15/天",
+          "cost": { "materials": 150, "food": 80, "water": 60 }
+        },
+        {
+          "id": "psychiatric_clinic",
+          "name": "精神科诊所",
+          "effect": "专业治疗，治愈精神疾病概率+40%",
+          "cost": { "materials": 200, "medicine": 120, "techPoints": 80 }
+        }
+      ]
+    }
+  }
+}

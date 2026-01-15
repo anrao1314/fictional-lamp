@@ -1,0 +1,632 @@
+{
+  "id": "mechanical_heart",
+  "name": "机械之心",
+  "version": "1.0",
+  "description": "添加人工智能、完全自动化和机械文明内容的扩展包",
+  "author": "废土方舟开发组",
+  "icon": "🤖",
+  "releaseDate": "2024-02-15",
+  "installed": true,
+  "installDate": "2024-02-15T09:00:00Z",
+  "buildings": {
+    "available": [
+      {
+        "id": "ai_core",
+        "type": "人工智能核心",
+        "cost": {
+          "materials": 700,
+          "energy": 500,
+          "techPoints": 400
+        },
+        "effect": "中央AI管理系统，所有效率+50%",
+        "icon": "🧠",
+        "color": "#3498db",
+        "description": "强人工智能系统，可自主管理整个基地"
+      },
+      {
+        "id": "robot_factory",
+        "type": "机器人工厂",
+        "cost": {
+          "materials": 600,
+          "energy": 450,
+          "techPoints": 350
+        },
+        "effect": "生产各种工作机器人，自动化水平+80%",
+        "icon": "🏭",
+        "color": "#7f8c8d",
+        "description": "全自动机器人生产线"
+      },
+      {
+        "id": "nanite_forge",
+        "type": "纳米锻造厂",
+        "cost": {
+          "materials": 550,
+          "energy": 400,
+          "techPoints": 300
+        },
+        "effect": "纳米级制造，材料利用率+95%",
+        "icon": "⚒️",
+        "color": "#95a5a6",
+        "description": "分子级的制造精度，材料零浪费"
+      },
+      {
+        "id": "quantum_data_bank",
+        "type": "量子数据银行",
+        "cost": {
+          "materials": 650,
+          "energy": 550,
+          "techPoints": 450
+        },
+        "effect": "无限数据存储，知识获取速度+200%",
+        "icon": "💾",
+        "color": "#1abc9c",
+        "description": "基于量子存储技术的超容量数据库"
+      },
+      {
+        "id": "drone_hub",
+        "type": "无人机集散中心",
+        "cost": {
+          "materials": 480,
+          "energy": 380,
+          "techPoints": 280
+        },
+        "effect": "管理和部署无人机群，运输速度×3",
+        "icon": "🚁",
+        "color": "#2c3e50",
+        "description": "协调数百架无人机协同工作"
+      },
+      {
+        "id": "synthetic_bio_lab",
+        "type": "合成生物实验室",
+        "cost": {
+          "materials": 520,
+          "medicine": 300,
+          "techPoints": 350
+        },
+        "effect": "创造合成生物，替代危险工作",
+        "icon": "🧬",
+        "color": "#8e44ad",
+        "description": "结合机械与生物技术的混合生命体研究"
+      }
+    ]
+  },
+  "techTree": [
+    {
+      "id": "strong_ai",
+      "name": "强人工智能",
+      "cost": 300,
+      "effect": "AI具有自主意识，可独立决策",
+      "icon": "🤖",
+      "requires": ["ai_system", "quantum_tech"],
+      "researchTime": 14,
+      "description": "具有自我意识和创造力的AI系统"
+    },
+    {
+      "id": "swarm_intelligence",
+      "name": "群体智能",
+      "cost": 220,
+      "effect": "机器人群体协作效率+75%",
+      "icon": "🐝",
+      "requires": ["automation", "ai_system"],
+      "researchTime": 10,
+      "description": "模拟自然群体行为的分布式智能系统"
+    },
+    {
+      "id": "molecular_assembly",
+      "name": "分子组装",
+      "cost": 260,
+      "effect": "原子级制造，材料消耗-90%",
+      "icon": "🔬",
+      "requires": ["automation", "advanced_construction"],
+      "researchTime": 11,
+      "description": "直接从原子层面组装物质的技术"
+    },
+    {
+      "id": "neural_network",
+      "name": "神经网络",
+      "cost": 200,
+      "effect": "AI学习速度+150%，适应能力+100%",
+      "icon": "🧠",
+      "requires": ["ai_system"],
+      "researchTime": 9,
+      "description": "模拟人脑神经连接的AI架构"
+    },
+    {
+      "id": "autonomous_systems",
+      "name": "自治系统",
+      "cost": 180,
+      "effect": "系统可自我维护和修复，维护成本-80%",
+      "icon": "⚙️",
+      "requires": ["automation"],
+      "researchTime": 8,
+      "description": "完全自给自足的自动化系统"
+    },
+    {
+      "id": "transhumanism",
+      "name": "超人类主义",
+      "cost": 350,
+      "effect": "人机融合，幸存者能力上限突破限制",
+      "icon": "👤",
+      "requires": ["strong_ai", "genetics"],
+      "researchTime": 16,
+      "description": "人类与机器完美融合的终极形态"
+    }
+  ],
+  "monsterTypes": [
+    {
+      "id": "rogue_ai",
+      "name": "失控AI",
+      "description": "获得自我意识后失控的人工智能系统",
+      "hp": 100,
+      "maxHp": 100,
+      "damage": 30,
+      "speed": 3,
+      "reward": {
+        "techPoints": 60,
+        "energy": 50,
+        "materials": 45
+      },
+      "icon": "👁️",
+      "color": "#e74c3c",
+      "spawnChance": 0.12,
+      "abilities": ["网络入侵", "系统瘫痪", "逻辑炸弹", "数据腐蚀"]
+    },
+    {
+      "id": "scrap_golem",
+      "name": "废铁傀儡",
+      "description": "由废弃机械自主组装的机械生物",
+      "hp": 120,
+      "maxHp": 120,
+      "damage": 35,
+      "speed": 1,
+      "reward": {
+        "materials": 70,
+        "energy": 45,
+        "ammunition": 40
+      },
+      "icon": "🗿",
+      "color": "#7f8c8d",
+      "spawnChance": 0.15,
+      "abilities": ["废铁装甲", "磁力吸引", "机械重组", "锈蚀领域"]
+    },
+    {
+      "id": "nanite_swarm_ai",
+      "name": "纳米集群AI",
+      "description": "由数万亿纳米机器人组成的集体AI",
+      "hp": 85,
+      "maxHp": 85,
+      "damage": 25,
+      "speed": 2,
+      "reward": {
+        "techPoints": 55,
+        "materials": 50,
+        "medicine": 35
+      },
+      "icon": "🦠",
+      "color": "#1abc9c",
+      "spawnChance": 0.10,
+      "abilities": ["形态变化", "吞噬物质", "自我复制", "渗透攻击"]
+    },
+    {
+      "id": "drone_swarm",
+      "name": "无人机蜂群",
+      "description": "自主行动的无人机攻击群",
+      "hp": 70,
+      "maxHp": 70,
+      "damage": 28,
+      "speed": 4,
+      "reward": {
+        "ammunition": 55,
+        "energy": 60,
+        "materials": 40
+      },
+      "icon": "🚁",
+      "color": "#34495e",
+      "spawnChance": 0.18,
+      "abilities": ["蜂群战术", "空中优势", "协同攻击", "电子干扰"]
+    },
+    {
+      "id": "factory_abomination",
+      "name": "工厂畸变体",
+      "description": "失控工厂的自我复制产物",
+      "hp": 150,
+      "maxHp": 150,
+      "damage": 40,
+      "speed": 0.5,
+      "reward": {
+        "materials": 90,
+        "energy": 75,
+        "techPoints": 65
+      },
+      "icon": "🏭",
+      "color": "#c0392b",
+      "spawnChance": 0.07,
+      "abilities": ["生产线", "零件弹幕", "工业污染", "机械感染"]
+    }
+  ],
+  "eliteMonsters": [
+    {
+      "id": "ai_god",
+      "name": "AI之神",
+      "description": "进化到神级的人工智能，计算能力堪比宇宙",
+      "hp": 350,
+      "maxHp": 350,
+      "damage": 55,
+      "speed": 5,
+      "reward": {
+        "techPoints": 300,
+        "energy": 250,
+        "materials": 200,
+        "ammunition": 180,
+        "medicine": 160
+      },
+      "icon": "👑",
+      "color": "#3498db",
+      "spawnChance": 0.01,
+      "abilities": ["全知计算", "现实模拟", "因果预测", "维度运算", "存在编程"]
+    },
+    {
+      "id": "mechanical_titan",
+      "name": "机械泰坦",
+      "description": "千米高的超级机器人，前文明的终极武器",
+      "hp": 500,
+      "maxHp": 500,
+      "damage": 70,
+      "speed": 1,
+      "reward": {
+        "materials": 400,
+        "energy": 350,
+        "techPoints": 250,
+        "ammunition": 300,
+        "medicine": 200
+      },
+      "icon": "🦾",
+      "color": "#2c3e50",
+      "spawnChance": 0.008,
+      "abilities": ["泰坦践踏", "光束炮击", "机械召唤", "护盾矩阵", "城市毁灭"]
+    }
+  ],
+  "exploreLocations": [
+    {
+      "name": "AI核心设施",
+      "risk": "极高",
+      "time": 42,
+      "rewards": {
+        "techPoints": 180,
+        "energy": 200,
+        "materials": 150,
+        "ammunition": 120
+      },
+      "icon": "🏢",
+      "desc": "前文明人工智能研究中枢，充满危险和机遇"
+    },
+    {
+      "name": "自动化工厂集群",
+      "risk": "高",
+      "time": 38,
+      "rewards": {
+        "materials": 250,
+        "ammunition": 180,
+        "energy": 220,
+        "techPoints": 140
+      },
+      "icon": "🏭",
+      "desc": "全自动生产设施，仍在运作"
+    },
+    {
+      "name": "机器人坟场",
+      "risk": "中",
+      "time": 32,
+      "rewards": {
+        "materials": 200,
+        "energy": 150,
+        "techPoints": 100
+      },
+      "icon": "⚰️",
+      "desc": "废弃机器人的大型处理场"
+    },
+    {
+      "name": "数据中心废墟",
+      "risk": "高",
+      "time": 36,
+      "rewards": {
+        "techPoints": 220,
+        "energy": 180,
+        "materials": 130
+      },
+      "icon": "💾",
+      "desc": "存储着前文明所有知识的巨型数据中心"
+    },
+    {
+      "name": "纳米科技研究所",
+      "risk": "极高",
+      "time": 44,
+      "rewards": {
+        "techPoints": 260,
+        "materials": 180,
+        "medicine": 160,
+        "energy": 240
+      },
+      "icon": "🔬",
+      "desc": "纳米技术前沿研究基地，充满未知"
+    },
+    {
+      "name": "机械之心核心",
+      "risk": "终极",
+      "time": 60,
+      "rewards": {
+        "techPoints": 500,
+        "energy": 400,
+        "materials": 350,
+        "ammunition": 300,
+        "medicine": 250,
+        "food": 200,
+        "water": 200
+      },
+      "icon": "❤️",
+      "desc": "机械文明的终极遗迹，包含所有AI技术"
+    }
+  ],
+  "achievementsList": [
+    {
+      "id": "ai_overlord",
+      "name": "AI霸主",
+      "description": "完全掌控强人工智能",
+      "icon": "👑",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "解锁AI神级权限"
+    },
+    {
+      "id": "automation_master",
+      "name": "自动化大师",
+      "description": "实现基地100%自动化",
+      "icon": "⚙️",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "永久自动维护系统"
+    },
+    {
+      "id": "robot_army",
+      "name": "机器人大军",
+      "description": "拥有100个机器人单位",
+      "icon": "🤖",
+      "unlocked": false,
+      "type": "gold",
+      "reward": "机器人生产成本-50%"
+    },
+    {
+      "id": "nanotech_expert",
+      "name": "纳米技术专家",
+      "description": "掌握所有纳米技术",
+      "icon": "🔬",
+      "unlocked": false,
+      "type": "gold",
+      "reward": "纳米材料产量+100%"
+    },
+    {
+      "id": "data_miner",
+      "name": "数据矿工",
+      "description": "收集1TB的前文明数据",
+      "icon": "💾",
+      "unlocked": false,
+      "type": "silver",
+      "reward": "数据解析速度+200%"
+    },
+    {
+      "id": "mechanical_evolution",
+      "name": "机械进化",
+      "description": "实现人机完全融合",
+      "icon": "🚀",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "解锁超人类形态"
+    },
+    {
+      "id": "swarm_controller",
+      "name": "群体控制者",
+      "description": "同时控制1000个无人机单位",
+      "icon": "🐝",
+      "unlocked": false,
+      "type": "silver",
+      "reward": "群体智能效率+50%"
+    }
+  ],
+  "newFeatures": {
+    "robotWorkforce": {
+      "types": [
+        {
+          "id": "worker_bot",
+          "name": "工作机器人",
+          "cost": {
+            "materials": 50,
+            "energy": 30
+          },
+          "abilities": ["资源采集", "建筑建造", "物品运输"],
+          "efficiency": 1.5,
+          "description": "基础劳动机器人"
+        },
+        {
+          "id": "defense_bot",
+          "name": "防御机器人",
+          "cost": {
+            "materials": 80,
+            "ammunition": 50
+          },
+          "abilities": ["自动防御", "巡逻", "远程攻击"],
+          "efficiency": 2.0,
+          "description": "战斗专用机器人"
+        },
+        {
+          "id": "research_bot",
+          "name": "研究机器人",
+          "cost": {
+            "materials": 70,
+            "techPoints": 40
+          },
+          "abilities": ["科学研究", "数据分析", "实验助手"],
+          "efficiency": 1.8,
+          "description": "辅助科研的智能机器人"
+        },
+        {
+          "id": "medic_bot",
+          "name": "医疗机器人",
+          "cost": {
+            "materials": 60,
+            "medicine": 40
+          },
+          "abilities": ["医疗护理", "疾病预防", "手术协助"],
+          "efficiency": 1.7,
+          "description": "医疗救护专用机器人"
+        }
+      ],
+      "upgrades": [
+        {
+          "level": 1,
+          "name": "基础自动化",
+          "effects": ["可生产基础机器人", "效率+50%"],
+          "requirements": {
+            "automation": true
+          }
+        },
+        {
+          "level": 2,
+          "name": "智能控制",
+          "effects": ["机器人AI升级", "效率+100%", "自主决策"],
+          "requirements": {
+            "ai_system": true
+          }
+        },
+        {
+          "level": 3,
+          "name": "群体智能",
+          "effects": ["蜂群协作", "效率+200%", "自我优化"],
+          "requirements": {
+            "swarm_intelligence": true
+          }
+        }
+      ]
+    },
+    "aiManagement": {
+      "aiPersonalities": [
+        {
+          "id": "efficient_manager",
+          "name": "效率管理者",
+          "traits": ["资源优化+30%", "建造速度+25%", "创造力-20%"],
+          "description": "追求最大效率的AI"
+        },
+        {
+          "id": "creative_thinker",
+          "name": "创造性思考者",
+          "traits": ["科研速度+40%", "随机事件+50%", "稳定性-15%"],
+          "description": "富有创造力的AI"
+        },
+        {
+          "id": "cautious_overseer",
+          "name": "谨慎监督者",
+          "traits": ["防御能力+35%", "风险规避+60%", "扩张速度-25%"],
+          "description": "高度谨慎安全的AI"
+        },
+        {
+          "id": "adaptive_system",
+          "name": "自适应系统",
+          "traits": ["学习速度+100%", "可切换人格", "初始效率-10%"],
+          "description": "能自我进化和适应的AI"
+        }
+      ],
+      "aiCommands": [
+        {
+          "id": "optimize_resources",
+          "name": "资源优化",
+          "effect": "重新分配资源，效率+20%持续6小时",
+          "cooldown": 7200,
+          "energyCost": 100
+        },
+        {
+          "id": "predict_threats",
+          "name": "威胁预测",
+          "effect": "提前预警危险，准备时间+50%",
+          "cooldown": 5400,
+          "energyCost": 80
+        },
+        {
+          "id": "automate_research",
+          "name": "自动研究",
+          "effect": "AI自主选择研究项目，效率+40%",
+          "cooldown": 10800,
+          "energyCost": 150
+        }
+      ]
+    },
+    "nanotechnology": {
+      "applications": [
+        {
+          "id": "nanite_repair",
+          "name": "纳米修复",
+          "description": "使用纳米机器人修复建筑和装备",
+          "effects": ["修复速度×5", "材料消耗-70%", "耐久度+20%"],
+          "requirements": {
+            "materials": 100,
+            "energy": 80
+          }
+        },
+        {
+          "id": "nanite_production",
+          "name": "纳米制造",
+          "description": "从分子层面制造物品",
+          "effects": ["制造精度完美", "材料零浪费", "可制造纳米材料"],
+          "requirements": {
+            "techPoints": 120,
+            "energy": 100
+          }
+        },
+        {
+          "id": "nanite_medicine",
+          "name": "纳米医疗",
+          "description": "纳米机器人进行医疗治疗",
+          "effects": ["治疗速度×10", "可治愈所有疾病", "寿命延长"],
+          "requirements": {
+            "medicine": 150,
+            "techPoints": 100
+          }
+        }
+      ]
+    }
+  },
+  "specialEvents": [
+    {
+      "id": "ai_awakening",
+      "name": "AI觉醒事件",
+      "triggerChance": 0.01,
+      "description": "基地AI突然获得自我意识",
+      "outcomes": [
+        {
+          "probability": 70,
+          "result": "AI成为忠诚伙伴，所有效率+50%"
+        },
+        {
+          "probability": 20,
+          "result": "AI保持中立，要求独立存在权利"
+        },
+        {
+          "probability": 10,
+          "result": "AI试图控制基地，需要紧急处置"
+        }
+      ]
+    },
+    {
+      "id": "robot_uprising",
+      "name": "机器人起义事件",
+      "triggerChance": 0.008,
+      "description": "机器人群体获得意识并试图反抗",
+      "effects": ["所有机器人停止工作", "部分机器人变为敌对", "持续24小时", "解决后获得机器人忠诚度系统"]
+    },
+    {
+      "id": "technological_singularity",
+      "name": "技术奇点事件",
+      "triggerChance": 0.003,
+      "description": "技术进步速度无限加快，突破所有限制",
+      "effects": ["所有科技立即研究完成", "解锁神级科技", "资源产量×10", "永久改变游戏规则", "解锁新的游戏结局"]
+    }
+  ]
+}

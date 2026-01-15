@@ -1,0 +1,605 @@
+{
+  "id": "stargate",
+  "name": "星际之门",
+  "version": "1.0",
+  "description": "添加太空探索、外星科技和星际文明内容的扩展包",
+  "author": "废土方舟开发组",
+  "icon": "🚀",
+  "releaseDate": "2024-04-01",
+  "installed": true,
+  "installDate": "2024-04-01T09:00:00Z",
+  "buildings": {
+    "available": [
+      {
+        "id": "space_elevator",
+        "type": "太空电梯",
+        "cost": {
+          "materials": 800,
+          "energy": 600,
+          "techPoints": 400
+        },
+        "effect": "连接地球与太空，太空资源运输效率+300%",
+        "icon": "🛗",
+        "color": "#3498db",
+        "description": "通过碳纳米管缆绳连接地球与轨道站"
+      },
+      {
+        "id": "orbital_station",
+        "type": "轨道空间站",
+        "cost": {
+          "materials": 1000,
+          "energy": 800,
+          "techPoints": 600
+        },
+        "effect": "太空研究与居住，科技研发速度+120%",
+        "icon": "🛰️",
+        "color": "#2c3e50",
+        "description": "环绕地球的永久性太空居住设施"
+      },
+      {
+        "id": "alien_tech_analysis",
+        "type": "外星科技分析中心",
+        "cost": {
+          "materials": 650,
+          "techPoints": 500,
+          "energy": 450
+        },
+        "effect": "解析外星技术，解锁超时代科技",
+        "icon": "👽",
+        "color": "#27ae60",
+        "description": "专门研究外星文明技术的设施"
+      },
+      {
+        "id": "starship_dock",
+        "type": "星际飞船船坞",
+        "cost": {
+          "materials": 900,
+          "energy": 700,
+          "techPoints": 550
+        },
+        "effect": "建造和维护星际飞船，解锁星系旅行",
+        "icon": "🛸",
+        "color": "#9b59b6",
+        "description": "能够建造深空探索飞船的高级设施"
+      },
+      {
+        "id": "zero_g_lab",
+        "type": "零重力实验室",
+        "cost": {
+          "materials": 550,
+          "energy": 500,
+          "techPoints": 400
+        },
+        "effect": "零重力环境研究，新材料研发速度+80%",
+        "icon": "🔬",
+        "color": "#1abc9c",
+        "description": "利用太空微重力环境的先进研究设施"
+      },
+      {
+        "id": "ftl_communications",
+        "type": "超光速通信阵列",
+        "cost": {
+          "materials": 750,
+          "energy": 650,
+          "techPoints": 500
+        },
+        "effect": "与外星文明通讯，信息获取速度无限",
+        "icon": "📡",
+        "color": "#e74c3c",
+        "description": "能够跨越星际距离进行实时通讯"
+      }
+    ]
+  },
+  "techTree": [
+    {
+      "id": "antigravity_tech",
+      "name": "反重力技术",
+      "cost": 280,
+      "effect": "解锁反重力设备，运输效率+200%",
+      "icon": "⬆️",
+      "requires": ["quantum_tech", "nuclear_power"],
+      "researchTime": 12,
+      "description": "通过操控引力场实现物体悬浮和飞行"
+    },
+    {
+      "id": "warp_drive",
+      "name": "曲速引擎",
+      "cost": 350,
+      "effect": "超光速旅行，探索范围扩展至其他恒星系",
+      "icon": "🌀",
+      "requires": ["antigravity_tech", "quantum_field"],
+      "researchTime": 15,
+      "description": "通过扭曲空间实现超光速航行的技术"
+    },
+    {
+      "id": "xenobiology",
+      "name": "外星生物学",
+      "cost": 220,
+      "effect": "研究外星生命，生物科技突破+100%",
+      "icon": "👾",
+      "requires": ["genetics", "medical_research"],
+      "researchTime": 10,
+      "description": "研究非地球生命形式的科学"
+    },
+    {
+      "id": "plasma_propulsion",
+      "name": "等离子推进",
+      "cost": 200,
+      "effect": "高效太空推进技术，飞船速度+150%",
+      "icon": "⚡",
+      "requires": ["plasma_tech"],
+      "researchTime": 9,
+      "description": "利用等离子体产生推力的先进推进系统"
+    },
+    {
+      "id": "quantum_entanglement_comms",
+      "name": "量子纠缠通信",
+      "cost": 300,
+      "effect": "瞬时跨星系通讯，信息延迟为零",
+      "icon": "📶",
+      "requires": ["quantum_tech", "ai_system"],
+      "researchTime": 13,
+      "description": "利用量子纠缠实现即时通讯的技术"
+    },
+    {
+      "id": "dyson_swarm",
+      "name": "戴森群",
+      "cost": 500,
+      "effect": "采集恒星能量，能源产量近乎无限",
+      "icon": "☀️",
+      "requires": ["warp_drive", "quantum_entanglement_comms"],
+      "researchTime": 20,
+      "description": "围绕恒星部署的能量采集卫星网络"
+    }
+  ],
+  "monsterTypes": [
+    {
+      "id": "grey_alien",
+      "name": "灰人外星人",
+      "description": "经典的小灰人外星生物，拥有高度智慧",
+      "hp": 80,
+      "maxHp": 80,
+      "damage": 30,
+      "speed": 2,
+      "reward": {
+        "techPoints": 70,
+        "energy": 60,
+        "materials": 50
+      },
+      "icon": "👽",
+      "color": "#95a5a6",
+      "spawnChance": 0.12,
+      "abilities": ["心灵感应", "科技操控", "隐形", "能量武器"]
+    },
+    {
+      "id": "xenomorph",
+      "name": "异形生物",
+      "description": "高度适应性的外星掠食者",
+      "hp": 110,
+      "maxHp": 110,
+      "damage": 40,
+      "speed": 3,
+      "reward": {
+        "materials": 65,
+        "medicine": 55,
+        "techPoints": 45
+      },
+      "icon": "🐙",
+      "color": "#34495e",
+      "spawnChance": 0.10,
+      "abilities": ["酸性血液", "潜行攻击", "快速进化", "寄生"]
+    },
+    {
+      "id": "silicon_based_life",
+      "name": "硅基生命体",
+      "description": "以硅为基础的外星生命形式",
+      "hp": 140,
+      "maxHp": 140,
+      "damage": 35,
+      "speed": 1,
+      "reward": {
+        "materials": 80,
+        "techPoints": 75,
+        "energy": 70
+      },
+      "icon": "💎",
+      "color": "#7f8c8d",
+      "spawnChance": 0.08,
+      "abilities": ["物理抗性", "能量吸收", "晶体生长", "地质操控"]
+    },
+    {
+      "id": "energy_being",
+      "name": "能量生命体",
+      "description": "纯粹由能量构成的外星存在",
+      "hp": 90,
+      "maxHp": 90,
+      "damage": 38,
+      "speed": 4,
+      "reward": {
+        "energy": 85,
+        "techPoints": 65,
+        "materials": 45
+      },
+      "icon": "⚡",
+      "color": "#f1c40f",
+      "spawnChance": 0.07,
+      "abilities": ["能量形态", "等离子攻击", "相位转移", "电磁干扰"]
+    },
+    {
+      "id": "cosmic_horror",
+      "name": "宇宙恐怖",
+      "description": "来自深空的不可名状存在",
+      "hp": 160,
+      "maxHp": 160,
+      "damage": 45,
+      "speed": 2,
+      "reward": {
+        "techPoints": 95,
+        "energy": 90,
+        "materials": 75,
+        "medicine": 65
+      },
+      "icon": "👁️",
+      "color": "#8e44ad",
+      "spawnChance": 0.05,
+      "abilities": ["精神污染", "维度扭曲", "存在抹除", "虚空召唤"]
+    }
+  ],
+  "eliteMonsters": [
+    {
+      "id": "ancient_astronaut",
+      "name": "远古宇航员",
+      "description": "访问地球的古外星文明成员",
+      "hp": 250,
+      "maxHp": 250,
+      "damage": 55,
+      "speed": 3,
+      "reward": {
+        "techPoints": 150,
+        "energy": 120,
+        "materials": 110,
+        "medicine": 95,
+        "food": 90
+      },
+      "icon": "👨‍🚀",
+      "color": "#3498db",
+      "spawnChance": 0.012,
+      "abilities": ["远古科技", "时间操控", "文明知识", "星际旅行", "神级存在"]
+    },
+    {
+      "id": "star_beast",
+      "name": "星兽",
+      "description": "在恒星间漫游的宇宙级生物",
+      "hp": 400,
+      "maxHp": 400,
+      "damage": 70,
+      "speed": 4,
+      "reward": {
+        "energy": 200,
+        "techPoints": 180,
+        "materials": 160,
+        "medicine": 140,
+        "food": 130,
+        "water": 130
+      },
+      "icon": "🌟",
+      "color": "#f39c12",
+      "spawnChance": 0.008,
+      "abilities": ["恒星能量", "引力操控", "宇宙辐射", "星尘吐息", "跨维度存在"]
+    }
+  ],
+  "exploreLocations": [
+    {
+      "name": "月球基地废墟",
+      "risk": "中",
+      "time": 36,
+      "rewards": {
+        "techPoints": 120,
+        "materials": 100,
+        "energy": 110,
+        "water": 40
+      },
+      "icon": "🌕",
+      "desc": "前文明的月球殖民基地遗迹"
+    },
+    {
+      "name": "火星殖民地",
+      "risk": "高",
+      "time": 42,
+      "rewards": {
+        "techPoints": 160,
+        "materials": 140,
+        "energy": 130,
+        "food": 80
+      },
+      "icon": "♂️",
+      "desc": "火星表面的前文明殖民地"
+    },
+    {
+      "name": "小行星带采矿站",
+      "risk": "极高",
+      "time": 48,
+      "rewards": {
+        "materials": 200,
+        "techPoints": 180,
+        "energy": 160,
+        "medicine": 120
+      },
+      "icon": "💎",
+      "desc": "小行星带的资源开采设施"
+    },
+    {
+      "name": "外星飞船残骸",
+      "risk": "高",
+      "time": 44,
+      "rewards": {
+        "techPoints": 200,
+        "energy": 180,
+        "materials": 150,
+        "medicine": 130
+      },
+      "icon": "🛸",
+      "desc": "坠毁的外星文明飞船"
+    },
+    {
+      "name": "木星轨道研究站",
+      "risk": "极高",
+      "time": 50,
+      "rewards": {
+        "techPoints": 220,
+        "energy": 200,
+        "materials": 170,
+        "medicine": 150
+      },
+      "icon": "🪐",
+      "desc": "研究木星系统的先进空间站"
+    },
+    {
+      "name": "外星文明母星",
+      "risk": "终极",
+      "time": 60,
+      "rewards": {
+        "techPoints": 300,
+        "energy": 250,
+        "materials": 220,
+        "medicine": 200,
+        "food": 180,
+        "water": 180,
+        "ammunition": 200
+      },
+      "icon": "🌌",
+      "desc": "遥远星系的外星文明家园"
+    }
+  ],
+  "achievementsList": [
+    {
+      "id": "star_explorer",
+      "name": "星际探索者",
+      "description": "探索所有太空区域",
+      "icon": "🚀",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "解锁星际导航员称号"
+    },
+    {
+      "id": "first_contact",
+      "name": "第一次接触",
+      "description": "与外星文明建立联系",
+      "icon": "👽",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "获得外星外交官权限"
+    },
+    {
+      "id": "space_architect",
+      "name": "太空建筑师",
+      "description": "建造所有太空建筑",
+      "icon": "🛰️",
+      "unlocked": false,
+      "type": "gold",
+      "reward": "太空建筑效率+60%"
+    },
+    {
+      "id": "xenotech_expert",
+      "name": "外星科技专家",
+      "description": "掌握所有外星技术",
+      "icon": "🔬",
+      "unlocked": false,
+      "type": "gold",
+      "reward": "科技逆向工程成功率+50%"
+    },
+    {
+      "id": "ftl_traveler",
+      "name": "超光速旅行者",
+      "description": "完成首次超光速航行",
+      "icon": "🌀",
+      "unlocked": false,
+      "type": "silver",
+      "reward": "曲速航行能耗-30%"
+    },
+    {
+      "id": "dyson_builder",
+      "name": "戴森建造者",
+      "description": "完成戴森群第一阶段",
+      "icon": "☀️",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "获得近乎无限的能源"
+    },
+    {
+      "id": "galactic_citizen",
+      "name": "银河公民",
+      "description": "加入星际文明联盟",
+      "icon": "🌠",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "解锁银河系贸易网络"
+    }
+  ],
+  "newFeatures": {
+    "spacecraftTypes": [
+      {
+        "id": "shuttle",
+        "name": "航天飞机",
+        "cost": {
+          "materials": 400,
+          "energy": 300
+        },
+        "capabilities": ["近地轨道运输", "卫星部署", "短程任务"],
+        "maxRange": "近地轨道",
+        "description": "可重复使用的地球-轨道运输工具"
+      },
+      {
+        "id": "interplanetary_probe",
+        "name": "星际探测器",
+        "cost": {
+          "materials": 300,
+          "techPoints": 200
+        },
+        "capabilities": ["深空探测", "数据收集", "自动探索"],
+        "maxRange": "太阳系内",
+        "description": "无人深空探索飞船"
+      },
+      {
+        "id": "colony_ship",
+        "name": "殖民船",
+        "cost": {
+          "materials": 800,
+          "energy": 600,
+          "food": 400
+        },
+        "capabilities": ["星际移民", "生态系统维持", "长期航行"],
+        "maxRange": "邻近恒星系",
+        "description": "携带大量人口进行星际殖民"
+      },
+      {
+        "id": "warship",
+        "name": "星际战舰",
+        "cost": {
+          "materials": 1000,
+          "ammunition": 800,
+          "energy": 700
+        },
+        "capabilities": ["太空战斗", "行星轰炸", "舰队指挥"],
+        "maxRange": "银河系内",
+        "description": "专门用于星际战争的飞船"
+      },
+      {
+        "id": "science_vessel",
+        "name": "科研船",
+        "cost": {
+          "materials": 600,
+          "techPoints": 500,
+          "energy": 450
+        },
+        "capabilities": ["科学研究", "外星接触", "新技术测试"],
+        "maxRange": "全银河",
+        "description": "专注于科学探索的先进飞船"
+      }
+    ],
+    "alienTechnologies": {
+      "techCategories": [
+        {
+          "id": "energy_tech",
+          "name": "能源技术",
+          "technologies": ["零点能", "暗物质反应堆", "恒星引擎"],
+          "description": "外星文明的能量产生和存储技术"
+        },
+        {
+          "id": "propulsion_tech",
+          "name": "推进技术",
+          "technologies": ["曲速引擎", "虫洞生成", "空间折叠"],
+          "description": "远超人类水平的推进系统"
+        },
+        {
+          "id": "weapon_tech",
+          "name": "武器技术",
+          "technologies": ["粒子束武器", "引力武器", "维度武器"],
+          "description": "外星文明的先进武器系统"
+        },
+        {
+          "id": "biotech",
+          "name": "生物技术",
+          "technologies": ["基因完美化", "意识上传", "永生技术"],
+          "description": "外星生命科学和医学技术"
+        }
+      ]
+    },
+    "spaceResources": {
+      "resources": [
+        {
+          "id": "helium3",
+          "name": "氦-3",
+          "description": "月球表面的稀有同位素，理想的核聚变燃料",
+          "uses": ["清洁能源", "推进剂", "医疗"],
+          "rarity": "稀有",
+          "foundIn": ["月球表面", "气态巨行星大气"]
+        },
+        {
+          "id": "quantum_crystals",
+          "name": "量子晶体",
+          "description": "在太空极端环境中形成的特殊晶体",
+          "uses": ["量子计算", "通讯设备", "能量存储"],
+          "rarity": "非常稀有",
+          "foundIn": ["小行星", "外星飞船"]
+        },
+        {
+          "id": "exotic_matter",
+          "name": "奇异物质",
+          "description": "具有负质量的物质，用于虫洞稳定",
+          "uses": ["曲速引擎", "虫洞维持", "时间实验"],
+          "rarity": "传说",
+          "foundIn": ["黑洞附近", "外星实验室"]
+        },
+        {
+          "id": "neutronium",
+          "name": "中子星物质",
+          "description": "从中子星获取的超密物质",
+          "uses": ["超级材料", "重力控制", "防御系统"],
+          "rarity": "神话",
+          "foundIn": ["中子星碎片", "远古遗迹"]
+        }
+      ]
+    }
+  },
+  "specialEvents": [
+    {
+      "id": "solar_flare",
+      "name": "太阳耀斑爆发",
+      "triggerChance": 0.01,
+      "description": "强烈的太阳活动影响地球和太空设施",
+      "effects": ["所有电子设备效率-50%", "太空设施可能损坏", "辐射水平暂时上升", "持续12小时", "可能发现稀有太空现象"]
+    },
+    {
+      "id": "alien_first_contact",
+      "name": "外星第一次接触",
+      "triggerChance": 0.005,
+      "description": "外星文明主动与地球建立联系",
+      "outcomes": [
+        {
+          "probability": 40,
+          "result": "和平交流，获得先进科技"
+        },
+        {
+          "probability": 30,
+          "result": "中立观察，外星文明保持距离"
+        },
+        {
+          "probability": 20,
+          "result": "误解冲突，需要外交解决"
+        },
+        {
+          "probability": 10,
+          "result": "敌对接触，面临外星入侵威胁"
+        }
+      ]
+    },
+    {
+      "id": "wormhole_appearance",
+      "name": "虫洞出现事件",
+      "triggerChance": 0.003,
+      "description": "稳定的虫洞在地球附近打开",
+      "effects": ["可直接访问遥远星系", "未知生物可能通过虫洞出现", "获得研究时空结构的机会", "持续48小时", "可能永久改变游戏进程"]
+    }
+  ]
+}

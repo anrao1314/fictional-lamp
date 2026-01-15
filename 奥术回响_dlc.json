@@ -1,0 +1,604 @@
+{
+  "id": "arcane_echoes",
+  "name": "奥术回响",
+  "version": "1.0",
+  "description": "添加魔法系统、神秘生物和超自然内容的扩展包",
+  "author": "废土方舟开发组",
+  "icon": "✨",
+  "releaseDate": "2024-03-01",
+  "installed": true,
+  "installDate": "2024-03-01T10:00:00Z",
+  
+  "buildings": {
+    "available": [
+      {
+        "id": "mana_crystal_farm",
+        "type": "魔法水晶农场",
+        "cost": {
+          "materials": 300,
+          "energy": 200,
+          "mana": 100
+        },
+        "effect": "种植魔法水晶，每日产生100魔力",
+        "icon": "💎",
+        "color": "#9b59b6",
+        "description": "培育天然魔法水晶的特殊农场"
+      },
+      {
+        "id": "wizard_tower",
+        "type": "巫师塔",
+        "cost": {
+          "materials": 450,
+          "mana": 200,
+          "techPoints": 150
+        },
+        "effect": "魔法研究速度+80%，法术强度+40%",
+        "icon": "🏰",
+        "color": "#8e44ad",
+        "description": "魔法师的研究和施法场所"
+      },
+      {
+        "id": "ritual_circle",
+        "type": "仪式魔法阵",
+        "cost": {
+          "materials": 350,
+          "mana": 250,
+          "medicine": 100
+        },
+        "effect": "可进行强大仪式魔法，解锁特殊能力",
+        "icon": "🔮",
+        "color": "#34495e",
+        "description": "绘制在地面的永久魔法阵"
+      },
+      {
+        "id": "enchanted_library",
+        "type": "附魔图书馆",
+        "cost": {
+          "materials": 400,
+          "mana": 180,
+          "techPoints": 120
+        },
+        "effect": "存储魔法知识，法术学习速度+100%",
+        "icon": "📚",
+        "color": "#2c3e50",
+        "description": "收藏古代魔法典籍的特殊图书馆"
+      },
+      {
+        "id": "alchemy_lab",
+        "type": "炼金实验室",
+        "cost": {
+          "materials": 320,
+          "medicine": 150,
+          "mana": 130
+        },
+        "effect": "炼制魔法药剂，药效+60%",
+        "icon": "⚗️",
+        "color": "#16a085",
+        "description": "将魔法与科学结合的先进实验室"
+      },
+      {
+        "id": "astral_observatory",
+        "type": "星界观测台",
+        "cost": {
+          "materials": 500,
+          "mana": 300,
+          "techPoints": 200
+        },
+        "effect": "观测星界能量，预言准确率+75%",
+        "icon": "🔭",
+        "color": "#3498db",
+        "description": "观测魔法能量流动和星界现象"
+      }
+    ]
+  },
+  
+  "techTree": [
+    {
+      "id": "elemental_magic",
+      "name": "元素魔法",
+      "cost": 150,
+      "effect": "掌握火、水、风、土元素力量",
+      "icon": "🔥",
+      "requires": [],
+      "researchTime": 8,
+      "description": "操控自然界四大元素的古老魔法"
+    },
+    {
+      "id": "necromancy",
+      "name": "死灵术",
+      "cost": 180,
+      "effect": "操控死亡能量，可召唤亡灵助手",
+      "icon": "💀",
+      "requires": ["elemental_magic"],
+      "researchTime": 9,
+      "description": "禁忌的死亡魔法，需谨慎使用"
+    },
+    {
+      "id": "divination",
+      "name": "占卜术",
+      "effect": "预见未来事件，准确率+50%",
+      "icon": "🔮",
+      "requires": [],
+      "researchTime": 7,
+      "cost": 140
+    },
+    {
+      "id": "enchantment_magic",
+      "name": "附魔法术",
+      "effect": "为物品附加魔法效果，强度+40%",
+      "icon": "✨",
+      "requires": ["elemental_magic"],
+      "researchTime": 8,
+      "cost": 160
+    },
+    {
+      "id": "summoning_arts",
+      "name": "召唤术",
+      "effect": "召唤魔法生物协助，持续时间+100%",
+      "icon": "👻",
+      "requires": ["elemental_magic", "necromancy"],
+      "researchTime": 10,
+      "cost": 200
+    },
+    {
+      "id": "arcane_mastery",
+      "name": "奥术精通",
+      "effect": "所有魔法效果+50%，魔力消耗-30%",
+      "icon": "⚡",
+      "requires": ["elemental_magic", "enchantment_magic", "summoning_arts"],
+      "researchTime": 12,
+      "cost": 250
+    }
+  ],
+  
+  "newResource": {
+    "mana": {
+      "name": "魔力",
+      "description": "施展魔法所需的能量",
+      "icon": "🔮",
+      "color": "#9b59b6",
+      "baseProduction": 50,
+      "baseMax": 1000,
+      "productionBuildings": ["魔法水晶农场", "巫师塔"]
+    }
+  },
+  
+  "monsterTypes": [
+    {
+      "id": "fire_elemental",
+      "name": "火焰元素",
+      "description": "由纯净火焰构成的魔法生物",
+      "hp": 85,
+      "maxHp": 85,
+      "damage": 32,
+      "speed": 2,
+      "reward": {
+        "mana": 40,
+        "energy": 50,
+        "materials": 30
+      },
+      "icon": "🔥",
+      "color": "#e74c3c",
+      "spawnChance": 0.12,
+      "abilities": ["火焰喷射", "高温光环", "熔岩护盾"]
+    },
+    {
+      "id": "specter",
+      "name": "怨灵",
+      "description": "含恨而死的灵魂实体化",
+      "hp": 70,
+      "maxHp": 70,
+      "damage": 28,
+      "speed": 3,
+      "reward": {
+        "mana": 35,
+        "medicine": 25,
+        "techPoints": 20
+      },
+      "icon": "👻",
+      "color": "#95a5a6",
+      "spawnChance": 0.15,
+      "abilities": ["穿墙", "恐惧光环", "吸取生命"]
+    },
+    {
+      "id": "golem",
+      "name": "魔像",
+      "description": "魔法驱动的石制或金属构装体",
+      "hp": 140,
+      "maxHp": 140,
+      "damage": 38,
+      "speed": 1,
+      "reward": {
+        "materials": 60,
+        "mana": 45,
+        "energy": 40
+      },
+      "icon": "🗿",
+      "color": "#7f8c8d",
+      "spawnChance": 0.08,
+      "abilities": ["物理免疫", "魔法抗性", "重击"]
+    },
+    {
+      "id": "witch",
+      "name": "邪恶女巫",
+      "description": "掌握黑暗魔法的施法者",
+      "hp": 65,
+      "maxHp": 65,
+      "damage": 30,
+      "speed": 2,
+      "reward": {
+        "mana": 50,
+        "medicine": 40,
+        "techPoints": 35
+      },
+      "icon": "🧙‍♀️",
+      "color": "#8e44ad",
+      "spawnChance": 0.06,
+      "abilities": ["诅咒", "召唤仆从", "变形术"]
+    },
+    {
+      "id": "basilisk",
+      "name": "石化蜥蜴",
+      "description": "目光能使人石化的魔法生物",
+      "hp": 95,
+      "maxHp": 95,
+      "damage": 34,
+      "speed": 2,
+      "reward": {
+        "mana": 55,
+        "materials": 45,
+        "medicine": 50
+      },
+      "icon": "🦎",
+      "color": "#27ae60",
+      "spawnChance": 0.05,
+      "abilities": ["石化凝视", "毒液攻击", "鳞甲防御"]
+    }
+  ],
+  
+  "eliteMonsters": [
+    {
+      "id": "archmage_lich",
+      "name": "巫妖大法师",
+      "description": "放弃生命追求永恒魔法知识的强大施法者",
+      "hp": 200,
+      "maxHp": 200,
+      "damage": 45,
+      "speed": 2,
+      "reward": {
+        "mana": 100,
+        "techPoints": 80,
+        "medicine": 70,
+        "materials": 90,
+        "energy": 85
+      },
+      "icon": "💀",
+      "color": "#8e44ad",
+      "spawnChance": 0.015,
+      "abilities": ["死亡一指", "召唤亡灵军团", "魔法免疫", "灵魂吸取"]
+    },
+    {
+      "id": "dragon",
+      "name": "巨龙",
+      "description": "古老而强大的魔法生物，智慧和力量的化身",
+      "hp": 350,
+      "maxHp": 350,
+      "damage": 60,
+      "speed": 3,
+      "reward": {
+        "mana": 150,
+        "materials": 120,
+        "energy": 100,
+        "techPoints": 90,
+        "medicine": 80
+      },
+      "icon": "🐉",
+      "color": "#e74c3c",
+      "spawnChance": 0.01,
+      "abilities": ["龙息", "飞行", "魔法抗性", "威压领域", "财宝守护"]
+    }
+  ],
+  
+  "exploreLocations": [
+    {
+      "name": "古代魔法学院遗址",
+      "risk": "高",
+      "time": 35,
+      "rewards": {
+        "mana": 120,
+        "techPoints": 80,
+        "medicine": 70,
+        "materials": 90
+      },
+      "icon": "🏫",
+      "desc": "前文明魔法教育中心，藏有珍贵魔法典籍"
+    },
+    {
+      "name": "元素位面裂隙",
+      "risk": "极高",
+      "time": 40,
+      "rewards": {
+        "mana": 180,
+        "energy": 150,
+        "techPoints": 100,
+        "materials": 110
+      },
+      "icon": "🌀",
+      "desc": "连接元素位面的不稳定通道"
+    },
+    {
+      "name": "被诅咒的墓地",
+      "risk": "中",
+      "time": 28,
+      "rewards": {
+        "mana": 90,
+        "medicine": 80,
+        "materials": 70
+      },
+      "icon": "⚰️",
+      "desc": "充满不安灵魂的古老墓地"
+    },
+    {
+      "name": "巫师塔废墟",
+      "risk": "高",
+      "time": 32,
+      "rewards": {
+        "mana": 110,
+        "techPoints": 95,
+        "materials": 85,
+        "energy": 90
+      },
+      "icon": "🏰",
+      "desc": "倒塌的强大巫师居住地"
+    },
+    {
+      "name": "魔法森林",
+      "risk": "中",
+      "time": 30,
+      "rewards": {
+        "mana": 100,
+        "medicine": 85,
+        "food": 95,
+        "materials": 80
+      },
+      "icon": "🌳",
+      "desc": "受魔法影响的奇异森林"
+    },
+    {
+      "name": "龙之巢穴",
+      "risk": "终极",
+      "time": 50,
+      "rewards": {
+        "mana": 250,
+        "materials": 200,
+        "energy": 180,
+        "techPoints": 150,
+        "medicine": 130,
+        "food": 120,
+        "water": 120
+      },
+      "icon": "🏔️",
+      "desc": "巨龙的居所，充满宝藏和危险"
+    }
+  ],
+  
+  "achievementsList": [
+    {
+      "id": "archmage",
+      "name": "大法师",
+      "description": "掌握所有魔法学派",
+      "icon": "🧙‍♂️",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "解锁禁咒级魔法"
+    },
+    {
+      "id": "dragon_slayer",
+      "name": "屠龙者",
+      "description": "击败一只巨龙",
+      "icon": "⚔️",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "获得龙族盟友"
+    },
+    {
+      "id": "master_enchanter",
+      "name": "附魔大师",
+      "description": "制作100件附魔物品",
+      "icon": "✨",
+      "unlocked": false,
+      "type": "gold",
+      "reward": "附魔成功率+50%"
+    },
+    {
+      "id": "alchemy_grandmaster",
+      "name": "炼金术宗师",
+      "description": "发现所有炼金配方",
+      "icon": "⚗️",
+      "unlocked": false,
+      "type": "gold",
+      "reward": "解锁万能灵药"
+    },
+    {
+      "id": "summoner",
+      "name": "召唤师",
+      "description": "召唤过所有类型魔法生物",
+      "icon": "👻",
+      "unlocked": false,
+      "type": "silver",
+      "reward": "召唤持续时间+100%"
+    },
+    {
+      "id": "arcane_researcher",
+      "name": "奥术研究员",
+      "description": "收集1000本魔法书籍",
+      "icon": "📚",
+      "unlocked": false,
+      "type": "silver",
+      "reward": "魔法研究速度+80%"
+    },
+    {
+      "id": "ritual_master",
+      "name": "仪式大师",
+      "description": "完成所有重大仪式",
+      "icon": "🔮",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "解锁神灵召唤仪式"
+    }
+  ],
+  
+  "newFeatures": {
+    "magicSpells": {
+      "categories": [
+        {
+          "id": "elemental",
+          "name": "元素魔法",
+          "spells": [
+            {
+              "id": "fireball",
+              "name": "火球术",
+              "cost": { "mana": 30 },
+              "effect": "发射火球造成40-60火焰伤害",
+              "cooldown": 10,
+              "description": "经典的火系攻击魔法"
+            },
+            {
+              "id": "frost_nova",
+              "name": "冰霜新星",
+              "cost": { "mana": 40 },
+              "effect": "冻结周围敌人，持续5秒",
+              "cooldown": 20,
+              "description": "范围控制冰系魔法"
+            }
+          ]
+        },
+        {
+          "id": "summoning",
+          "name": "召唤魔法",
+          "spells": [
+            {
+              "id": "summon_wolf",
+              "name": "召唤狼灵",
+              "cost": { "mana": 50 },
+              "effect": "召唤狼灵协助战斗，持续5分钟",
+              "cooldown": 300,
+              "description": "召唤忠诚的动物之灵"
+            }
+          ]
+        }
+      ]
+    },
+    
+    "alchemyRecipes": {
+      "potions": [
+        {
+          "id": "mana_potion",
+          "name": "魔力药水",
+          "ingredients": { "medicine": 10, "water": 5 },
+          "effect": "立即恢复100魔力",
+          "productionTime": 30,
+          "description": "基础魔力恢复药水"
+        },
+        {
+          "id": "healing_potion",
+          "name": "治疗药水",
+          "ingredients": { "medicine": 15, "food": 10 },
+          "effect": "恢复50点生命值",
+          "productionTime": 45,
+          "description": "基础生命恢复药水"
+        }
+      ]
+    },
+    
+    "enchantmentSystem": {
+      "enchantmentTypes": [
+        {
+          "id": "weapon_enchantment",
+          "name": "武器附魔",
+          "effects": ["火焰伤害", "冰霜伤害", "雷电伤害", "吸血", "锋利"],
+          "successRate": 70,
+          "description": "为武器附加魔法效果"
+        },
+        {
+          "id": "armor_enchantment",
+          "name": "护甲附魔",
+          "effects": ["火焰抗性", "冰霜抗性", "雷电抗性", "物理防御", "生命回复"],
+          "successRate": 75,
+          "description": "为护甲附加魔法效果"
+        }
+      ]
+    }
+  },
+  
+  "specialEvents": [
+    {
+      "id": "mana_storm",
+      "name": "魔力风暴",
+      "triggerChance": 0.01,
+      "description": "强烈的魔力波动席卷基地",
+      "effects": [
+        "所有魔法效果×2",
+        "魔力恢复速度×3",
+        "魔法失控概率+30%",
+        "持续3小时",
+        "可能引发随机魔法现象"
+      ]
+    },
+    {
+      "id": "astral_alignment",
+      "name": "星界对齐",
+      "triggerChance": 0.008,
+      "description": "星球与星界能量完美对齐",
+      "effects": [
+        "仪式魔法效果×3",
+        "预言准确率100%",
+        "召唤成功率+50%",
+        "持续6小时",
+        "可能触发神级事件"
+      ]
+    },
+    {
+      "id": "curse_outbreak",
+      "name": "诅咒爆发",
+      "triggerChance": 0.012,
+      "description": "古老的诅咒被意外触发",
+      "effects": [
+        "幸存者受到随机诅咒",
+        "资源产量-40%",
+        "需要找到解咒方法",
+        "持续12小时",
+        "解决后获得诅咒抗性"
+      ]
+    }
+  ],
+  
+  "magicClasses": {
+    "classes": [
+      {
+        "id": "elementalist",
+        "name": "元素使",
+        "description": "专注于元素力量的魔法师",
+        "specializations": ["火焰专精", "冰霜专精", "雷电专精", "大地专精"],
+        "baseAbilities": ["元素护盾", "元素武器", "元素召唤"],
+        "ultimateAbility": "元素融合"
+      },
+      {
+        "id": "necromancer",
+        "name": "死灵法师",
+        "description": "操控死亡和灵魂的黑暗法师",
+        "specializations": ["骷髅专精", "幽灵专精", "诅咒专精", "瘟疫专精"],
+        "baseAbilities": ["召唤亡灵", "生命吸取", "死亡诅咒"],
+        "ultimateAbility": "亡灵天灾"
+      },
+      {
+        "id": "enchanter",
+        "name": "附魔师",
+        "description": "专注于物品附魔的魔法师",
+        "specializations": ["武器附魔", "护甲附魔", "首饰附魔", "建筑附魔"],
+        "baseAbilities": ["物品鉴定", "魔法注入", "符文刻印"],
+        "ultimateAbility": "传奇附魔"
+      }
+    ]
+  }
+}

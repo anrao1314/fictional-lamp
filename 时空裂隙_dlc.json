@@ -1,0 +1,559 @@
+
+{
+  "id": "chrono_rift",
+  "name": "时空裂隙",
+  "version": "1.0",
+  "description": "添加时间旅行、空间操控和跨维度内容的扩展包",
+  "author": "废土方舟开发组",
+  "icon": "⏳",
+  "releaseDate": "2024-02-01",
+  "installed": true,
+  "installDate": "2024-02-01T14:00:00Z",
+  
+  "buildings": {
+    "available": [
+      {
+        "id": "chrono_anchor",
+        "type": "时空锚点",
+        "cost": {
+          "materials": 500,
+          "energy": 300,
+          "techPoints": 200
+        },
+        "effect": "稳定时间流，游戏速度可调节范围+100%",
+        "icon": "⚓",
+        "color": "#9b59b6",
+        "description": "锚定特定时间点，防止时间线崩溃"
+      },
+      {
+        "id": "dimensional_gate",
+        "type": "维度之门",
+        "cost": {
+          "materials": 600,
+          "energy": 400,
+          "techPoints": 250
+        },
+        "effect": "连接平行维度，解锁无限资源获取",
+        "icon": "🚪",
+        "color": "#3498db",
+        "description": "打开通往其他维度的通道"
+      },
+      {
+        "id": "temporal_observatory",
+        "type": "时空观测台",
+        "cost": {
+          "materials": 450,
+          "energy": 350,
+          "techPoints": 180
+        },
+        "effect": "预测未来事件，提前准备+24小时",
+        "icon": "🔭",
+        "color": "#8e44ad",
+        "description": "观测时间流，预见即将发生的事件"
+      },
+      {
+        "id": "paradox_containment",
+        "type": "悖论收容所",
+        "cost": {
+          "materials": 550,
+          "energy": 450,
+          "techPoints": 220
+        },
+        "effect": "防止时间悖论，游戏稳定性+99%",
+        "icon": "⚠️",
+        "color": "#e74c3c",
+        "description": "收容和处理时间旅行产生的悖论"
+      },
+      {
+        "id": "quantum_duplicator",
+        "type": "量子复制器",
+        "cost": {
+          "materials": 480,
+          "energy": 380,
+          "techPoints": 190
+        },
+        "effect": "量子复制物品，每日随机资源×2",
+        "icon": "📋",
+        "color": "#1abc9c",
+        "description": "利用量子叠加原理复制物品"
+      }
+    ]
+  },
+  
+  "techTree": [
+    {
+      "id": "temporal_mechanics",
+      "name": "时间力学",
+      "cost": 220,
+      "effect": "解锁时间操控能力，可回溯至多24小时",
+      "icon": "⏰",
+      "requires": ["quantum_tech"],
+      "researchTime": 10,
+      "description": "理解并操纵时间流动的基本原理"
+    },
+    {
+      "id": "multiverse_theory",
+      "name": "多重宇宙论",
+      "cost": 240,
+      "effect": "可访问平行宇宙，资源种类+50%",
+      "icon": "🌌",
+      "requires": ["quantum_tech", "ai_system"],
+      "researchTime": 12,
+      "description": "证明并利用多重宇宙的存在"
+    },
+    {
+      "id": "causality_control",
+      "name": "因果控制",
+      "cost": 260,
+      "effect": "可改变事件因果关系，成功率+40%",
+      "icon": "🔗",
+      "requires": ["temporal_mechanics"],
+      "researchTime": 11,
+      "description": "控制事件之间的因果关系"
+    },
+    {
+      "id": "chronal_stabilization",
+      "name": "时间稳定技术",
+      "cost": 180,
+      "effect": "防止时间异常，基地时间流稳定性+60%",
+      "icon": "🛡️",
+      "requires": ["temporal_mechanics"],
+      "researchTime": 8,
+      "description": "保护基地免受时间异常影响"
+    },
+    {
+      "id": "dimensional_phasing",
+      "name": "维度相移",
+      "cost": 200,
+      "effect": "可在不同维度间切换，探索奖励×1.5",
+      "icon": "🌀",
+      "requires": ["multiverse_theory"],
+      "researchTime": 9,
+      "description": "在不同维度之间自由切换的技术"
+    }
+  ],
+  
+  "monsterTypes": [
+    {
+      "id": "time_slime",
+      "name": "时间黏液怪",
+      "description": "存在于多个时间点的半透明生物",
+      "hp": 70,
+      "maxHp": 70,
+      "damage": 22,
+      "speed": 2,
+      "reward": {
+        "materials": 35,
+        "techPoints": 25,
+        "energy": 30
+      },
+      "icon": "🕐",
+      "color": "#9b59b6",
+      "spawnChance": 0.15,
+      "abilities": ["时间减速", "年龄吸取", "时间跳跃"]
+    },
+    {
+      "id": "paradox_wraith",
+      "name": "悖论怨灵",
+      "description": "时间悖论产生的实体化矛盾",
+      "hp": 85,
+      "maxHp": 85,
+      "damage": 28,
+      "speed": 3,
+      "reward": {
+        "techPoints": 40,
+        "materials": 30,
+        "energy": 35
+      },
+      "icon": "👻",
+      "color": "#34495e",
+      "spawnChance": 0.10,
+      "abilities": ["因果混乱", "存在抹除", "悖论复制"]
+    },
+    {
+      "id": "dimensional_shifter",
+      "name": "维度移位者",
+      "description": "能在不同维度间跳跃的生物",
+      "hp": 90,
+      "maxHp": 90,
+      "damage": 32,
+      "speed": 4,
+      "reward": {
+        "materials": 45,
+        "techPoints": 35,
+        "energy": 40
+      },
+      "icon": "💫",
+      "color": "#3498db",
+      "spawnChance": 0.08,
+      "abilities": ["维度跳跃", "相位攻击", "空间扭曲"]
+    },
+    {
+      "id": "chronal_horror",
+      "name": "时间恐惧兽",
+      "description": "时间流异常产生的恐怖实体",
+      "hp": 120,
+      "maxHp": 120,
+      "damage": 38,
+      "speed": 1,
+      "reward": {
+        "techPoints": 55,
+        "energy": 50,
+        "materials": 60
+      },
+      "icon": "⏳",
+      "color": "#e74c3c",
+      "spawnChance": 0.06,
+      "abilities": ["时间暂停", "快速老化", "时间循环"]
+    },
+    {
+      "id": "quantum_entangler",
+      "name": "量子纠缠体",
+      "description": "由量子纠缠现象产生的集体意识",
+      "hp": 75,
+      "maxHp": 75,
+      "damage": 26,
+      "speed": 2,
+      "reward": {
+        "techPoints": 45,
+        "energy": 40,
+        "materials": 35
+      },
+      "icon": "⚛️",
+      "color": "#1abc9c",
+      "spawnChance": 0.07,
+      "abilities": ["量子叠加", "概率操控", "纠缠链接"]
+    }
+  ],
+  
+  "eliteMonsters": [
+    {
+      "id": "chrono_dragon",
+      "name": "时间巨龙",
+      "description": "在时间中遨游的古老生物，见证过宇宙的诞生",
+      "hp": 300,
+      "maxHp": 300,
+      "damage": 50,
+      "speed": 2,
+      "reward": {
+        "techPoints": 120,
+        "energy": 100,
+        "materials": 150,
+        "medicine": 80,
+        "ammunition": 90
+      },
+      "icon": "🐉",
+      "color": "#9b59b6",
+      "spawnChance": 0.015,
+      "abilities": ["时间吐息", "时间停止", "时间回溯", "年龄吸收"]
+    },
+    {
+      "id": "multiverse_entity",
+      "name": "多重宇宙实体",
+      "description": "存在于所有平行宇宙的终极存在",
+      "hp": 280,
+      "maxHp": 280,
+      "damage": 48,
+      "speed": 3,
+      "reward": {
+        "techPoints": 150,
+        "energy": 120,
+        "materials": 140,
+        "food": 100,
+        "water": 100
+      },
+      "icon": "🌌",
+      "color": "#3498db",
+      "spawnChance": 0.012,
+      "abilities": ["维度切割", "平行召唤", "宇宙观察", "存在抹除"]
+    }
+  ],
+  
+  "exploreLocations": [
+    {
+      "name": "时间裂缝",
+      "risk": "极高",
+      "time": 40,
+      "rewards": {
+        "techPoints": 120,
+        "energy": 150,
+        "materials": 100,
+        "ammunition": 80
+      },
+      "icon": "⏳",
+      "desc": "时间流中的裂隙，充满未知的时间异常"
+    },
+    {
+      "name": "平行宇宙交汇点",
+      "risk": "高",
+      "time": 35,
+      "rewards": {
+        "techPoints": 90,
+        "materials": 120,
+        "food": 100,
+        "water": 100
+      },
+      "icon": "🌀",
+      "desc": "多个平行宇宙的交汇处，资源异常丰富"
+    },
+    {
+      "name": "时间静止区",
+      "risk": "中",
+      "time": 30,
+      "rewards": {
+        "energy": 180,
+        "materials": 90,
+        "techPoints": 70
+      },
+      "icon": "🕰️",
+      "desc": "时间流速极慢的区域，适合研究"
+    },
+    {
+      "name": "维度实验室废墟",
+      "risk": "高",
+      "time": 38,
+      "rewards": {
+        "techPoints": 110,
+        "materials": 130,
+        "energy": 160,
+        "medicine": 90
+      },
+      "icon": "🔬",
+      "desc": "前文明的维度研究设施，技术远超想象"
+    },
+    {
+      "name": "时间原点",
+      "risk": "极高",
+      "time": 45,
+      "rewards": {
+        "techPoints": 200,
+        "energy": 220,
+        "materials": 180,
+        "food": 150,
+        "water": 150,
+        "medicine": 120,
+        "ammunition": 150
+      },
+      "icon": "🌅",
+      "desc": "时间流的最初起点，获得终极时间技术"
+    }
+  ],
+  
+  "achievementsList": [
+    {
+      "id": "time_lord",
+      "name": "时间领主",
+      "description": "完全掌握时间操控技术",
+      "icon": "👑",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "解锁时间暂停能力"
+    },
+    {
+      "id": "multiverse_explorer",
+      "name": "多重宇宙探索者",
+      "description": "访问过3个不同的平行宇宙",
+      "icon": "🚀",
+      "unlocked": false,
+      "type": "gold",
+      "reward": "维度旅行能量消耗-50%"
+    },
+    {
+      "id": "paradox_solver",
+      "name": "悖论解决者",
+      "description": "解决10个时间悖论",
+      "icon": "🧩",
+      "unlocked": false,
+      "type": "gold",
+      "reward": "悖论抗性+100%"
+    },
+    {
+      "id": "chrono_architect",
+      "name": "时间建筑师",
+      "description": "建造所有时间相关建筑",
+      "icon": "🏗️",
+      "unlocked": false,
+      "type": "silver",
+      "reward": "建筑建造时间-40%"
+    },
+    {
+      "id": "quantum_observer",
+      "name": "量子观察者",
+      "description": "观察到100次量子现象",
+      "icon": "👁️",
+      "unlocked": false,
+      "type": "silver",
+      "reward": "量子事件触发率+25%"
+    },
+    {
+      "id": "dimensional_master",
+      "name": "维度大师",
+      "description": "在所有维度建立前哨",
+      "icon": "🌟",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "解锁跨维度传送网络"
+    }
+  ],
+  
+  "newFeatures": {
+    "timeManipulation": {
+      "abilities": [
+        {
+          "id": "time_slow",
+          "name": "时间减速",
+          "cost": { "energy": 50, "techPoints": 30 },
+          "effect": "周围时间流速减慢50%，持续30秒",
+          "cooldown": 300,
+          "description": "局部减慢时间流动"
+        },
+        {
+          "id": "time_rewind",
+          "name": "时间回溯",
+          "cost": { "energy": 100, "techPoints": 60 },
+          "effect": "回溯至多1小时前的状态",
+          "cooldown": 1800,
+          "description": "逆转时间，修复错误"
+        },
+        {
+          "id": "fast_forward",
+          "name": "时间加速",
+          "cost": { "energy": 80, "techPoints": 40 },
+          "effect": "资源生产速度×2，持续1小时",
+          "cooldown": 3600,
+          "description": "加速局部时间流动"
+        }
+      ]
+    },
+    
+    "parallelUniverses": {
+      "universes": [
+        {
+          "id": "tech_universe",
+          "name": "科技宇宙",
+          "description": "科技高度发达，但资源匮乏",
+          "features": ["科技点产量+200%", "资源产量-50%", "高级科技解锁"],
+          "accessCost": { "energy": 200, "techPoints": 150 }
+        },
+        {
+          "id": "resource_universe",
+          "name": "资源宇宙",
+          "description": "资源极其丰富，但科技落后",
+          "features": ["所有资源产量+300%", "科技点产量-80%", "稀有资源丰富"],
+          "accessCost": { "materials": 300, "energy": 250 }
+        },
+        {
+          "id": "organic_universe",
+          "name": "有机宇宙",
+          "description": "生物极度繁盛，充满危险",
+          "features": ["食物产量+400%", "怪物强度+200%", "稀有生物种类"],
+          "accessCost": { "food": 400, "medicine": 200 }
+        }
+      ]
+    },
+    
+    "timeEvents": {
+      "paradoxEvents": [
+        {
+          "id": "grandfather_paradox",
+          "name": "祖父悖论",
+          "description": "时间旅行改变了历史，产生逻辑矛盾",
+          "effects": ["随机事件取消", "部分进度重置", "获得悖论研究点数"],
+          "resolution": "需要建立时间修复站"
+        },
+        {
+          "id": "bootstrap_paradox",
+          "name": "自举悖论",
+          "description": "信息或物品在时间循环中没有明确的起源",
+          "effects": ["获得重复的科技", "资源来源不明", "时间流稳定性-30%"],
+          "resolution": "需要建立因果分析中心"
+        }
+      ],
+      
+      "anomalies": [
+        {
+          "id": "time_dilation",
+          "name": "时间膨胀",
+          "description": "局部时间流速异常变化",
+          "effects": ["建造速度×3", "资源消耗×2", "持续2小时"],
+          "rarity": "罕见"
+        },
+        {
+          "id": "chronal_echo",
+          "name": "时间回响",
+          "description": "过去事件的影像在现在重现",
+          "effects": ["看到过去的建筑", "学习过去的科技", "获得历史知识"],
+          "rarity": "稀有"
+        }
+      ]
+    }
+  },
+  
+  "specialEvents": [
+    {
+      "id": "time_storm",
+      "name": "时间风暴",
+      "triggerChance": 0.008,
+      "description": "猛烈的时间流风暴席卷基地",
+      "effects": [
+        "时间随机前进或后退1-3天",
+        "资源随机增减50-150%",
+        "建筑可能老化或更新",
+        "幸存者年龄随机变化",
+        "持续6小时"
+      ]
+    },
+    {
+      "id": "dimensional_convergence",
+      "name": "维度汇聚事件",
+      "triggerChance": 0.005,
+      "description": "多个平行宇宙在一点交汇",
+      "effects": [
+        "可同时访问多个维度的资源",
+        "出现来自不同维度的生物",
+        "科技交流效率+500%",
+        "持续12小时",
+        "可能引发维度冲突"
+      ]
+    },
+    {
+      "id": "quantum_fluctuation",
+      "name": "量子涨落事件",
+      "triggerChance": 0.01,
+      "description": "量子层面的随机涨落影响现实",
+      "effects": [
+        "物体随机出现或消失",
+        "属性值随机变化",
+        "小概率获得稀有物品",
+        "持续3小时",
+        "可能引发薛定谔状态"
+      ]
+    }
+  ],
+  
+  "timeTravelQuests": [
+    {
+      "id": "prevent_apocalypse",
+      "name": "阻止末日",
+      "description": "回到过去阻止导致末日的灾难",
+      "requirements": { "temporal_mechanics": true, "chrono_anchor": true },
+      "rewards": {
+        "techPoints": 500,
+        "prestige": "救世主称号",
+        "unlock": "时间控制大师技能"
+      },
+      "difficulty": "终极"
+    },
+    {
+      "id": "alternate_history",
+      "name": "改变历史",
+      "description": "创造一个新的时间线分支",
+      "requirements": { "causality_control": true, "temporal_observatory": true },
+      "rewards": {
+        "resources": "所有资源×2",
+        "unlock": "平行时间线访问权"
+      },
+      "difficulty": "史诗"
+    }
+  ]
+}

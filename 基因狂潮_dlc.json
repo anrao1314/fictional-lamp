@@ -1,0 +1,689 @@
+{
+  "id": "genetic_tide",
+  "name": "基因狂潮",
+  "version": "1.0",
+  "description": "添加基因编辑、生物改造和进化控制内容的扩展包",
+  "author": "废土方舟开发组",
+  "icon": "🧬",
+  "releaseDate": "2024-04-15",
+  "installed": true,
+  "installDate": "2024-04-15T10:30:00Z",
+  
+  "buildings": {
+    "available": [
+      {
+        "id": "crispr_lab",
+        "type": "CRISPR基因编辑实验室",
+        "cost": {
+          "materials": 450,
+          "medicine": 300,
+          "techPoints": 250
+        },
+        "effect": "精确基因编辑，幸存者属性可定制化",
+        "icon": "🔬",
+        "color": "#2ecc71",
+        "description": "使用CRISPR-Cas9技术进行精确基因修改"
+      },
+      {
+        "id": "clone_facility",
+        "type": "克隆设施",
+        "cost": {
+          "materials": 600,
+          "medicine": 400,
+          "energy": 350
+        },
+        "effect": "克隆优秀幸存者，人口增长率+150%",
+        "icon": "👥",
+        "color": "#3498db",
+        "description": "先进的体细胞克隆技术中心"
+      },
+      {
+        "id": "mutagen_chamber",
+        "type": "诱变培养室",
+        "cost": {
+          "materials": 380,
+          "medicine": 250,
+          "food": 200
+        },
+        "effect": "诱导可控变异，解锁新生物特性",
+        "icon": "🧪",
+        "color": "#9b59b6",
+        "description": "通过化学和辐射诱导生物变异"
+      },
+      {
+        "id": "chimeric_lab",
+        "type": "嵌合体实验室",
+        "cost": {
+          "materials": 520,
+          "medicine": 350,
+          "techPoints": 280
+        },
+        "effect": "创造混合生物，解锁独特能力",
+        "icon": "🐲",
+        "color": "#e74c3c",
+        "description": "结合不同物种基因创造新生命形式"
+      },
+      {
+        "id": "evolution_accelerator",
+        "type": "进化加速器",
+        "cost": {
+          "materials": 700,
+          "energy": 500,
+          "techPoints": 400
+        },
+        "effect": "加速自然选择进程，快速获得有利突变",
+        "icon": "⚡",
+        "color": "#f39c12",
+        "description": "模拟数百万年进化过程的先进设备"
+      },
+      {
+        "id": "genetic_vault",
+        "type": "基因库",
+        "cost": {
+          "materials": 550,
+          "medicine": 400,
+          "energy": 300
+        },
+        "effect": "存储所有生物基因样本，防止物种灭绝",
+        "icon": "🏦",
+        "color": "#8e44ad",
+        "description": "地球生物多样性的终极备份设施"
+      }
+    ]
+  },
+  
+  "techTree": [
+    {
+      "id": "crisper_tech",
+      "name": "CRISPR技术",
+      "cost": 200,
+      "effect": "精确基因编辑，遗传病治愈率100%",
+      "icon": "✂️",
+      "requires": ["genetics", "medical_research"],
+      "researchTime": 10,
+      "description": "革命性的基因编辑技术"
+    },
+    {
+      "id": "synthetic_biology",
+      "name": "合成生物学",
+      "cost": 240,
+      "effect": "设计全新生物，创造自然界不存在的能力",
+      "icon": "🧫",
+      "requires": ["crisper_tech", "genetic_engineering"],
+      "researchTime": 12,
+      "description": "从零开始设计和构建生物系统"
+    },
+    {
+      "id": "directed_evolution",
+      "name": "定向进化",
+      "cost": 180,
+      "effect": "引导生物向特定方向进化，获得目标性状",
+      "icon": "📈",
+      "requires": ["genetics"],
+      "researchTime": 9,
+      "description": "控制自然选择过程的人工引导技术"
+    },
+    {
+      "id": "epigenetics",
+      "name": "表观遗传学",
+      "cost": 160,
+      "effect": "修改基因表达而不改变DNA序列",
+      "icon": "🧬",
+      "requires": [],
+      "researchTime": 8,
+      "description": "研究环境对基因表达影响的科学"
+    },
+    {
+      "id": "xenotransplantation",
+      "name": "异种移植",
+      "cost": 220,
+      "effect": "跨物种器官移植，延长寿命+50年",
+      "icon": "💉",
+      "requires": ["crisper_tech", "medical_research"],
+      "researchTime": 11,
+      "description": "将动物器官移植给人类的技术"
+    },
+    {
+      "id": "genetic_perfection",
+      "name": "基因完美化",
+      "cost": 300,
+      "effect": "消除所有遗传缺陷，创造完美人类",
+      "icon": "🌟",
+      "requires": ["crisper_tech", "synthetic_biology", "epigenetics"],
+      "researchTime": 15,
+      "description": "人类基因优化的终极目标"
+    }
+  ],
+  
+  "monsterTypes": [
+    {
+      "id": "gene_spliced_horror",
+      "name": "基因拼接恐魔",
+      "description": "多种生物基因强行拼接的怪物",
+      "hp": 120,
+      "maxHp": 120,
+      "damage": 38,
+      "speed": 2,
+      "reward": {
+        "medicine": 70,
+        "techPoints": 60,
+        "materials": 55
+      },
+      "icon": "🧟",
+      "color": "#27ae60",
+      "spawnChance": 0.12,
+      "abilities": ["多重攻击", "基因不稳定", "快速适应", "突变爆发"]
+    },
+    {
+      "id": "perfect_predator",
+      "name": "完美掠食者",
+      "description": "基因优化后的终极猎杀机器",
+      "hp": 100,
+      "maxHp": 100,
+      "damage": 42,
+      "speed": 4,
+      "reward": {
+        "food": 80,
+        "medicine": 65,
+        "techPoints": 55
+      },
+      "icon": "🐅",
+      "color": "#e74c3c",
+      "spawnChance": 0.10,
+      "abilities": ["完美感知", "隐形猎杀", "超速再生", "适应免疫"]
+    },
+    {
+      "id": "mutagenic_blob",
+      "name": "诱变黏液团",
+      "description": "不断变异的不定型生物质",
+      "hp": 90,
+      "maxHp": 90,
+      "damage": 30,
+      "speed": 1,
+      "reward": {
+        "medicine": 75,
+        "techPoints": 65,
+        "materials": 50
+      },
+      "icon": "🫐",
+      "color": "#9b59b6",
+      "spawnChance": 0.15,
+      "abilities": ["形态变化", "吸收生物", "分裂繁殖", "毒性分泌"]
+    },
+    {
+      "id": "chimera",
+      "name": "奇美拉",
+      "description": "狮头、羊身、蛇尾的经典嵌合体",
+      "hp": 140,
+      "maxHp": 140,
+      "damage": 45,
+      "speed": 3,
+      "reward": {
+        "materials": 85,
+        "medicine": 80,
+        "food": 75,
+        "techPoints": 70
+      },
+      "icon": "🐲",
+      "color": "#f39c12",
+      "spawnChance": 0.08,
+      "abilities": ["火焰吐息", "毒尾攻击", "山羊冲撞", "多重弱点"]
+    },
+    {
+      "id": "genetic_abomination",
+      "name": "基因畸变体",
+      "description": "基因实验失败的恐怖产物",
+      "hp": 160,
+      "maxHp": 160,
+      "damage": 48,
+      "speed": 2,
+      "reward": {
+        "techPoints": 90,
+        "medicine": 85,
+        "materials": 80,
+        "energy": 70
+      },
+      "icon": "👾",
+      "color": "#8e44ad",
+      "spawnChance": 0.06,
+      "abilities": ["随机突变", "基因污染", "辐射爆发", "不稳定形态"]
+    }
+  ],
+  
+  "eliteMonsters": [
+    {
+      "id": "adam",
+      "name": "亚当-完美人类原型",
+      "description": "基因完美化的第一个成功案例",
+      "hp": 250,
+      "maxHp": 250,
+      "damage": 58,
+      "speed": 4,
+      "reward": {
+        "techPoints": 180,
+        "medicine": 150,
+        "materials": 130,
+        "food": 120,
+        "energy": 110
+      },
+      "icon": "👤",
+      "color": "#2ecc71",
+      "spawnChance": 0.012,
+      "abilities": ["完美基因", "超常智力", "超速再生", "适应一切", "基因操控"]
+    },
+    {
+      "id": "genesis_project",
+      "name": "创世计划最终产物",
+      "description": "失控的基因工程项目，企图创造新物种",
+      "hp": 350,
+      "maxHp": 350,
+      "damage": 65,
+      "speed": 3,
+      "reward": {
+        "techPoints": 220,
+        "medicine": 200,
+        "materials": 180,
+        "food": 170,
+        "energy": 160,
+        "water": 160
+      },
+      "icon": "🌱",
+      "color": "#27ae60",
+      "spawnChance": 0.008,
+      "abilities": ["基因同化", "物种创造", "生态重塑", "完美进化", "生命起源"]
+    }
+  ],
+  
+  "exploreLocations": [
+    {
+      "name": "基因研究所废墟",
+      "risk": "高",
+      "time": 38,
+      "rewards": {
+        "medicine": 140,
+        "techPoints": 120,
+        "materials": 110,
+        "food": 100
+      },
+      "icon": "🏢",
+      "desc": "前文明基因研究的顶级设施"
+    },
+    {
+      "name": "生物武器实验室",
+      "risk": "极高",
+      "time": 42,
+      "rewards": {
+        "medicine": 160,
+        "techPoints": 140,
+        "ammunition": 130,
+        "materials": 120
+      },
+      "icon": "⚠️",
+      "desc": "开发基因武器的秘密设施"
+    },
+    {
+      "name": "克隆农场遗址",
+      "risk": "中",
+      "time": 34,
+      "rewards": {
+        "food": 150,
+        "medicine": 120,
+        "materials": 110,
+        "water": 100
+      },
+      "icon": "🏭",
+      "desc": "大规模克隆生产的农业设施"
+    },
+    {
+      "name": "基因库保护设施",
+      "risk": "高",
+      "time": 40,
+      "rewards": {
+        "medicine": 180,
+        "techPoints": 160,
+        "food": 140,
+        "materials": 130
+      },
+      "icon": "🏦",
+      "desc": "保存地球生物基因的末日设施"
+    },
+    {
+      "name": "进化实验室",
+      "risk": "极高",
+      "time": 44,
+      "rewards": {
+        "techPoints": 200,
+        "medicine": 180,
+        "materials": 160,
+        "energy": 150
+      },
+      "icon": "🔬",
+      "desc": "研究生命进化过程的先进实验室"
+    },
+    {
+      "name": "基因圣殿",
+      "risk": "终极",
+      "time": 52,
+      "rewards": {
+        "techPoints": 250,
+        "medicine": 220,
+        "materials": 200,
+        "food": 190,
+        "energy": 180,
+        "water": 180,
+        "ammunition": 170
+      },
+      "icon": "🏛️",
+      "desc": "基因技术的圣殿，藏有人类进化的终极秘密"
+    }
+  ],
+  
+  "achievementsList": [
+    {
+      "id": "genetic_engineer",
+      "name": "基因工程师",
+      "description": "掌握所有基因技术",
+      "icon": "🧬",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "解锁基因编辑大师权限"
+    },
+    {
+      "id": "clone_master",
+      "name": "克隆大师",
+      "description": "成功克隆100个个体",
+      "icon": "👥",
+      "unlocked": false,
+      "type": "gold",
+      "reward": "克隆成功率+50%"
+    },
+    {
+      "id": "mutagenic_artist",
+      "name": "诱变艺术家",
+      "name": "诱变艺术家",
+      "description": "创造50种新生物变种",
+      "icon": "🎨",
+      "unlocked": false,
+      "type": "gold",
+      "reward": "变异控制精度+40%"
+    },
+    {
+      "id": "chimeric_creator",
+      "name": "嵌合体创造者",
+      "description": "成功创造稳定嵌合体",
+      "icon": "🐲",
+      "unlocked": false,
+      "type": "silver",
+      "reward": "嵌合体稳定性+60%"
+    },
+    {
+      "id": "evolution_director",
+      "name": "进化导演",
+      "description": "引导一个物种完成定向进化",
+      "icon": "📽️",
+      "unlocked": false,
+      "type": "silver",
+      "reward": "进化加速效果+50%"
+    },
+    {
+      "id": "genetic_perfectionist",
+      "name": "基因完美主义者",
+      "description": "创造完美基因个体",
+      "icon": "🌟",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "获得完美基因样本"
+    },
+    {
+      "id": "biodiversity_preserver",
+      "name": "生物多样性保护者",
+      "description": "保存1000个物种基因",
+      "icon": "🦋",
+      "unlocked": false,
+      "type": "platinum",
+      "reward": "解锁地球生物图鉴"
+    }
+  ],
+  
+  "newFeatures": {
+    "geneModificationSystem": {
+      "geneCategories": [
+        {
+          "id": "physical_genes",
+          "name": "物理基因",
+          "traits": ["力量增强", "耐力提升", "敏捷增加", "感官强化"],
+          "modificationCost": { "medicine": 30, "techPoints": 20 },
+          "description": "影响身体能力的基因修改"
+        },
+        {
+          "id": "mental_genes",
+          "name": "心智基因",
+          "traits": ["智力提升", "记忆力增强", "创造力增加", "学习加速"],
+          "modificationCost": { "medicine": 40, "techPoints": 30 },
+          "description": "影响认知能力的基因修改"
+        },
+        {
+          "id": "special_genes",
+          "name": "特殊基因",
+          "traits": ["辐射抗性", "疾病免疫", "快速愈合", "衰老减缓"],
+          "modificationCost": { "medicine": 50, "techPoints": 40 },
+          "description": "赋予特殊能力的基因修改"
+        }
+      ],
+      
+      "modificationProcess": {
+        "successRate": 85,
+        "riskOfMutation": 15,
+        "recoveryTime": 24,
+        "maxModifications": 10,
+        "compatibilityCheck": true
+      }
+    },
+    
+    "cloneManagement": {
+      "cloneTypes": [
+        {
+          "id": "standard_clone",
+          "name": "标准克隆",
+          "cost": { "medicine": 100, "food": 80, "water": 60 },
+          "growthTime": 72,
+          "traits": ["原版基因", "中等能力", "无记忆"],
+          "description": "基础克隆体，需要从头培养"
+        },
+        {
+          "id": "enhanced_clone",
+          "name": "增强克隆",
+          "cost": { "medicine": 150, "techPoints": 100, "food": 120 },
+          "growthTime": 48,
+          "traits": ["优化基因", "优秀能力", "基础技能"],
+          "description": "基因优化后的高级克隆体"
+        },
+        {
+          "id": "memory_transfer_clone",
+          "name": "记忆转移克隆",
+          "cost": { "medicine": 200, "techPoints": 150, "energy": 120 },
+          "growthTime": 24,
+          "traits": ["原体记忆", "完整技能", "人格连续"],
+          "description": "可以继承原体记忆的完美克隆"
+        }
+      ],
+      
+      "cloneEthics": {
+        "moraleImpact": -10,
+        "socialStability": -15,
+        "cloneRights": true,
+        "uprisingRisk": 0.01
+      }
+    },
+    
+    "mutagenicCreatures": {
+      "creationSystem": {
+        "baseSpecies": ["人类", "犬类", "猫科", "鸟类", "爬行类", "昆虫"],
+        "mutationTypes": ["尺寸", "形态", "能力", "行为", "生理"],
+        "stabilityLevels": ["不稳定", "半稳定", "稳定", "可遗传"],
+        "creationProcess": "基因提取 -> 编辑 -> 胚胎培养 -> 生长加速"
+      },
+      
+      "creatureExamples": [
+        {
+          "id": "glow_rat",
+          "name": "发光鼠",
+          "traits": ["生物发光", "夜视能力", "辐射检测"],
+          "uses": ["照明", "辐射探测", "实验室动物"],
+          "creationCost": { "medicine": 20, "techPoints": 15 }
+        },
+        {
+          "id": "spider_goat",
+          "name": "蜘蛛羊",
+          "traits": ["产蛛丝奶", "攀爬能力", "混合防御"],
+          "uses": ["生物材料生产", "特殊纤维", "混合育种"],
+          "creationCost": { "medicine": 40, "food": 30 }
+        }
+      ]
+    }
+  },
+  
+  "specialEvents": [
+    {
+      "id": "genetic_outbreak",
+      "name": "基因泄露事件",
+      "triggerChance": 0.01,
+      "description": "实验室基因材料意外泄露到环境中",
+      "effects": [
+        "周围生物随机变异",
+        "可能产生新物种",
+        "环境生态改变",
+        "持续72小时",
+        "需要紧急清理"
+      ]
+    },
+    {
+      "id": "clone_uprising",
+      "name": "克隆体起义事件",
+      "triggerChance": 0.008,
+      "description": "克隆体获得意识并要求平等权利",
+      "outcomes": [
+        {
+          "probability": 50,
+          "result": "和平谈判，克隆体获得有限权利"
+        },
+        {
+          "probability": 30,
+          "result": "冲突爆发，部分克隆体反抗"
+        },
+        {
+          "probability": 15,
+          "result": "全面起义，需要武力镇压"
+        },
+        {
+          "probability": 5,
+          "result": "克隆体建立独立社会"
+        }
+      ]
+    },
+    {
+      "id": "evolutionary_leap",
+      "name": "进化飞跃事件",
+      "triggerChance": 0.005,
+      "description": "某个物种突然经历快速进化",
+      "effects": [
+        "随机物种获得高级能力",
+        "生态平衡被打破",
+        "可能产生超级生物",
+        "永久性改变",
+        "需要重新适应"
+      ]
+    }
+  ],
+  
+  "geneDatabase": {
+    "speciesCategories": [
+      {
+        "category": "哺乳动物",
+        "count": 200,
+        "preservation": 85,
+        "notableSpecies": ["人类", "狗", "猫", "牛", "马", "鲸"],
+        "specialGenes": ["智力", "社会性", "适应性"]
+      },
+      {
+        "category": "鸟类",
+        "count": 150,
+        "preservation": 90,
+        "notableSpecies": ["鹰", "乌鸦", "企鹅", "鹦鹉", "信天翁"],
+        "specialGenes": ["飞行", "导航", "鸣叫"]
+      },
+      {
+        "category": "爬行动物",
+        "count": 120,
+        "preservation": 88,
+        "notableSpecies": ["鳄鱼", "蛇", "蜥蜴", "龟", "恐龙(化石基因)"],
+        "specialGenes": ["再生", "环境适应", "长寿"]
+      },
+      {
+        "category": "昆虫",
+        "count": 300,
+        "preservation": 95,
+        "notableSpecies": ["蜜蜂", "蚂蚁", "蝴蝶", "甲虫", "螳螂"],
+        "specialGenes": ["甲壳质", "群体智能", "变态发育"]
+      },
+      {
+        "category": "植物",
+        "count": 400,
+        "preservation": 92,
+        "notableSpecies": ["橡树", "小麦", "玫瑰", "竹子", "红杉"],
+        "specialGenes": ["光合作用", "快速生长", "药用成分"]
+      }
+    ],
+    
+    "extinctSpeciesRecovery": {
+      "recoveryProcess": "化石DNA提取 -> 基因修复 -> 克隆复活 -> 生态适应",
+      "recoverableSpecies": ["猛犸象", "渡渡鸟", "塔斯马尼亚虎", "恐龙(部分)", "古代植物"],
+      "successRate": 65,
+      "ethicalConcerns": true
+    }
+  },
+  
+  "bioethicsSystem": {
+    "ethicalDilemmas": [
+      {
+        "id": "designer_babies",
+        "name": "设计婴儿",
+        "description": "是否允许父母选择未出生孩子的基因特征",
+        "options": [
+          {"choice": "完全禁止", "effects": ["道德+20", "科技发展-15%"]},
+          {"choice": "仅限医疗目的", "effects": ["道德+10", "科技发展±0"]},
+          {"choice": "有限选择", "effects": ["道德-10", "科技发展+10%"]},
+          {"choice": "完全自由", "effects": ["道德-30", "科技发展+25%"]}
+        ]
+      },
+      {
+        "id": "clone_rights",
+        "name": "克隆体权利",
+        "description": "克隆体是否应享有与原体相同的权利",
+        "options": [
+          {"choice": "无权利", "effects": ["秩序+20", "克隆起义风险+10%"]},
+          {"choice": "有限权利", "effects": ["秩序+5", "克隆起义风险+5%"]},
+          {"choice": "平等权利", "effects": ["秩序-10", "克隆起义风险-20%"]},
+          {"choice": "特殊保护", "effects": ["秩序-15", "克隆稳定性+30%"]}
+        ]
+      },
+      {
+        "id": "species_creation",
+        "name": "物种创造",
+        "description": "是否允许创造自然界不存在的新物种",
+        "options": [
+          {"choice": "严格禁止", "effects": ["生态稳定+30", "科技限制-20%"]},
+          {"choice": "研究用途", "effects": ["生态稳定+10", "科技限制±0"]},
+          {"choice": "有限创造", "effects": ["生态稳定-15", "科技发展+15%"]},
+          {"choice": "鼓励创新", "effects": ["生态稳定-30", "科技发展+40%"]}
+        ]
+      }
+    ],
+    
+    "moraleImpact": {
+      "positiveFactors": ["疾病治愈", "寿命延长", "食物改良"],
+      "negativeFactors": ["基因歧视", "伦理争议", "生态风险"],
+      "overallEffect": "根据伦理决策动态变化"
+    }
+  }
+}
